@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestor de Tarefas — Staff Conect</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #060505;
+    --green: #00C48C;
+    --blue:  #0D6EFD;
+    --gray:  #EEEEEE;
+  }
+  * { font-family: 'Inter', sans-serif; }
+  body { background: #F4F5F7; }
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #e8e8e8; }
+  ::-webkit-scrollbar-thumb { background: #00C48C; border-radius: 4px; }
+  input[type="checkbox"] { accent-color: #00C48C; width: 17px; height: 17px; cursor: pointer; }
+  .fade-in { animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+  .step-done { text-decoration: line-through; color: #aaa; }
+  .nav-header { background: #060505; }
+  .tab-active   { border-bottom: 3px solid #00C48C; color: #00C48C; font-weight: 600; }
+  .tab-inactive { border-bottom: 3px solid transparent; color: #94a3b8; }
+  .tab-inactive:hover { color: #EEEEEE; }
+  .card { background: #ffffff; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .badge { display:inline-flex; align-items:center; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:600; }
+  .btn-green   { background:#00C48C; color:#fff; padding:8px 18px; border-radius:8px; font-weight:600; font-size:14px; border:none; cursor:pointer; transition:opacity .15s; }
+  .btn-green:hover { opacity:.88; }
+  .btn-blue    { background:#0D6EFD; color:#fff; padding:8px 18px; border-radius:8px; font-weight:600; font-size:14px; border:none; cursor:pointer; transition:opacity .15s; }
+  .btn-blue:hover { opacity:.88; }
+  .btn-ghost   { background:#F4F5F7; color:#475569; padding:8px 18px; border-radius:8px; font-weight:600; font-size:14px; border:none; cursor:pointer; }
+  .btn-ghost:hover { background:#e2e8f0; }
+  .btn-success { background:rgba(0,196,140,.15); color:#00C48C; padding:6px 14px; border-radius:8px; font-weight:600; font-size:13px; border:none; cursor:pointer; }
+  .btn-danger  { background:#fee2e2; color:#dc2626; padding:6px 14px; border-radius:8px; font-weight:600; font-size:13px; border:none; cursor:pointer; }
+  .input-field { border:1.5px solid #e2e8f0; border-radius:8px; padding:8px 12px; font-size:14px; width:100%; outline:none; transition:border .15s; background:#fff; }
+  .input-field:focus { border-color:#00C48C; }
+  textarea.input-field { resize:vertical; min-height:70px; }
+  .progress-track { width:100%; background:#e8e8e8; border-radius:99px; height:6px; }
+  .progress-fill  { background:#00C48C; height:6px; border-radius:99px; transition:width .3s; }
+  .stat-card { background:#060505; border-radius:12px; padding:20px; color:#fff; }
+  .decision-box { background:rgba(0,196,140,.08); border:1.5px solid rgba(0,196,140,.3); border-radius:12px; padding:16px; margin-top:12px; }
+  .return-box { background:rgba(13,110,253,.06); border:1.5px solid rgba(13,110,253,.25); border-radius:12px; padding:14px; margin-top:10px; }
+  /* Auth */
+  .auth-bg { min-height:100vh; background:#060505; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .auth-card { background:#fff; border-radius:16px; padding:36px; width:100%; max-width:400px; }
+  .auth-logo { width:48px; height:48px; border-radius:12px; background:rgba(0,196,140,.15); border:1.5px solid rgba(0,196,140,.4); display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+// ── API ──────────────────────────────────────────────
+const API = {
+  tok: () => localStorage.getItem('sc_token'),
+  hdr: () => ({
+    'Content-Type': 'application/json',
+    ...(API.tok() ? { Authorization: `Bearer ${API.tok()}` } : {}),
+  }),
+  async get(url) {
+    const r = await fetch(url, { headers: API.hdr() });
+    if (r.status === 401) { localStorage.clear(); window.location.reload(); return null; }
+    if (!r.ok) throw await r.json();
+    return r.json();
+  },
+  async post(url, body) {
+    const r = await fetch(url, { method: 'POST', headers: API.hdr(), body: JSON.stringify(body) });
+    const d = await r.json();
+    if (!r.ok) throw d;
+    return d;
+  },
+  async put(url, body) {
+    const r = await fetch(url, { method: 'PUT', headers: API.hdr(), body: JSON.stringify(body) });
+    const d = await r.json();
+    if (!r.ok) throw d;
+    return d;
+  },
+  async del(url) {
+    const r = await fetch(url, { method: 'DELETE', headers: API.hdr() });
+    const d = await r.json();
+    if (!r.ok) throw d;
+    return d;
+  },
+};
+
+// ── CONSTANTES ───────────────────────────────────────
+const BLOCO1 = [
+  { id:'b1_1', text:'Acessar e-mail' },
+  { id:'b1_2', text:"Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores" },
+  { id:'b1_3', text:'Salvar na pasta do mês' },
+  { id:'b1_4', text:'WhatsApp — verificar solicitações (grupo + individual)' },
+  { id:'b1_5', text:'Lançar solicitações de pagamento no Conta Azul' },
+  { id:'b1_6', text:'Acessar banco · Salvar extrato PDF e OFX' },
+  { id:'b1_7', text:'Importar OFX no Conta Azul' },
+  { id:'b1_8', text:'Conciliação bancária  ⚠️  dúvidas → perguntar no grupo' },
+  { id:'b1_9', text:'Salvar arquivo da conciliação na pasta' },
+];
+
+const BLOCO2 = [
+  { id:'b2_1', text:'Conferir contas a pagar no Conta Azul' },
+  { id:'b2_2', text:"Conferir NF's e boletos na pasta" },
+  { id:'b2_3', text:'Conferir DDA' },
+  { id:'b2_4', text:'Salvar contas a pagar do dia' },
+  { id:'b2_5', text:'Agendar pagamentos' },
+  { id:'b2_6', text:'Salvar programação bancária' },
+  { id:'b2_7', text:'Atualizar saldo bancário' },
+  { id:'b2_8', text:'Enviar rotina ao cliente ✓' },
+];
+
+const BANK_COLORS = {
+  'Asaas':      { bg:'rgba(13,110,253,.12)',  color:'#0D6EFD' },
+  'Sicredi':    { bg:'rgba(0,196,140,.12)',   color:'#00a87a' },
+  'Stone':      { bg:'rgba(0,180,100,.12)',   color:'#00a064' },
+  'Sicoob':     { bg:'rgba(80,60,200,.12)',   color:'#503cc8' },
+  'Bradesco':   { bg:'rgba(220,50,50,.12)',   color:'#dc3232' },
+  'Cora':       { bg:'rgba(200,50,150,.12)',  color:'#c83296' },
+  'Itaú':       { bg:'rgba(220,120,0,.12)',   color:'#dc7800' },
+  'Santander':  { bg:'rgba(180,0,0,.12)',     color:'#b40000' },
+};
+
+const todayStr = () => new Date().toISOString().split('T')[0];
+const fmtDate  = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
+const nowTime  = () => new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+const freshClientTask = () => ({
+  bloco1:{ steps:BLOCO1.map(s=>({...s,done:false})), hasPayment:null, status:'pending', notes:'', returnMsg:'', startedAt:null, doneAt:null },
+  bloco2:{ steps:BLOCO2.map(s=>({...s,done:false})), active:false, status:'pending', notes:'', returnMsg:'', startedAt:null, doneAt:null },
+  fullyDone:false,
+});
+
+// ── UI HELPERS ───────────────────────────────────────
+const BankBadge = ({bank}) => {
+  const c = BANK_COLORS[bank] || { bg:'#eee', color:'#555' };
+  return <span className="badge mr-1 mb-1" style={{fontSize:'10px',background:c.bg,color:c.color}}>{bank}</span>;
+};
+
+const StatusDot = ({status}) => {
+  const map = { pending:['#94a3b8','Pendente'], active:['#0D6EFD','Em andamento'], done:['#00C48C','Concluído'], waiting:['#f59e0b','Aguardando Op.2'] };
+  const [color, label] = map[status]||map.pending;
+  return <span className="badge" style={{background:`${color}20`,color}}>{label}</span>;
+};
+
+const ProgressBar = ({value,max}) => (
+  <div className="progress-track mt-1">
+    <div className="progress-fill" style={{width:`${max?Math.round((value/max)*100):0}%`}}/>
+  </div>
+);
+
+const Spinner = () => (
+  <div style={{display:'flex',alignItems:'center',justifyContent:'center',padding:'60px'}}>
+    <div style={{width:'36px',height:'36px',border:'3px solid #e2e8f0',borderTopColor:'#00C48C',borderRadius:'50%',animation:'spin .7s linear infinite'}}/>
+    <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+  </div>
+);
+
+// ── TELA DE LOGIN ────────────────────────────────────
+function AuthScreen({ onAuth, isSetup }) {
+  const [mode, setMode]     = useState(isSetup ? 'register' : 'login');
+  const [form, setForm]     = useState({ name:'', email:'', password:'' });
+  const [err, setErr]       = useState('');
+  const [loading, setLoading] = useState(false);
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const submit = async () => {
+    setErr(''); setLoading(true);
+    try {
+      const url = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+      const data = await API.post(url, form);
+      localStorage.setItem('sc_token', data.token);
+      localStorage.setItem('sc_user', JSON.stringify(data.user));
+      onAuth(data.user);
+    } catch(e) {
+      setErr(e.error || 'Erro ao conectar');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onKey = e => { if(e.key === 'Enter') submit(); };
+
+  return (
+    <div className="auth-bg">
+      <div className="auth-card fade-in">
+        <div className="auth-logo">
+          <span style={{color:'#00C48C',fontSize:'22px',fontWeight:800}}>S</span>
+        </div>
+        <h1 style={{textAlign:'center',fontWeight:700,fontSize:'20px',color:'#060505',marginBottom:'4px'}}>
+          Staff<span style={{color:'#00C48C'}}>Conect</span>
+        </h1>
+        <p style={{textAlign:'center',fontSize:'13px',color:'#94a3b8',marginBottom:'28px'}}>
+          {isSetup ? 'Crie o primeiro usuário administrador' : mode === 'login' ? 'Gestor de Tarefas' : 'Criar conta'}
+        </p>
+
+        {mode === 'register' && (
+          <div style={{marginBottom:'14px'}}>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Nome</div>
+            <input className="input-field" placeholder="Seu nome completo" value={form.name} onChange={e=>upd('name',e.target.value)} onKeyDown={onKey}/>
+          </div>
+        )}
+        <div style={{marginBottom:'14px'}}>
+          <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>E-mail</div>
+          <input className="input-field" type="email" placeholder="seu@email.com" value={form.email} onChange={e=>upd('email',e.target.value)} onKeyDown={onKey}/>
+        </div>
+        <div style={{marginBottom:'20px'}}>
+          <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Senha</div>
+          <input className="input-field" type="password" placeholder={mode==='register'?'Mínimo 6 caracteres':'••••••••'} value={form.password} onChange={e=>upd('password',e.target.value)} onKeyDown={onKey}/>
+        </div>
+
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',borderRadius:'8px',padding:'10px 14px',fontSize:'13px',marginBottom:'16px'}}>{err}</div>}
+
+        <button className="btn-green" style={{width:'100%',padding:'12px'}} onClick={submit} disabled={loading}>
+          {loading ? 'Aguarde...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+        </button>
+
+        {!isSetup && (
+          <p style={{textAlign:'center',fontSize:'13px',color:'#94a3b8',marginTop:'20px'}}>
+            {mode === 'login'
+              ? <span>Não tem conta? <button onClick={()=>{setMode('register');setErr('');}} style={{color:'#00C48C',fontWeight:600,background:'none',border:'none',cursor:'pointer'}}>Criar conta</button></span>
+              : <span>Já tem conta? <button onClick={()=>{setMode('login');setErr('');}} style={{color:'#00C48C',fontWeight:600,background:'none',border:'none',cursor:'pointer'}}>Entrar</button></span>
+            }
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── MODAL ADICIONAR OPERADOR (admin) ─────────────────
+function AddOperatorModal({ onSave, onClose }) {
+  const [form, setForm]   = useState({ name:'', email:'', password:'' });
+  const [err, setErr]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const submit = async () => {
+    setErr(''); setLoading(true);
+    try {
+      await API.post('/api/auth/register', form);
+      const ops = await API.get('/api/operators');
+      onSave(ops);
+    } catch(e) {
+      setErr(e.error || 'Erro');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(6,5,5,.7)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:50,padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'400px'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'20px 20px 16px',borderBottom:'1px solid #f1f5f9'}}>
+          <h2 style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>Adicionar Operador</h2>
+          <button onClick={onClose} style={{fontSize:'22px',color:'#94a3b8',background:'none',border:'none',cursor:'pointer'}}>&times;</button>
+        </div>
+        <div style={{padding:'20px',display:'flex',flexDirection:'column',gap:'14px'}}>
+          {[['Nome','name','text','Nome completo'],['E-mail','email','email','email@empresa.com'],['Senha','password','password','Mínimo 6 caracteres']].map(([label,key,type,ph])=>(
+            <div key={key}>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>{label}</div>
+              <input className="input-field" type={type} placeholder={ph} value={form[key]} onChange={e=>upd(key,e.target.value)}/>
+            </div>
+          ))}
+          {err && <div style={{background:'#fee2e2',color:'#dc2626',borderRadius:'8px',padding:'10px 14px',fontSize:'13px'}}>{err}</div>}
+        </div>
+        <div style={{display:'flex',gap:'10px',padding:'16px 20px',borderTop:'1px solid #f1f5f9'}}>
+          <button className="btn-green" style={{flex:1}} onClick={submit} disabled={loading}>{loading?'Salvando...':'Criar Operador'}</button>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── MODAL CLIENTE ────────────────────────────────────
+function ClienteModal({client, onSave, onClose}) {
+  const [form, setForm] = useState({...client});
+  const [newLabel, setNewLabel] = useState('');
+  const [newVal, setNewVal]     = useState('');
+  const [showPw, setShowPw]     = useState({});
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(6,5,5,.7)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:50,padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'480px',maxHeight:'90vh',overflowY:'auto'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'20px 20px 16px',borderBottom:'1px solid #f1f5f9'}}>
+          <h2 style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>Ficha — {client.name}</h2>
+          <button onClick={onClose} style={{fontSize:'22px',color:'#94a3b8',background:'none',border:'none',cursor:'pointer',lineHeight:1}}>&times;</button>
+        </div>
+        <div style={{padding:'20px',display:'flex',flexDirection:'column',gap:'14px'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+            {[['CNPJ','cnpj','00.000.000/0001-00'],['Responsável','contact','Nome'],['WhatsApp','whatsapp','(00) 00000-0000'],['E-mail','email','email@empresa.com']].map(([label,key,ph])=>(
+              <div key={key}>
+                <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>{label}</div>
+                <input className="input-field" value={form[key]||''} onChange={e=>upd(key,e.target.value)} placeholder={ph}/>
+              </div>
+            ))}
+            <div style={{gridColumn:'1/-1'}}>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>ERP</div>
+              <input className="input-field" value={form.erp||''} onChange={e=>upd('erp',e.target.value)} placeholder="Conta Azul, Omie..."/>
+            </div>
+          </div>
+          <div>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'6px'}}>Bancos</div>
+            <div style={{display:'flex',flexWrap:'wrap'}}>{(form.banks||[]).map(b=><BankBadge key={b} bank={b}/>)}</div>
+          </div>
+          <div>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Observações</div>
+            <textarea className="input-field" value={form.notes||''} onChange={e=>upd('notes',e.target.value)} placeholder="Particularidades, regras especiais..."/>
+          </div>
+          <div>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#00C48C',marginBottom:'8px'}}>🔐 Senhas e Acessos</div>
+            {(form.passwords||[]).map(p=>(
+              <div key={p.id} style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'8px'}}>
+                <span style={{fontSize:'13px',fontWeight:500,color:'#374151',minWidth:'110px'}}>{p.label}</span>
+                <input type={showPw[p.id]?'text':'password'} className="input-field" value={p.value} readOnly style={{flex:1}}/>
+                <button onClick={()=>setShowPw(s=>({...s,[p.id]:!s[p.id]}))} style={{background:'none',border:'none',cursor:'pointer',color:'#94a3b8',fontSize:'14px'}}>👁</button>
+                <button onClick={()=>setForm(f=>({...f,passwords:f.passwords.filter(x=>x.id!==p.id)}))} style={{background:'none',border:'none',cursor:'pointer',color:'#dc2626',fontSize:'14px'}}>✕</button>
+              </div>
+            ))}
+            <div style={{display:'flex',gap:'8px',marginTop:'8px'}}>
+              <input className="input-field" placeholder="Sistema / login" value={newLabel} onChange={e=>setNewLabel(e.target.value)}/>
+              <input className="input-field" placeholder="Senha" value={newVal} onChange={e=>setNewVal(e.target.value)}/>
+              <button className="btn-green" style={{whiteSpace:'nowrap',padding:'8px 12px'}} onClick={()=>{
+                if(!newLabel.trim()) return;
+                setForm(f=>({...f,passwords:[...(f.passwords||[]),{id:Date.now(),label:newLabel,value:newVal}]}));
+                setNewLabel(''); setNewVal('');
+              }}>+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:'10px',padding:'16px 20px',borderTop:'1px solid #f1f5f9'}}>
+          <button className="btn-green" style={{flex:1}} onClick={()=>onSave(form)}>Salvar</button>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── MODAL TAREFA EXTRA ───────────────────────────────
+function TarefaModal({clients, operators, currentUser, onSave, onClose}) {
+  const [form, setForm] = useState({title:'',client_id:'',operator_id:currentUser?.id||'',due_date:'',priority:'normal',notes:'',recurring:false,frequency:'daily'});
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(6,5,5,.7)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:50,padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'440px'}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'20px 20px 16px',borderBottom:'1px solid #f1f5f9'}}>
+          <h2 style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>Nova Tarefa</h2>
+          <button onClick={onClose} style={{fontSize:'22px',color:'#94a3b8',background:'none',border:'none',cursor:'pointer',lineHeight:1}}>&times;</button>
+        </div>
+        <div style={{padding:'20px',display:'flex',flexDirection:'column',gap:'12px'}}>
+          <div>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Título *</div>
+            <input className="input-field" value={form.title} onChange={e=>upd('title',e.target.value)} placeholder="Descrição da tarefa"/>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px'}}>
+            <div>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Cliente</div>
+              <select className="input-field" value={form.client_id} onChange={e=>upd('client_id',e.target.value)}>
+                <option value="">Geral</option>
+                {clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Operador</div>
+              <select className="input-field" value={form.operator_id} onChange={e=>upd('operator_id',e.target.value)}>
+                <option value="">Nenhum</option>
+                {operators.map(o=><option key={o.id} value={o.id}>{o.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Prazo</div>
+              <input type="date" className="input-field" value={form.due_date} onChange={e=>upd('due_date',e.target.value)}/>
+            </div>
+            <div>
+              <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Prioridade</div>
+              <select className="input-field" value={form.priority} onChange={e=>upd('priority',e.target.value)}>
+                <option value="low">Baixa</option>
+                <option value="normal">Normal</option>
+                <option value="high">Alta</option>
+              </select>
+            </div>
+          </div>
+          <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+            <input type="checkbox" id="rec" checked={form.recurring} onChange={e=>upd('recurring',e.target.checked)}/>
+            <label htmlFor="rec" style={{fontSize:'14px',color:'#374151',cursor:'pointer'}}>Tarefa recorrente</label>
+            {form.recurring && (
+              <select className="input-field" value={form.frequency} onChange={e=>upd('frequency',e.target.value)} style={{width:'auto',marginLeft:'8px'}}>
+                <option value="daily">Diária</option>
+                <option value="weekly">Semanal</option>
+                <option value="monthly">Mensal</option>
+              </select>
+            )}
+          </div>
+          <div>
+            <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>Observações</div>
+            <textarea className="input-field" value={form.notes} onChange={e=>upd('notes',e.target.value)} placeholder="Detalhes, contexto, passo a passo..."/>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:'10px',padding:'16px 20px',borderTop:'1px solid #f1f5f9'}}>
+          <button className="btn-green" style={{flex:1}} onClick={()=>{ if(!form.title.trim()) return; onSave(form); }}>Criar Tarefa</button>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── CARD CLIENTE NA FILA ─────────────────────────────
+function ClienteFilaCard({client, task, onUpdate}) {
+  const [open, setOpen]     = useState(false);
+  const [openB2, setOpenB2] = useState(false);
+  const b1 = task.bloco1, b2 = task.bloco2;
+  const b1done = b1.steps.filter(s=>s.done).length;
+  const b2done = b2.steps.filter(s=>s.done).length;
+
+  const toggleB1 = stepId => {
+    const steps = b1.steps.map(s=>s.id===stepId?{...s,done:!s.done}:s);
+    const allDone = steps.every(s=>s.done);
+    const anyDone = steps.some(s=>s.done);
+    onUpdate({...task, bloco1:{...b1,steps,status:allDone?'done':anyDone?'active':'pending',startedAt:b1.startedAt||(anyDone?nowTime():null),doneAt:allDone?nowTime():null}});
+  };
+
+  const toggleB2 = stepId => {
+    const steps = b2.steps.map(s=>s.id===stepId?{...s,done:!s.done}:s);
+    const allDone = steps.every(s=>s.done);
+    const anyDone = steps.some(s=>s.done);
+    onUpdate({...task, bloco2:{...b2,steps,status:allDone?'done':anyDone?'active':'pending',startedAt:b2.startedAt||(anyDone?nowTime():null),doneAt:allDone?nowTime():null}, fullyDone:allDone});
+  };
+
+  const setPayment = has => {
+    onUpdate({...task,
+      bloco1:{...b1,hasPayment:has,doneAt:nowTime()},
+      bloco2:has?{...b2,active:true}:b2,
+      fullyDone:!has
+    });
+    if(has) setOpenB2(true);
+  };
+
+  const overallStatus = () => {
+    if(task.fullyDone) return 'done';
+    if(b2.active && b2.status!=='done') return b2.status==='active'?'active':'waiting';
+    return b1.status;
+  };
+  const os = overallStatus();
+
+  return (
+    <div className="card fade-in" style={{marginBottom:'10px',overflow:'hidden',opacity:task.fullyDone?.7:1}}>
+      <div onClick={()=>setOpen(!open)} style={{display:'flex',alignItems:'center',gap:'12px',padding:'14px 16px',cursor:'pointer',transition:'background .15s'}}
+        onMouseEnter={e=>e.currentTarget.style.background='#fafafa'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+        <div style={{width:'34px',height:'34px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:700,flexShrink:0,
+          background:task.fullyDone?'rgba(0,196,140,.15)':'#060505',color:'#00C48C'}}>
+          {task.fullyDone?'✓':client.priority}
+        </div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap'}}>
+            <span style={{fontWeight:700,color:'#060505',fontSize:'15px'}}>{client.name}</span>
+            <StatusDot status={os}/>
+            {b2.active && !task.fullyDone && <span className="badge" style={{background:'rgba(13,110,253,.12)',color:'#0D6EFD'}}>Op.2 acionado</span>}
+          </div>
+          <div style={{display:'flex',flexWrap:'wrap',marginTop:'4px'}}>{(client.banks||[]).map(b=><BankBadge key={b} bank={b}/>)}</div>
+        </div>
+        <div style={{textAlign:'right',flexShrink:0,marginRight:'8px',minWidth:'70px'}}>
+          <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'4px'}}>{b1done}/{BLOCO1.length} etapas</div>
+          <ProgressBar value={b1done} max={BLOCO1.length}/>
+        </div>
+        <span style={{color:'#94a3b8',fontSize:'12px'}}>{open?'▲':'▼'}</span>
+      </div>
+
+      {open && (
+        <div style={{borderTop:'1px solid #f1f5f9'}} className="fade-in">
+          {/* BLOCO 1 */}
+          <div style={{padding:'16px'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'12px',flexWrap:'wrap'}}>
+              <span className="badge" style={{background:'#060505',color:'#00C48C'}}>Bloco 1 — Operador 1</span>
+              {b1.startedAt && <span style={{fontSize:'11px',color:'#94a3b8'}}>Início: {b1.startedAt}</span>}
+              {b1.doneAt    && <span style={{fontSize:'11px',color:'#00C48C'}}>✓ {b1.doneAt}</span>}
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:'4px'}}>
+              {b1.steps.map(step=>(
+                <label key={step.id} style={{display:'flex',alignItems:'flex-start',gap:'10px',padding:'8px',borderRadius:'8px',cursor:'pointer',transition:'background .1s'}}
+                  onMouseEnter={e=>e.currentTarget.style.background='#f8fafb'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                  <input type="checkbox" checked={step.done} onChange={()=>toggleB1(step.id)} style={{marginTop:'2px'}}/>
+                  <span style={{fontSize:'13px',color:step.done?'#aaa':'#374151'}} className={step.done?'step-done':''}>{step.text}</span>
+                </label>
+              ))}
+            </div>
+            <textarea className="input-field" style={{marginTop:'10px',fontSize:'13px'}} placeholder="Observações desta execução..." value={b1.notes||''} onChange={e=>onUpdate({...task,bloco1:{...b1,notes:e.target.value}})} rows="2"/>
+
+            {b1.status==='done' && b1.hasPayment===null && (
+              <div className="decision-box fade-in">
+                <p style={{fontSize:'13px',fontWeight:700,color:'#00C48C',marginBottom:'12px'}}>⚑  Tem pagamento para hoje?</p>
+                <div style={{display:'flex',gap:'10px'}}>
+                  <button className="btn-blue" style={{flex:1}} onClick={()=>setPayment(true)}>✓ Sim — acionar Op.2</button>
+                  <button className="btn-success" style={{flex:1}} onClick={()=>setPayment(false)}>✗ Não — concluir rotina</button>
+                </div>
+              </div>
+            )}
+
+            {b1.hasPayment===false && (
+              <div className="return-box fade-in">
+                <p style={{fontSize:'11px',fontWeight:700,color:'#0D6EFD',marginBottom:'6px'}}>📱 Mensagem de retorno ao cliente:</p>
+                <textarea className="input-field" placeholder="Digite o retorno que será enviado ao cliente via WhatsApp..." value={b1.returnMsg||''} onChange={e=>onUpdate({...task,bloco1:{...b1,returnMsg:e.target.value}})} rows="3" style={{fontSize:'13px'}}/>
+              </div>
+            )}
+          </div>
+
+          {/* BLOCO 2 */}
+          {b2.active && (
+            <div style={{borderTop:'1px solid #f1f5f9',background:'rgba(13,110,253,.03)',padding:'16px'}} className="fade-in">
+              <div onClick={()=>setOpenB2(!openB2)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',marginBottom:openB2?'12px':'0'}}>
+                <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
+                  <span className="badge" style={{background:'#060505',color:'#0D6EFD'}}>Bloco 2 — Operador 2</span>
+                  {b2.startedAt && <span style={{fontSize:'11px',color:'#94a3b8'}}>Início: {b2.startedAt}</span>}
+                  {b2.doneAt    && <span style={{fontSize:'11px',color:'#00C48C'}}>✓ {b2.doneAt}</span>}
+                  <span style={{fontSize:'11px',color:'#94a3b8'}}>{b2done}/{BLOCO2.length}</span>
+                </div>
+                <span style={{color:'#94a3b8',fontSize:'12px'}}>{openB2?'▲':'▼'}</span>
+              </div>
+              {openB2 && (
+                <div className="fade-in">
+                  <ProgressBar value={b2done} max={BLOCO2.length}/>
+                  <div style={{display:'flex',flexDirection:'column',gap:'4px',marginTop:'12px'}}>
+                    {b2.steps.map(step=>(
+                      <label key={step.id} style={{display:'flex',alignItems:'flex-start',gap:'10px',padding:'8px',borderRadius:'8px',cursor:'pointer',transition:'background .1s'}}
+                        onMouseEnter={e=>e.currentTarget.style.background='rgba(13,110,253,.05)'} onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
+                        <input type="checkbox" checked={step.done} onChange={()=>toggleB2(step.id)} style={{marginTop:'2px'}}/>
+                        <span style={{fontSize:'13px',color:step.done?'#aaa':'#374151'}} className={step.done?'step-done':''}>{step.text}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <textarea className="input-field" style={{marginTop:'10px',fontSize:'13px'}} placeholder="Observações dos pagamentos..." value={b2.notes||''} onChange={e=>onUpdate({...task,bloco2:{...b2,notes:e.target.value}})} rows="2"/>
+                  {b2.status==='done' && (
+                    <div className="return-box fade-in">
+                      <p style={{fontSize:'11px',fontWeight:700,color:'#0D6EFD',marginBottom:'6px'}}>📱 Mensagem de retorno ao cliente:</p>
+                      <textarea className="input-field" placeholder="Retorno ao cliente via WhatsApp..." value={b2.returnMsg||''} onChange={e=>onUpdate({...task,bloco2:{...b2,returnMsg:e.target.value}})} rows="3" style={{fontSize:'13px'}}/>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── FILA DO DIA ──────────────────────────────────────
+function FilaDoDia({clients, dayTasks, onUpdateTask}) {
+  const sorted  = [...clients].sort((a,b)=>a.priority-b.priority);
+  const total   = sorted.length;
+  const done    = sorted.filter(c=>dayTasks[c.id]?.fullyDone).length;
+  const b2queue = sorted.filter(c=>{ const t=dayTasks[c.id]; return t?.bloco2?.active && t?.bloco2?.status!=='done'; }).length;
+
+  return (
+    <div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'12px',marginBottom:'24px'}}>
+        <div className="stat-card">
+          <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'4px'}}>Concluídos</div>
+          <div style={{fontSize:'32px',fontWeight:700,color:'#00C48C'}}>{done}<span style={{fontSize:'18px',color:'#64748b'}}>/{total}</span></div>
+          <ProgressBar value={done} max={total}/>
+        </div>
+        <div className="stat-card">
+          <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'4px'}}>Pendentes</div>
+          <div style={{fontSize:'32px',fontWeight:700,color:'#fff'}}>{total-done}</div>
+          <div style={{fontSize:'11px',color:'#64748b',marginTop:'4px'}}>clientes</div>
+        </div>
+        <div className="stat-card">
+          <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'4px'}}>Fila Op.2</div>
+          <div style={{fontSize:'32px',fontWeight:700,color:'#0D6EFD'}}>{b2queue}</div>
+          <div style={{fontSize:'11px',color:'#64748b',marginTop:'4px'}}>pagamentos</div>
+        </div>
+      </div>
+
+      <div style={{fontSize:'11px',fontWeight:700,color:'#00C48C',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'10px'}}>● Fila — Operador 1</div>
+      {sorted.filter(c=>!dayTasks[c.id]?.bloco2?.active || dayTasks[c.id]?.fullyDone).map(c=>(
+        <ClienteFilaCard key={c.id} client={c} task={dayTasks[c.id]||freshClientTask()} onUpdate={t=>onUpdateTask(c.id,t)}/>
+      ))}
+
+      {b2queue>0 && (
+        <>
+          <div style={{fontSize:'11px',fontWeight:700,color:'#0D6EFD',letterSpacing:'1px',textTransform:'uppercase',margin:'20px 0 10px'}}>● Fila — Operador 2 · Pagamentos</div>
+          {sorted.filter(c=>dayTasks[c.id]?.bloco2?.active && dayTasks[c.id]?.bloco2?.status!=='done').map(c=>(
+            <ClienteFilaCard key={c.id} client={c} task={dayTasks[c.id]} onUpdate={t=>onUpdateTask(c.id,t)}/>
+          ))}
+        </>
+      )}
+
+      {done===total && total>0 && (
+        <div className="card fade-in" style={{textAlign:'center',padding:'32px',marginTop:'16px'}}>
+          <div style={{fontSize:'40px',marginBottom:'8px'}}>🎉</div>
+          <div style={{fontSize:'18px',fontWeight:700,color:'#00C48C'}}>Rotina concluída!</div>
+          <div style={{fontSize:'13px',color:'#94a3b8',marginTop:'4px'}}>Todos os {total} clientes finalizados hoje.</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── CLIENTES ─────────────────────────────────────────
+function Clientes({clients, onUpdate}) {
+  const [editing, setEditing] = useState(null);
+  return (
+    <div>
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:'14px'}}>
+        {[...clients].sort((a,b)=>a.priority-b.priority).map(c=>(
+          <div key={c.id} className="card" onClick={()=>setEditing(c)}
+            style={{padding:'18px',cursor:'pointer',transition:'box-shadow .15s'}}
+            onMouseEnter={e=>e.currentTarget.style.boxShadow='0 4px 14px rgba(0,196,140,.15)'}
+            onMouseLeave={e=>e.currentTarget.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)'}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'8px'}}>
+                  <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'#060505',color:'#00C48C',fontSize:'11px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{c.priority}</div>
+                  <span style={{fontWeight:700,fontSize:'15px',color:'#060505'}}>{c.name}</span>
+                </div>
+                <div style={{display:'flex',flexWrap:'wrap',marginBottom:'8px'}}>{(c.banks||[]).map(b=><BankBadge key={b} bank={b}/>)}</div>
+                {c.contact  && <div style={{fontSize:'12px',color:'#64748b'}}>👤 {c.contact}</div>}
+                {c.whatsapp && <div style={{fontSize:'12px',color:'#64748b'}}>📱 {c.whatsapp}</div>}
+                {c.erp      && <div style={{fontSize:'12px',color:'#64748b'}}>💻 {c.erp}</div>}
+                {(c.passwords||[]).length>0 && <div style={{fontSize:'11px',color:'#00C48C',marginTop:'6px'}}>🔐 {c.passwords.length} senha{c.passwords.length!==1?'s':''}</div>}
+              </div>
+              <span style={{color:'#00C48C',fontSize:'16px'}}>✎</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {editing && <ClienteModal client={editing} onSave={u=>{onUpdate(u);setEditing(null);}} onClose={()=>setEditing(null)}/>}
+    </div>
+  );
+}
+
+// ── MANUAIS ──────────────────────────────────────────
+function Manuais() {
+  const [sel, setSel] = useState('b1');
+  const manuals = {
+    b1:{ label:'Bloco 1 — Op.1', steps:[
+      {n:1,action:'Acessar e-mail',detail:"Verificar todos os e-mails. Identificar boletos, NF's e solicitações."},
+      {n:2,action:"Salvar boletos e NF's",detail:"Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."},
+      {n:3,action:'Salvar na pasta do mês',detail:'Garantir que todos os documentos do dia estejam na pasta do mês corrente.'},
+      {n:4,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
+      {n:5,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
+      {n:6,action:'Acessar banco e extratos',detail:'Acessar internet banking. Baixar extrato PDF e OFX do dia.'},
+      {n:7,action:'Importar OFX',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
+      {n:8,action:'Conciliação bancária',detail:'Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir.'},
+      {n:9,action:'Salvar conciliação',detail:'Exportar e salvar o arquivo da conciliação na pasta do mês.'},
+    ]},
+    b2:{ label:'Bloco 2 — Op.2 · Pagamentos', steps:[
+      {n:1,action:'Conferir contas a pagar',detail:'Verificar no Conta Azul todas as contas com vencimento no dia.'},
+      {n:2,action:"Conferir NF's e boletos",detail:"Verificar fisicamente se os boletos e NF's batem com o sistema."},
+      {n:3,action:'Conferir DDA',detail:'Verificar o DDA no banco para garantir que não há boletos não cadastrados.'},
+      {n:4,action:'Salvar contas a pagar',detail:'Salvar a relação de contas a pagar do dia na pasta do cliente.'},
+      {n:5,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
+      {n:6,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
+      {n:7,action:'Atualizar saldo bancário',detail:'Atualizar o saldo no Conta Azul após os agendamentos.'},
+      {n:8,action:'Enviar rotina ao cliente',detail:'Redigir mensagem de retorno com resumo do feito e enviar ao cliente.'},
+    ]},
+  };
+  const m = manuals[sel];
+  return (
+    <div>
+      <div style={{display:'flex',gap:'8px',marginBottom:'20px'}}>
+        {Object.entries(manuals).map(([k,v])=>(
+          <button key={k} onClick={()=>setSel(k)}
+            style={{padding:'8px 16px',borderRadius:'8px',fontSize:'13px',fontWeight:600,border:'none',cursor:'pointer',
+              background:sel===k?'#060505':'#fff',color:sel===k?'#00C48C':'#64748b',
+              boxShadow:sel===k?'none':'0 1px 3px rgba(0,0,0,.07)'}}>
+            {v.label}
+          </button>
+        ))}
+      </div>
+      <div className="card" style={{padding:'24px'}}>
+        <h2 style={{fontWeight:700,fontSize:'17px',color:'#060505',marginBottom:'20px'}}>{m.label}</h2>
+        <div style={{display:'flex',flexDirection:'column',gap:'16px'}}>
+          {m.steps.map(s=>(
+            <div key={s.n} style={{display:'flex',gap:'14px'}}>
+              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'#060505',color:'#00C48C',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0,fontSize:'13px'}}>{s.n}</div>
+              <div>
+                <div style={{fontWeight:600,color:'#060505',fontSize:'14px'}}>{s.action}</div>
+                <div style={{fontSize:'13px',color:'#64748b',marginTop:'2px'}}>{s.detail}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TAREFAS EXTRAS ───────────────────────────────────
+function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUpdate}) {
+  const [modal, setModal] = useState(false);
+  const [filter, setFilter] = useState('pending');
+  const priStyle = {high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
+  const getClient = id => clients.find(c=>c.id===id);
+  const getOp     = id => operators.find(o=>String(o.id)===String(id));
+  const filtered  = extraTasks.filter(t=>filter==='all'?true:t.status===filter);
+
+  return (
+    <div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px',flexWrap:'wrap',gap:'10px'}}>
+        <div style={{display:'flex',gap:'6px'}}>
+          {[['pending','Pendentes'],['active','Em andamento'],['done','Concluídas'],['all','Todas']].map(([v,l])=>(
+            <button key={v} onClick={()=>setFilter(v)} style={{padding:'6px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'none',cursor:'pointer',
+              background:filter===v?'#060505':'#fff',color:filter===v?'#00C48C':'#64748b'}}>
+              {l}
+            </button>
+          ))}
+        </div>
+        <button className="btn-green" onClick={()=>setModal(true)}>+ Nova Tarefa</button>
+      </div>
+
+      {filtered.length===0 && <div className="card" style={{padding:'32px',textAlign:'center',color:'#94a3b8',fontSize:'14px'}}>Nenhuma tarefa encontrada.</div>}
+      <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+        {filtered.map(t=>(
+          <div key={t.id} className="card" style={{padding:'16px'}}>
+            <div style={{display:'flex',alignItems:'flex-start',gap:'12px'}}>
+              <div style={{flex:1}}>
+                <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',marginBottom:'4px'}}>
+                  <span style={{fontWeight:700,color:'#060505',fontSize:'14px'}}>{t.title}</span>
+                  <span className="badge" style={{background:priStyle[t.priority]?.bg,color:priStyle[t.priority]?.color}}>{priStyle[t.priority]?.label}</span>
+                  {t.recurring && <span className="badge" style={{background:'rgba(0,196,140,.12)',color:'#00C48C'}}>↺ {t.frequency==='daily'?'Diária':t.frequency==='weekly'?'Semanal':'Mensal'}</span>}
+                </div>
+                <div style={{display:'flex',gap:'14px',fontSize:'11px',color:'#94a3b8',flexWrap:'wrap'}}>
+                  {getClient(t.client_id) && <span>👤 {getClient(t.client_id).name}</span>}
+                  {getOp(t.operator_id)   && <span>🧑‍💻 {getOp(t.operator_id).name}</span>}
+                  {t.due_date             && <span>📅 {fmtDate(t.due_date)}</span>}
+                </div>
+                {t.notes && <div style={{fontSize:'13px',color:'#64748b',marginTop:'6px'}}>{t.notes}</div>}
+              </div>
+              <div style={{display:'flex',gap:'8px',flexShrink:0}}>
+                {t.status==='pending' && <button className="btn-ghost" style={{fontSize:'12px',padding:'6px 12px'}} onClick={()=>onUpdate({...t,status:'active'})}>Iniciar</button>}
+                {t.status!=='done'    && <button className="btn-success" style={{fontSize:'12px'}} onClick={()=>onUpdate({...t,status:'done',done_at:new Date().toISOString()})}>✓</button>}
+                {t.status==='done'    && <span className="badge" style={{background:'rgba(0,196,140,.12)',color:'#00C48C'}}>✓ Feito</span>}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {modal && <TarefaModal clients={clients} operators={operators} currentUser={currentUser} onSave={t=>{onAdd(t);setModal(false);}} onClose={()=>setModal(false)}/>}
+    </div>
+  );
+}
+
+// ── OPERADORES ───────────────────────────────────────
+function Operadores({operators, dayTasks, clients, currentUser, onOperatorsChange}) {
+  const [addModal, setAddModal] = useState(false);
+  const isAdmin = currentUser?.role === 'admin';
+
+  const remove = async (id) => {
+    if (!confirm('Remover este operador?')) return;
+    try {
+      await API.del('/api/operators/' + id);
+      onOperatorsChange(operators.filter(o => o.id !== id));
+    } catch(e) { alert(e.error || 'Erro'); }
+  };
+
+  return (
+    <div>
+      {isAdmin && (
+        <div style={{display:'flex',justifyContent:'flex-end',marginBottom:'16px'}}>
+          <button className="btn-green" onClick={()=>setAddModal(true)}>+ Adicionar Operador</button>
+        </div>
+      )}
+      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:'14px',marginBottom:'20px'}}>
+        {operators.map(op=>{
+          const isMe = op.id === currentUser?.id;
+          const accentColor = op.role === 'admin' ? '#00C48C' : '#0D6EFD';
+          return (
+            <div key={op.id} className="card" style={{padding:'20px',borderTop:`3px solid ${accentColor}`}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'12px'}}>
+                <div>
+                  <div style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>{op.name} {isMe && <span style={{fontSize:'11px',color:'#94a3b8'}}>(você)</span>}</div>
+                  <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'2px'}}>{op.email}</div>
+                </div>
+                <div style={{display:'flex',gap:'6px',alignItems:'center'}}>
+                  <span className="badge" style={{background:op.role==='admin'?'rgba(0,196,140,.12)':'rgba(13,110,253,.12)',color:accentColor}}>
+                    {op.role==='admin'?'Admin':'Operador'}
+                  </span>
+                  {isAdmin && !isMe && (
+                    <button onClick={()=>remove(op.id)} style={{background:'none',border:'none',cursor:'pointer',color:'#dc2626',fontSize:'16px',padding:'2px 4px'}}>✕</button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {addModal && <AddOperatorModal onSave={ops=>{onOperatorsChange(ops);setAddModal(false);}} onClose={()=>setAddModal(false)}/>}
+    </div>
+  );
+}
+
+// ── DASHBOARD (app principal) ────────────────────────
+function Dashboard({ user, onLogout }) {
+  const [tab, setTab]           = useState('fila');
+  const [clients, setClients]   = useState([]);
+  const [operators, setOps]     = useState([]);
+  const [dayTasks, setDayTasks] = useState({});
+  const [extraTasks, setExtra]  = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const today = todayStr();
+  const pollRef = useRef(null);
+
+  // Carrega dados iniciais
+  useEffect(() => {
+    Promise.all([
+      API.get('/api/clients'),
+      API.get('/api/operators'),
+      API.get('/api/day-tasks/' + today),
+      API.get('/api/extra-tasks'),
+    ]).then(([cls, ops, dt, et]) => {
+      setClients(cls || []);
+      setOps(ops || []);
+      const tasks = {};
+      (cls || []).forEach(c => { tasks[c.id] = dt[c.id] || freshClientTask(); });
+      setDayTasks(tasks);
+      setExtra(et || []);
+      setLoading(false);
+    }).catch(err => { console.error(err); setLoading(false); });
+  }, []);
+
+  // Polling a cada 5s para sincronizar entre operadores
+  useEffect(() => {
+    if (loading) return;
+    pollRef.current = setInterval(async () => {
+      try {
+        const dt = await API.get('/api/day-tasks/' + today);
+        if (dt) {
+          setDayTasks(prev => {
+            const next = { ...prev };
+            Object.keys(dt).forEach(cid => { next[cid] = dt[cid]; });
+            return next;
+          });
+        }
+      } catch {}
+    }, 5000);
+    return () => clearInterval(pollRef.current);
+  }, [loading, today]);
+
+  const updateClient = async (updated) => {
+    setClients(cs => cs.map(c => c.id === updated.id ? updated : c));
+    try { await API.put('/api/clients/' + updated.id, updated); } catch {}
+  };
+
+  const updateDayTask = async (cid, task) => {
+    setDayTasks(dt => ({ ...dt, [cid]: task }));
+    try { await API.put(`/api/day-tasks/${today}/${cid}`, task); } catch {}
+  };
+
+  const addExtra = async (task) => {
+    try {
+      const saved = await API.post('/api/extra-tasks', task);
+      setExtra(ts => [saved, ...ts]);
+    } catch(e) { alert(e.error || 'Erro ao criar tarefa'); }
+  };
+
+  const updateExtra = async (task) => {
+    setExtra(ts => ts.map(t => t.id === task.id ? task : t));
+    try { await API.put('/api/extra-tasks/' + task.id, task); } catch {}
+  };
+
+  const totalDone    = Object.values(dayTasks).filter(t => t.fullyDone).length;
+  const totalClients = clients.length;
+  const pct = totalClients ? Math.round((totalDone / totalClients) * 100) : 0;
+
+  const tabs = [
+    { id:'fila',     label:'📋 Fila do Dia' },
+    { id:'tarefas',  label:'✅ Tarefas' },
+    { id:'clientes', label:'🏢 Clientes' },
+    { id:'manuais',  label:'📖 Manuais' },
+    { id:'ops',      label:'👥 Operadores' },
+  ];
+
+  return (
+    <div style={{minHeight:'100vh',background:'#F4F5F7'}}>
+      {/* HEADER */}
+      <div className="nav-header" style={{position:'sticky',top:0,zIndex:40}}>
+        <div style={{maxWidth:'960px',margin:'0 auto',padding:'0 16px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+              <div style={{width:'36px',height:'36px',borderRadius:'9px',background:'rgba(0,196,140,.15)',border:'1.5px solid rgba(0,196,140,.4)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <span style={{color:'#00C48C',fontSize:'15px',fontWeight:800}}>S</span>
+              </div>
+              <div>
+                <div style={{fontSize:'14px',fontWeight:700,color:'#fff',lineHeight:1.2}}>Staff<span style={{color:'#00C48C'}}>Conect</span></div>
+                <div style={{fontSize:'10px',color:'#64748b',lineHeight:1.2}}>Gestor de Tarefas · {fmtDate(today)}</div>
+              </div>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:'14px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:'11px',color:'#64748b'}}>{user.name}</div>
+                  <div style={{fontSize:'10px',color:'#00C48C'}}>{totalDone}/{totalClients} clientes</div>
+                </div>
+                <svg viewBox="0 0 36 36" style={{width:'40px',height:'40px',transform:'rotate(-90deg)'}}>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1a1a1a" strokeWidth="3"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="#00C48C" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round"/>
+                </svg>
+              </div>
+              <button onClick={onLogout} style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.1)',color:'#94a3b8',padding:'6px 12px',borderRadius:'8px',fontSize:'12px',cursor:'pointer'}}>Sair</button>
+            </div>
+          </div>
+          <div style={{display:'flex',overflowX:'auto'}}>
+            {tabs.map(t=>(
+              <button key={t.id} onClick={()=>setTab(t.id)}
+                className={tab===t.id?'tab-active':'tab-inactive'}
+                style={{padding:'10px 16px',fontSize:'13px',fontWeight:500,background:'none',border:'none',cursor:'pointer',whiteSpace:'nowrap',transition:'color .15s'}}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CONTEÚDO */}
+      <div style={{maxWidth:'960px',margin:'0 auto',padding:'24px 16px 48px'}}>
+        {loading ? <Spinner/> : (
+          <>
+            {tab==='fila'     && <FilaDoDia clients={clients} dayTasks={dayTasks} onUpdateTask={updateDayTask}/>}
+            {tab==='tarefas'  && <TarefasExtras clients={clients} operators={operators} extraTasks={extraTasks} currentUser={user} onAdd={addExtra} onUpdate={updateExtra}/>}
+            {tab==='clientes' && <Clientes clients={clients} onUpdate={updateClient}/>}
+            {tab==='manuais'  && <Manuais/>}
+            {tab==='ops'      && <Operadores operators={operators} dayTasks={dayTasks} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
+          </>
+        )}
+      </div>
+
+      <div style={{textAlign:'center',padding:'16px',fontSize:'11px',color:'#94a3b8'}}>
+        Staff Conect · Gestor de Tarefas v2.0
+      </div>
+    </div>
+  );
+}
+
+// ── ROOT ─────────────────────────────────────────────
+function Root() {
+  const [state, setState] = useState('checking'); // checking | setup | auth | app
+  const [user, setUser]   = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('sc_token');
+    const saved = localStorage.getItem('sc_user');
+    if (token && saved) {
+      setUser(JSON.parse(saved));
+      setState('app');
+      return;
+    }
+    fetch('/api/auth/setup')
+      .then(r => r.json())
+      .then(d => setState(d.needsSetup ? 'setup' : 'auth'))
+      .catch(() => setState('auth'));
+  }, []);
+
+  const handleAuth = (u) => { setUser(u); setState('app'); };
+  const handleLogout = () => { localStorage.removeItem('sc_token'); localStorage.removeItem('sc_user'); setUser(null); setState('auth'); };
+
+  if (state === 'checking') return (
+    <div className="auth-bg"><div style={{color:'#00C48C',fontSize:'14px'}}>Carregando...</div></div>
+  );
+  if (state === 'setup')  return <AuthScreen onAuth={handleAuth} isSetup={true}/>;
+  if (state === 'auth')   return <AuthScreen onAuth={handleAuth} isSetup={false}/>;
+  return <Dashboard user={user} onLogout={handleLogout}/>;
+}
+
+ReactDOM.render(<Root/>, document.getElementById('root'));
+</script>
+</body>
+</html>
