@@ -1016,7 +1016,7 @@ function OutrosFilaCard({client, clients, extraTasks, operators, currentUser, ma
   const [modal, setModal]     = useState(false);
   const today = todayStr();
   const tasks = extraTasks.filter(t=>String(t.client_id)===String(client.id)&&t.due_date===today&&t.status!=='done');
-  const priStyle = {high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
+  const priStyle = {critical:{bg:'rgba(185,28,28,.15)',color:'#b91c1c',label:'🔴 CRÍTICO'},high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
   const getClient = id=>(clients||[]).find(c=>String(c.id)===String(id));
   const getOp     = id=>operators.find(o=>String(o.id)===String(id));
   const doneCnt   = tasks.filter(t=>t.status==='done').length;
@@ -1743,7 +1743,7 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
   };
 
   const sorted = [...clients].sort((a,b)=>a.priority-b.priority);
-  const priStyle = {high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
+  const priStyle = {critical:{bg:'rgba(185,28,28,.15)',color:'#b91c1c',label:'🔴 CRÍTICO'},high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
   const getClient = id=>clients.find(c=>String(c.id)===String(id));
   const getOp     = id=>operators.find(o=>String(o.id)===String(id));
 
@@ -2481,7 +2481,7 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
   const allStepsDone = steps.length>0 && stepsDone===steps.length;
   const hasPend = !!(t.exec_notes && t.exec_notes.trim());
   const isWaiting = t.status === 'waiting';
-  const priDot = t.priority==='high' ? '🔴' : t.priority==='low' ? '⚪' : '🟡';
+  const priDot = t.priority==='critical' ? '🚨' : t.priority==='high' ? '🔴' : t.priority==='low' ? '⚪' : '🟡';
 
   const toggleStep = id => {
     const updated = steps.map(s=>s.id===id?{...s,done:!s.done}:s);
@@ -2490,10 +2490,11 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
   };
   const savePend = () => { if(pendText !== (t.exec_notes||'')) onUpdate({...t, exec_notes: pendText}); };
 
-  const borderColor = t.status==='done'?'#00C48C':isWaiting?'#dc2626':t.status==='active'?'#0D6EFD':hasPend?'#f59e0b':'#e2e8f0';
+  const isCritical = t.priority === 'critical';
+  const borderColor = t.status==='done'?'#00C48C':isWaiting?'#dc2626':isCritical?'#b91c1c':t.status==='active'?'#0D6EFD':hasPend?'#f59e0b':'#e2e8f0';
 
   return (
-    <div className="card" style={{borderLeft:`3px solid ${borderColor}`,overflow:'hidden',marginBottom:'8px'}}>
+    <div className="card" style={{borderLeft:`3px solid ${borderColor}`,overflow:'hidden',marginBottom:'8px',background:isCritical&&t.status!=='done'?'rgba(185,28,28,.03)':'',}}>
       <div style={{padding:'14px 16px'}}>
         <div style={{display:'flex',alignItems:'flex-start',gap:'12px'}}>
           <div style={{flex:1,minWidth:0}}>
@@ -2614,7 +2615,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   const [filterCli,setFilterCli] = useState('');
   const [sortDate,setSortDate] = useState('asc');
   const today = todayStr();
-  const priStyle = {high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
+  const priStyle = {critical:{bg:'rgba(185,28,28,.15)',color:'#b91c1c',label:'🔴 CRÍTICO'},high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
   const getClient = id => clients.find(c=>String(c.id)===String(id));
   const getOp     = id => operators.find(o=>String(o.id)===String(id));
 
@@ -3224,6 +3225,7 @@ function EmailNotificacoes({currentUser}) {
   const [loading, setLoading]   = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm]         = useState({from:'',subject:'',summary:''});
+  const [filtro, setFiltro]     = useState('todos');
   const isAdmin = currentUser?.role === 'admin';
   const uid = String(currentUser?.id);
 
@@ -3256,6 +3258,39 @@ function EmailNotificacoes({currentUser}) {
   };
 
   const unread = notifs.filter(n=>!(n.readBy||[]).includes(uid));
+
+  const filtrados = notifs.filter(n => {
+    if (filtro === 'criticos')    return n.critico;
+    if (filtro === 'erros')       return !!n.motivo_falha;
+    if (filtro === 'operacional') return n.tipo === 'operacional' || n.classificacao === 'operacional';
+    if (filtro === 'documentos')  return n.tipo !== 'operacional' && n.classificacao !== 'operacional' && !n.motivo_falha;
+    return true;
+  });
+  const cnt = {
+    criticos:    notifs.filter(n=>n.critico).length,
+    erros:       notifs.filter(n=>!!n.motivo_falha).length,
+    operacional: notifs.filter(n=>n.tipo==='operacional'||n.classificacao==='operacional').length,
+    documentos:  notifs.filter(n=>n.tipo!=='operacional'&&n.classificacao!=='operacional'&&!n.motivo_falha).length,
+  };
+  const MOTIVO_LABEL = {
+    sem_anexo:    'E-mail sem anexo PDF — nenhum arquivo para baixar',
+    link_quebrado:'Link encontrado no e-mail, mas download falhou',
+    protegido:    'Arquivo protegido ou acesso negado — baixar manualmente',
+  };
+  const ICON_CLASSIF = {nf:'🧾',boleto:'📋',fatura:'💵',extrato:'🏦',operacional:'📋',outros:'📎'};
+  const borderColorFn = (n, lido) => {
+    if (lido) return '#e2e8f0';
+    if (n.critico) return '#b91c1c';
+    if (n.motivo_falha) return '#f59e0b';
+    if (n.tipo === 'operacional' || n.classificacao === 'operacional') return '#d97706';
+    return '#3b82f6';
+  };
+  const FilterBtn = ({id, label, count}) =>
+    React.createElement('button',{
+      onClick:()=>setFiltro(id),
+      style:{fontSize:'12px',padding:'4px 12px',borderRadius:'20px',border:'none',cursor:'pointer',
+        fontWeight:filtro===id?700:400, background:filtro===id?'#060505':'#f1f5f9', color:filtro===id?'#fff':'#64748b'}
+    }, label+(count>0?` (${count})`:''));
 
   return (
     <div style={{maxWidth:'700px',margin:'0 auto'}}>
@@ -3298,33 +3333,78 @@ function EmailNotificacoes({currentUser}) {
         </div>
       )}
 
+      {notifs.length > 0 && (
+        <div style={{display:'flex',gap:'6px',flexWrap:'wrap',marginBottom:'14px'}}>
+          {React.createElement(FilterBtn,{id:'todos',label:'Todos',count:notifs.length})}
+          {cnt.criticos>0&&React.createElement(FilterBtn,{id:'criticos',label:'🔴 Críticos',count:cnt.criticos})}
+          {cnt.erros>0&&React.createElement(FilterBtn,{id:'erros',label:'⚠ Erros',count:cnt.erros})}
+          {cnt.operacional>0&&React.createElement(FilterBtn,{id:'operacional',label:'📋 Operacionais',count:cnt.operacional})}
+          {cnt.documentos>0&&React.createElement(FilterBtn,{id:'documentos',label:'📄 Documentos',count:cnt.documentos})}
+        </div>
+      )}
+
       <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
-        {notifs.map(n=>{
+        {filtrados.map(n=>{
           const lido = (n.readBy||[]).includes(uid);
           const dt = n.createdAt ? new Date(n.createdAt).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}) : '';
+          const isOp = n.tipo==='operacional' || n.classificacao==='operacional';
+          const iconClassif = ICON_CLASSIF[n.classificacao] || '📎';
+          const border = borderColorFn(n, lido);
+          const confColor = n.confianca==='alta'?'#00C48C':n.confianca==='baixa'?'#dc2626':'#f59e0b';
           return (
-            <div key={n.id} className="card fade-in" style={{padding:'14px 16px',borderLeft:`3px solid ${lido?'#e2e8f0':'#dc2626'}`,opacity:lido?0.75:1,transition:'opacity .2s'}}>
+            <div key={n.id} className="card fade-in" style={{padding:'14px 16px',borderLeft:`3px solid ${border}`,opacity:lido?0.75:1,transition:'opacity .2s',background:n.critico&&!lido?'rgba(185,28,28,.03)':''}}>
               <div style={{display:'flex',alignItems:'flex-start',gap:'12px'}}>
                 <div style={{flex:1,minWidth:0}}>
                   <div style={{display:'flex',alignItems:'center',gap:'8px',flexWrap:'wrap',marginBottom:'3px'}}>
                     <span style={{fontSize:'16px'}}>{lido?'📬':'📩'}</span>
                     <span style={{fontWeight:700,fontSize:'14px',color:lido?'#94a3b8':'#060505'}}>{n.assunto||n.subject||'(sem assunto)'}</span>
+                    {n.critico&&<span style={{fontSize:'10px',background:'rgba(185,28,28,.12)',color:'#b91c1c',borderRadius:'6px',padding:'2px 8px',fontWeight:700}}>🔴 CRÍTICO</span>}
                     {!lido&&<span style={{fontSize:'10px',background:'rgba(220,38,38,.12)',color:'#dc2626',borderRadius:'6px',padding:'2px 8px',fontWeight:700}}>NÃO LIDO</span>}
                     {lido&&<span style={{fontSize:'10px',background:'rgba(0,196,140,.1)',color:'#00C48C',borderRadius:'6px',padding:'2px 8px',fontWeight:600}}>✓ Lido</span>}
                   </div>
-                  {(n.remetente||n.from)&&<div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'2px'}}>De: {n.remetente||n.from}</div>}
-                  {n.cliente&&<div style={{fontSize:'11px',color:'#64748b',marginBottom:'2px'}}>Cliente: <strong>{n.cliente}</strong>{n.fornecedor&&n.fornecedor!==n.cliente?' · '+n.fornecedor:''}</div>}
-                  {(n.summary||n.classificacao)&&<div style={{fontSize:'12px',color:'#374151',lineHeight:1.5,marginTop:'4px',display:'flex',gap:'8px',flexWrap:'wrap'}}>
-                    {n.classificacao&&<span style={{background:'#f1f5f9',borderRadius:'4px',padding:'1px 7px',fontWeight:600,textTransform:'uppercase',fontSize:'11px'}}>{n.classificacao}</span>}
-                    {n.confianca&&<span style={{color:'#94a3b8',fontSize:'11px'}}>confiança: {n.confianca}</span>}
-                    {n.summary&&<span>{n.summary}</span>}
-                  </div>}
-                  {n.motivo_falha&&<div style={{fontSize:'11px',color:'#f59e0b',marginTop:'3px'}}>
-                    ⚠️ {n.motivo_falha==='sem_anexo'?'Sem anexo — e-mail sem arquivo para download':n.motivo_falha}
-                    {n.link_original&&<> · <a href={n.link_original} target="_blank" rel="noreferrer" style={{color:'#3b82f6',textDecoration:'underline'}}>link original</a></>}
-                  </div>}
-                  {n.drive_url&&<a href={n.drive_url} target="_blank" rel="noreferrer" style={{fontSize:'11px',color:'#3b82f6',textDecoration:'underline',marginTop:'3px',display:'inline-block'}}>📎 {n.nome_arquivo||'Ver arquivo'}</a>}
-                  <div style={{fontSize:'11px',color:'#b0b8c4',marginTop:'6px'}}>{dt} · {(n.readBy||[]).length} leu{(n.readBy||[]).length!==1?'ram':''}</div>
+                  <div style={{fontSize:'11px',color:'#94a3b8',marginBottom:'2px'}}>
+                    {(n.remetente||n.from)&&<span>De: {n.remetente||n.from}</span>}
+                    {n.cliente&&<span style={{marginLeft:'8px',color:'#64748b'}}>· <strong>{n.cliente}</strong>{n.fornecedor&&n.fornecedor!==n.cliente?' · '+n.fornecedor:''}</span>}
+                  </div>
+                  {(n.classificacao||n.confianca)&&(
+                    <div style={{display:'flex',gap:'6px',flexWrap:'wrap',marginBottom:'4px',alignItems:'center'}}>
+                      {n.classificacao&&<span style={{background:'#f1f5f9',borderRadius:'4px',padding:'1px 7px',fontWeight:600,textTransform:'uppercase',fontSize:'10px',color:'#374151'}}>{iconClassif} {n.classificacao}</span>}
+                      {n.confianca&&<span style={{fontSize:'10px',color:confColor,fontWeight:600}}>{n.confianca}</span>}
+                      {n.motivo_falha&&<span style={{fontSize:'10px',background:'rgba(245,158,11,.1)',color:'#b45309',borderRadius:'4px',padding:'1px 7px',fontWeight:600}}>⚠ Não baixado</span>}
+                    </div>
+                  )}
+                  {isOp&&n.descricao&&(
+                    <div style={{fontSize:'12px',color:'#374151',background:'rgba(217,119,6,.06)',border:'1px solid rgba(217,119,6,.15)',borderRadius:'6px',padding:'8px 10px',marginBottom:'6px',lineHeight:1.5}}>
+                      {n.descricao}
+                    </div>
+                  )}
+                  {n.motivo_falha&&(
+                    <div style={{fontSize:'11px',background:'rgba(245,158,11,.07)',border:'1px solid rgba(245,158,11,.2)',borderRadius:'6px',padding:'8px 10px',marginBottom:'6px'}}>
+                      <div style={{color:'#b45309',fontWeight:600,marginBottom:'4px'}}>⚠️ {MOTIVO_LABEL[n.motivo_falha]||n.motivo_falha}</div>
+                      <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
+                        {n.link_original&&(
+                          <a href={n.link_original} target="_blank" rel="noreferrer"
+                             style={{fontSize:'11px',background:'#f59e0b',color:'#fff',borderRadius:'5px',padding:'3px 10px',textDecoration:'none',fontWeight:600}}>
+                            🔗 Abrir link original
+                          </a>
+                        )}
+                        {n.drive_url&&(
+                          <a href={n.drive_url} target="_blank" rel="noreferrer"
+                             style={{fontSize:'11px',background:'#3b82f6',color:'#fff',borderRadius:'5px',padding:'3px 10px',textDecoration:'none',fontWeight:600}}>
+                            📄 Rastro no Drive
+                          </a>
+                        )}
+                      </div>
+                      {n.nome_arquivo&&<div style={{color:'#94a3b8',marginTop:'3px',fontSize:'10px'}}>{n.nome_arquivo}</div>}
+                    </div>
+                  )}
+                  {n.drive_url&&!n.motivo_falha&&(
+                    <a href={n.drive_url} target="_blank" rel="noreferrer"
+                       style={{fontSize:'11px',color:'#3b82f6',textDecoration:'underline',marginBottom:'4px',display:'inline-block'}}>
+                      📎 {n.nome_arquivo||'Ver arquivo'}
+                    </a>
+                  )}
+                  <div style={{fontSize:'11px',color:'#b0b8c4',marginTop:'4px'}}>{dt} · {(n.readBy||[]).length} leu{(n.readBy||[]).length!==1?'ram':''}</div>
                 </div>
                 <div style={{display:'flex',gap:'6px',flexShrink:0,alignItems:'center'}}>
                   {!lido&&(
@@ -3338,6 +3418,9 @@ function EmailNotificacoes({currentUser}) {
             </div>
           );
         })}
+        {filtrados.length===0&&notifs.length>0&&(
+          <div className="card" style={{padding:'24px',textAlign:'center',color:'#94a3b8',fontSize:'13px'}}>Nenhuma notificação neste filtro</div>
+        )}
       </div>
     </div>
   );

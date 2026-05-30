@@ -731,52 +731,47 @@ app.post('/api/webhook/intake-notify', (req, res) => {
 app.post('/api/webhook/intake-operacional', (req, res) => {
   const {
     secret, cliente, cliente_id, origem, remetente, assunto,
-    descricao, texto_original, data_recebido, prazo_sugerido,
+    descricao, texto_original, data_recebido, critico,
   } = req.body;
   if (secret !== WEBHOOK_SECRET) return res.status(403).json({ error: 'Não autorizado' });
 
-  const users   = DB.users();
-  const clients = DB.clients();
-
-  const client = clients.find(c =>
-    String(c.id) === String(cliente_id) ||
-    c.name?.toLowerCase() === (cliente || '').toLowerCase()
-  );
-  const operator = client
-    ? users.find(u => !u.noLogin && (u.assignedClients || []).map(String).includes(String(client.id)))
-    : null;
-
-  // Cria tarefa extra para o operador
-  const task = {
-    id:          Date.now(),
-    title:       `[${cliente}] Solicitação — ${(assunto || '').slice(0, 60)}`,
-    description: `Origem: ${origem || 'email'}\nDe: ${remetente}\nDescricao: ${descricao || assunto}\n\n${texto_original ? 'Texto original:\n' + texto_original.slice(0, 500) : ''}`,
-    status:      'pending',
-    client_id:   client?.id || null,
-    operator_id: operator?.id || null,
-    priority:    'high',
-    source:      'intake_operacional',
-    due_date:    prazo_sugerido ? prazo_sugerido.split('/').reverse().join('-') : null,
-    created_at:  new Date().toISOString(),
-    done_at:     null,
-    steps:       [],
+  // Salva em email_notifs.json — aparece na aba E-mails, não cria tarefa
+  const notif = {
+    id:            String(Date.now()),
+    tipo:          'operacional',
+    cliente,
+    cliente_id,
+    origem:        origem || 'email',
+    remetente,
+    assunto,
+    classificacao: 'operacional',
+    descricao:     descricao || assunto,
+    confianca:     'media',
+    critico:       !!critico,
+    processado:    false,
+    link_original: null,
+    motivo_falha:  null,
+    readBy:        [],
+    createdAt:     new Date().toISOString(),
   };
-  DB.saveExtra([task, ...DB.extraTasks()]);
+  const notifs = DB.emailNotifs();
+  notifs.unshift(notif);
+  DB.saveEmailNotifs(notifs.slice(0, 500));
 
-  // Push
+  // Push para o operador do cliente
+  const client   = DB.clients().find(c => String(c.id) === String(cliente_id) || c.name?.toLowerCase() === (cliente||'').toLowerCase());
+  const operator = client ? DB.users().find(u => !u.noLogin && (u.assignedClients||[]).map(String).includes(String(client.id))) : null;
   if (operator) {
-    const subs = getSubs();
-    const sub  = subs[String(operator.id)];
-    if (sub) {
-      webpush.sendNotification(sub, JSON.stringify({
-        title: `📋 Solicitação — ${cliente}`,
-        body:  descricao || assunto,
-      })).catch(() => {});
-    }
+    const sub = getSubs()[String(operator.id)];
+    if (sub) webpush.sendNotification(sub, JSON.stringify({
+      title: critico ? `🔴 CRÍTICO — ${cliente}` : `📋 Operacional — ${cliente}`,
+      body:  descricao || assunto,
+      tag:   critico ? 'critico' : 'operacional',
+    })).catch(() => {});
   }
 
-  console.log(`[intake-operacional] ${cliente} | ${assunto}`);
-  res.json({ ok: true, task_id: task.id });
+  console.log(`[intake-operacional] ${cliente} | ${assunto} | critico=${!!critico}`);
+  res.json({ ok: true, notif_id: notif.id });
 });
 
 // ─── WEBHOOK — FILA DE LANÇAMENTOS (Fase 2) ──────────
