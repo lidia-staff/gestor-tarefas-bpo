@@ -223,7 +223,7 @@ const DEFAULT_MANUALS = [
   ]},
 ];
 
-const todayStr = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+const todayStr = () => new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
 const fmtDate  = d => { if(!d) return ''; const [y,m,dd]=d.split('-'); return `${dd}/${m}/${y}`; };
 const nowTime  = () => new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 const freshTask = () => ({
@@ -271,7 +271,7 @@ const freshTaskOutros = (client) => {
 
 // ── UI HELPERS ───────────────────────────────────────
 const BankBadge = ({bank}) => { const c=BANK_COLORS[bank]||{bg:'#eee',color:'#555'}; return <span className="badge mr-1 mb-1" style={{fontSize:'10px',background:c.bg,color:c.color}}>{bank}</span>; };
-const StatusDot = ({status}) => { const map={pending:['#94a3b8','Pendente'],active:['#0D6EFD','Em andamento'],done:['#00C48C','Concluído'],waiting:['#f59e0b','Aguardando Op.2']}; const [color,label]=map[status]||map.pending; return <span className="badge" style={{background:`${color}20`,color}}>{label}</span>; };
+const StatusDot = ({status}) => { const map={pending:['#94a3b8','Pendente'],active:['#0D6EFD','Em andamento'],done:['#00C48C','Concluído'],waiting:['#f59e0b','Aguardando Op.2'],pending_approval:['#f59e0b','Aguardando aprovação']}; const [color,label]=map[status]||map.pending; return <span className="badge" style={{background:`${color}20`,color}}>{label}</span>; };
 const ProgressBar = ({value,max}) => <div className="progress-track mt-1"><div className="progress-fill" style={{width:`${max?Math.round((value/max)*100):0}%`}}/></div>;
 const Spinner = () => <div style={{display:'flex',alignItems:'center',justifyContent:'center',padding:'60px'}}><div style={{width:'36px',height:'36px',border:'3px solid #e2e8f0',borderTopColor:'#00C48C',borderRadius:'50%',animation:'spin .7s linear infinite'}}/></div>;
 
@@ -2467,11 +2467,13 @@ function Conhecimento({manuals, onAdd, onEdit, onDelete, onReorderManuals, mensa
 }
 
 // ── CARD TAREFA EXTRA ────────────────────────────────
-function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, isAdmin}) {
+function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, isAdmin, onAprovar, onRejeitar}) {
   const [expanded, setExpanded]   = useState(false);
   const [openSteps, setOpenSteps] = useState(false);
   const [showPend, setShowPend]   = useState(false);
   const [showHist, setShowHist]   = useState(false);
+  const [showReject, setShowReject] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
   const [pendText, setPendText]   = useState(t.exec_notes||'');
   const history = t.exec_notes_history||[];
   const LIMIT = 120;
@@ -2481,6 +2483,7 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
   const allStepsDone = steps.length>0 && stepsDone===steps.length;
   const hasPend = !!(t.exec_notes && t.exec_notes.trim());
   const isWaiting = t.status === 'waiting';
+  const isPendingApproval = t.status === 'pending_approval';
   const priDot = t.priority==='critical' ? '🚨' : t.priority==='high' ? '🔴' : t.priority==='low' ? '⚪' : '🟡';
 
   const toggleStep = id => {
@@ -2491,7 +2494,7 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
   const savePend = () => { if(pendText !== (t.exec_notes||'')) onUpdate({...t, exec_notes: pendText}); };
 
   const isCritical = t.priority === 'critical';
-  const borderColor = t.status==='done'?'#00C48C':isWaiting?'#dc2626':isCritical?'#b91c1c':t.status==='active'?'#0D6EFD':hasPend?'#f59e0b':'#e2e8f0';
+  const borderColor = t.status==='done'?'#00C48C':isPendingApproval?'#f59e0b':isWaiting?'#dc2626':isCritical?'#b91c1c':t.status==='active'?'#0D6EFD':hasPend?'#f59e0b':'#e2e8f0';
 
   return (
     <div className="card" style={{borderLeft:`3px solid ${borderColor}`,overflow:'hidden',marginBottom:'8px',background:isCritical&&t.status!=='done'?'rgba(185,28,28,.03)':'',}}>
@@ -2534,6 +2537,14 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
             {isWaiting ? (
               <button className="btn-success" style={{fontSize:'12px',padding:'6px 14px'}}
                 onClick={()=>onUpdate({...t,status:'pending',waiting_since:null})}>▶ Continuar</button>
+            ) : isPendingApproval ? (
+              <>
+                <span style={{fontSize:'12px',color:'#d97706',fontWeight:600}}>⏳ Aguardando aprovação</span>
+                {isAdmin && onAprovar && <>
+                  <button className="btn-success" style={{fontSize:'12px',padding:'6px 12px'}} onClick={()=>onAprovar(t)}>✓ Aprovar</button>
+                  <button className="btn-danger"  style={{fontSize:'12px',padding:'6px 12px'}} onClick={()=>setShowReject(r=>!r)}>✕ Rejeitar</button>
+                </>}
+              </>
             ) : (
               <>
                 {isAdmin&&onDelete&&(
@@ -2587,6 +2598,26 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
           ))}
         </div>
       )}
+      {/* Painel de rejeição */}
+      {showReject&&(
+        <div style={{borderTop:'1px solid rgba(220,38,38,.2)',padding:'12px 16px',background:'rgba(220,38,38,.03)'}} className="fade-in">
+          <div style={{fontSize:'12px',fontWeight:700,color:'#dc2626',marginBottom:'6px'}}>✕ Motivo da rejeição</div>
+          <textarea className="input-field" style={{fontSize:'13px',minHeight:'60px',borderColor:'rgba(220,38,38,.3)'}}
+            placeholder="Explique o que precisa ser corrigido..."
+            value={rejectReason} onChange={e=>setRejectReason(e.target.value)}/>
+          <div style={{display:'flex',gap:'8px',marginTop:'8px',justifyContent:'flex-end'}}>
+            <button className="btn-ghost" style={{fontSize:'12px'}} onClick={()=>{setShowReject(false);setRejectReason('');}}>Cancelar</button>
+            <button className="btn-danger" style={{fontSize:'12px'}} onClick={()=>{onRejeitar(t, rejectReason);setShowReject(false);setRejectReason('');}}>Confirmar rejeição</button>
+          </div>
+        </div>
+      )}
+      {/* Feedback de rejeição anterior (visível ao operador) */}
+      {t.rejected_reason&&t.status==='pending'&&(
+        <div style={{borderTop:'1px solid rgba(220,38,38,.2)',padding:'10px 16px',background:'rgba(220,38,38,.04)'}} className="fade-in">
+          <div style={{fontSize:'11px',fontWeight:700,color:'#dc2626',marginBottom:'3px'}}>⚠ Devolvida por {t.rejected_by||'admin'}</div>
+          <div style={{fontSize:'13px',color:'#92400e',lineHeight:1.5}}>{t.rejected_reason}</div>
+        </div>
+      )}
       {/* Histórico de pendências */}
       {showHist&&history.length>0&&(
         <div style={{borderTop:'1px solid #e2e8f0',padding:'12px 16px',background:'#fafafa'}} className="fade-in">
@@ -2615,9 +2646,26 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   const [filterCli,setFilterCli] = useState('');
   const [sortDate,setSortDate] = useState('asc');
   const today = todayStr();
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'master';
   const priStyle = {critical:{bg:'rgba(185,28,28,.15)',color:'#b91c1c',label:'🔴 CRÍTICO'},high:{bg:'rgba(220,38,38,.1)',color:'#dc2626',label:'Alta'},normal:{bg:'rgba(13,110,253,.1)',color:'#0D6EFD',label:'Normal'},low:{bg:'rgba(148,163,184,.15)',color:'#64748b',label:'Baixa'}};
   const getClient = id => clients.find(c=>String(c.id)===String(id));
   const getOp     = id => operators.find(o=>String(o.id)===String(id));
+
+  const pendingApproval = extraTasks.filter(t => t.status === 'pending_approval');
+
+  const handleAprovar = async t => {
+    try {
+      await API.post(`/api/extra-tasks/${t.id}/aprovar`, {});
+      onUpdate({...t, status:'done', done_at: new Date().toISOString(), approved_by: currentUser?.name});
+    } catch(e) { alert(e.error||'Erro ao aprovar'); }
+  };
+
+  const handleRejeitar = async (t, reason) => {
+    try {
+      await API.post(`/api/extra-tasks/${t.id}/rejeitar`, { reason });
+      onUpdate({...t, status:'pending', done_at: null, rejected_reason: reason, rejected_by: currentUser?.name});
+    } catch(e) { alert(e.error||'Erro ao rejeitar'); }
+  };
 
   const handleSave = t => {
     if(editing) { onUpdate({...editing,...t}); }
@@ -2627,7 +2675,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
 
   // ── Vista LISTA ──────────────────────────────────────
   const filtered = extraTasks
-    .filter(t => filter==='all' ? true : t.status===filter)
+    .filter(t => filter==='all' ? t.status!=='pending_approval' : t.status===filter)
     .filter(t => filterOp  ? String(t.operator_id)===String(filterOp)  : true)
     .filter(t => filterCli ? String(t.client_id||'')===String(filterCli) : true)
     .sort((a,b) => {
@@ -2672,8 +2720,9 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   const freqLabel = f => f==='daily'?'Diária':f==='weekly'?'Semanal':f==='monthly'?'Mensal':'?';
   const freqColor = f => f==='daily'?{bg:'rgba(0,196,140,.12)',c:'#00C48C'}:f==='weekly'?{bg:'rgba(13,110,253,.1)',c:'#0D6EFD'}:{bg:'rgba(124,58,237,.1)',c:'#7c3aed'};
 
-  const waitingCount = extraTasks.filter(t=>t.status==='waiting'&&(filterOp?String(t.operator_id)===String(filterOp):true)).length;
-  const activeFilers = (filterOp?1:0)+(filterCli?1:0)+(sortDate!=='none'?1:0);
+  const waitingCount   = extraTasks.filter(t=>t.status==='waiting'&&(filterOp?String(t.operator_id)===String(filterOp):true)).length;
+  const approvalCount  = pendingApproval.length;
+  const activeFilers   = (filterOp?1:0)+(filterCli?1:0)+(sortDate!=='none'?1:0);
 
   return (
     <div>
@@ -2707,6 +2756,14 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
                   {v==='waiting'&&waitingCount>0&&<span style={{marginLeft:'5px',background:'#dc2626',color:'#fff',borderRadius:'10px',padding:'1px 6px',fontSize:'10px'}}>{waitingCount}</span>}
                 </button>
               ))}
+              {isAdmin && approvalCount > 0 && (
+                <button onClick={()=>setFilter('pending_approval')}
+                  style={{padding:'6px 14px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'none',cursor:'pointer',
+                    background:filter==='pending_approval'?'#d97706':'rgba(245,158,11,.12)',color:filter==='pending_approval'?'#fff':'#d97706'}}>
+                  ⏳ Aprovar
+                  <span style={{marginLeft:'5px',background:filter==='pending_approval'?'rgba(255,255,255,.3)':'#d97706',color:'#fff',borderRadius:'10px',padding:'1px 6px',fontSize:'10px'}}>{approvalCount}</span>
+                </button>
+              )}
             </div>
             {/* Filtros secundários */}
             <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
@@ -2729,12 +2786,32 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
                 style={{padding:'5px 12px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'none',cursor:'pointer',background:'rgba(220,38,38,.08)',color:'#dc2626'}}>✕ Limpar</button>}
             </div>
           </div>
-          {filtered.length===0&&<div className="card" style={{padding:'32px',textAlign:'center',color:'#94a3b8',fontSize:'14px'}}>Nenhuma tarefa encontrada.</div>}
-          <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
-            {filtered.map(t=>(
-              <TarefaCard key={t.id} t={t} priStyle={priStyle} getClient={getClient} getOp={getOp} onUpdate={onUpdate} onEdit={t=>{setEditing(t);setModal(true);}} onDelete={onDelete} isAdmin={currentUser?.role==='admin'}/>
-            ))}
-          </div>
+          {/* Seção de aprovação pendente para admins */}
+          {isAdmin && filter==='pending_approval' && (
+            <div style={{marginBottom:'16px'}}>
+              {pendingApproval.length===0
+                ? <div className="card" style={{padding:'32px',textAlign:'center',color:'#94a3b8',fontSize:'14px'}}>Nenhuma tarefa aguardando aprovação. ✓</div>
+                : <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                    {pendingApproval.map(t=>(
+                      <TarefaCard key={t.id} t={t} priStyle={priStyle} getClient={getClient} getOp={getOp}
+                        onUpdate={onUpdate} onEdit={null} onDelete={null}
+                        isAdmin={isAdmin} onAprovar={handleAprovar} onRejeitar={handleRejeitar}/>
+                    ))}
+                  </div>
+              }
+            </div>
+          )}
+
+          {filter!=='pending_approval' && <>
+            {filtered.length===0&&<div className="card" style={{padding:'32px',textAlign:'center',color:'#94a3b8',fontSize:'14px'}}>Nenhuma tarefa encontrada.</div>}
+            <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+              {filtered.map(t=>(
+                <TarefaCard key={t.id} t={t} priStyle={priStyle} getClient={getClient} getOp={getOp}
+                  onUpdate={onUpdate} onEdit={t=>{setEditing(t);setModal(true);}} onDelete={onDelete}
+                  isAdmin={isAdmin} onAprovar={handleAprovar} onRejeitar={handleRejeitar}/>
+              ))}
+            </div>
+          </>}
         </>
       )}
 
@@ -3469,7 +3546,11 @@ function Chat({currentUser}) {
         const last = visible[visible.length-1];
         if(last) localStorage.setItem(LAST_READ_KEY, last.createdAt);
       } else {
-        setMessages(prev=>[...prev,...visible]);
+        setMessages(prev=>{
+          const seen = new Set(prev.map(m=>m.createdAt));
+          const novos = visible.filter(m=>!seen.has(m.createdAt));
+          return novos.length ? [...prev,...novos] : prev;
+        });
         const last = visible[visible.length-1];
         if(last) localStorage.setItem(LAST_READ_KEY, last.createdAt);
       }
@@ -3671,7 +3752,7 @@ function Dashboard({user, onLogout}) {
     pollRef.current=setInterval(async()=>{
       pollCount++;
       // Não sobrescreve estado se houve uma gravação nos últimos 12 segundos
-      const recentSave = (Date.now() - lastSaveAtRef.current) < 12000;
+      const recentSave = (Date.now() - lastSaveAtRef.current) < 30000;
       if(!recentSave) {
         try {
           const dt=await API.get('/api/day-tasks/'+today);
@@ -3950,20 +4031,630 @@ function Dashboard({user, onLogout}) {
   );
 }
 
+// ── TELA DE TROCA DE SENHA OBRIGATÓRIA ───────────────
+function ChangePasswordScreen({user, onDone}) {
+  const [form, setForm]   = useState({currentPassword:'', newPassword:'', confirm:''});
+  const [err, setErr]     = useState('');
+  const [loading, setLoading] = useState(false);
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const submit = async () => {
+    setErr('');
+    if (form.newPassword !== form.confirm) { setErr('As senhas não coincidem'); return; }
+    if (form.newPassword.length < 6) { setErr('Nova senha deve ter mínimo 6 caracteres'); return; }
+    setLoading(true);
+    try {
+      await API.post('/api/auth/change-password', {
+        currentPassword: form.currentPassword,
+        newPassword:     form.newPassword,
+      });
+      // Atualiza user no localStorage sem must_change_password
+      const updated = { ...user, must_change_password: false };
+      localStorage.setItem('sc_user', JSON.stringify(updated));
+      onDone(updated);
+    } catch(e) { setErr(e.error||'Erro ao trocar senha'); }
+    finally { setLoading(false); }
+  };
+
+  return (
+    <div className="auth-bg">
+      <div className="auth-card fade-in" style={{maxWidth:'420px'}}>
+        <div className="auth-logo" style={{background:'rgba(249,115,22,.1)',border:'1.5px solid rgba(249,115,22,.3)'}}>
+          <span style={{fontSize:'22px'}}>🔑</span>
+        </div>
+        <h1 style={{textAlign:'center',fontWeight:700,fontSize:'20px',color:'#060505',marginBottom:'6px'}}>Troque sua senha</h1>
+        <p style={{textAlign:'center',fontSize:'13px',color:'#64748b',marginBottom:'24px',lineHeight:1.5}}>
+          Esta é uma senha temporária.<br/>Crie uma senha pessoal para continuar.
+        </p>
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',padding:'10px 14px',borderRadius:'8px',fontSize:'13px',marginBottom:'14px'}}>{err}</div>}
+        <div style={{display:'grid',gap:'12px',marginBottom:'20px'}}>
+          <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Senha temporária (atual)</label>
+            <input className="input-field" type="password" placeholder="Senha recebida do administrador"
+              value={form.currentPassword} onChange={e=>upd('currentPassword',e.target.value)}/>
+          </div>
+          <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Nova senha</label>
+            <input className="input-field" type="password" placeholder="Mínimo 6 caracteres"
+              value={form.newPassword} onChange={e=>upd('newPassword',e.target.value)}/>
+          </div>
+          <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Confirmar nova senha</label>
+            <input className="input-field" type="password" placeholder="Repita a nova senha"
+              value={form.confirm} onChange={e=>upd('confirm',e.target.value)}
+              onKeyDown={e=>e.key==='Enter'&&submit()}/>
+          </div>
+        </div>
+        <button className="btn-green" onClick={submit} disabled={loading}
+          style={{width:'100%',padding:'12px'}}>
+          {loading?'Salvando…':'Definir nova senha e entrar'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── MASTER DASHBOARD ─────────────────────────────────
+const PLAN_LABELS = { basic:'Básico', pro:'Pro', enterprise:'Enterprise' };
+const PLAN_COLORS = { basic:'#64748b', pro:'#0D6EFD', enterprise:'#7c3aed' };
+const DEFAULT_TABS = [
+  {id:'fila',        label:'📋 Fila do Dia'},
+  {id:'tarefas',     label:'✅ Tarefas'},
+  {id:'emails',      label:'📧 E-mails'},
+  {id:'lancamentos', label:'💰 Lançamentos'},
+  {id:'contas',      label:'💳 Contas a Pagar'},
+  {id:'clientes',    label:'🏢 Clientes'},
+  {id:'conhecimento',label:'📚 Trilha'},
+  {id:'ops',         label:'👥 Operadores'},
+  {id:'chat',        label:'💬 Chat'},
+];
+const BASIC_TABS = ['fila','tarefas','clientes','conhecimento','chat'];
+
+function TenantModal({tenant, onSave, onClose}) {
+  const isEdit = !!tenant?.id;
+  const [form, setForm] = useState(isEdit ? {...tenant} : {
+    id:'', name:'', plan:'basic', primaryColor:'#00C48C',
+    activeTabIds: [...BASIC_TABS], active:true,
+  });
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState('');
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+
+  const toggleTab = id => {
+    const has = form.activeTabIds.includes(id);
+    if (!has) { upd('activeTabIds', [...form.activeTabIds, id]); return; }
+    if (BASIC_TABS.includes(id)) return; // abas básicas não podem ser removidas
+    upd('activeTabIds', form.activeTabIds.filter(x => x !== id));
+  };
+
+  const save = async () => {
+    setErr(''); setSaving(true);
+    try {
+      if (isEdit) await API.put('/api/master/tenants/'+tenant.id, form);
+      else        await API.post('/api/master/tenants', form);
+      onSave();
+    } catch(e) { setErr(e.error||'Erro ao salvar'); }
+    finally { setSaving(false); }
+  };
+
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.5)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'520px',padding:'28px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+          <h2 style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>{isEdit?'Editar Tenant':'Novo Tenant'}</h2>
+          <button onClick={onClose} style={{background:'none',border:'none',fontSize:'18px',cursor:'pointer',color:'#94a3b8'}}>✕</button>
+        </div>
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',padding:'10px',borderRadius:'8px',fontSize:'13px',marginBottom:'14px'}}>{err}</div>}
+        <div style={{display:'grid',gap:'14px'}}>
+          {!isEdit && <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>ID (slug único)</label>
+            <input className="input-field" value={form.id} onChange={e=>upd('id',e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g,'-'))} placeholder="ex: staffconect"/>
+            <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'4px'}}>Letras minúsculas, números e hífen. Não pode ser alterado depois.</div>
+          </div>}
+          <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Nome exibido</label>
+            <input className="input-field" value={form.name} onChange={e=>upd('name',e.target.value)} placeholder="ex: Staff Conect"/>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px'}}>
+            <div>
+              <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Plano</label>
+              <select className="input-field" value={form.plan} onChange={e=>upd('plan',e.target.value)}>
+                <option value="basic">Básico (máx 2 usuários)</option>
+                <option value="pro">Pro (máx 5 usuários)</option>
+                <option value="enterprise">Enterprise (ilimitado)</option>
+              </select>
+            </div>
+            <div>
+              <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'4px'}}>Cor primária</label>
+              <div style={{display:'flex',gap:'8px',alignItems:'center'}}>
+                <input type="color" value={form.primaryColor} onChange={e=>upd('primaryColor',e.target.value)} style={{width:'40px',height:'36px',border:'1.5px solid #e2e8f0',borderRadius:'8px',cursor:'pointer',padding:'2px'}}/>
+                <input className="input-field" value={form.primaryColor} onChange={e=>upd('primaryColor',e.target.value)} style={{flex:1}}/>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',display:'block',marginBottom:'8px'}}>Abas habilitadas</label>
+            <div style={{display:'flex',flexWrap:'wrap',gap:'6px'}}>
+              {DEFAULT_TABS.map(t => {
+                const on = form.activeTabIds.includes(t.id);
+                const locked = BASIC_TABS.includes(t.id);
+                return (
+                  <button key={t.id} onClick={()=>toggleTab(t.id)}
+                    style={{padding:'5px 12px',borderRadius:'20px',fontSize:'12px',fontWeight:600,cursor:locked?'not-allowed':'pointer',border:'1.5px solid',
+                      borderColor: on ? (locked?'#94a3b8':'#00C48C') : '#e2e8f0',
+                      background:  on ? (locked?'rgba(148,163,184,.1)':'rgba(0,196,140,.1)') : '#fff',
+                      color:       on ? (locked?'#64748b':'#00C48C') : '#94a3b8',
+                    }}>
+                    {t.label}{locked&&' 🔒'}
+                  </button>
+                );
+              })}
+            </div>
+            <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'6px'}}>Abas com 🔒 são obrigatórias no plano básico.</div>
+          </div>
+          {isEdit && <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b'}}>Status</label>
+            <button onClick={()=>upd('active',!form.active)}
+              style={{padding:'5px 14px',borderRadius:'20px',fontSize:'12px',fontWeight:600,border:'1.5px solid',cursor:'pointer',
+                borderColor:form.active?'#00C48C':'#e2e8f0',
+                background:form.active?'rgba(0,196,140,.1)':'#f1f5f9',
+                color:form.active?'#00C48C':'#94a3b8'}}>
+              {form.active?'✓ Ativo':'✕ Inativo'}
+            </button>
+          </div>}
+        </div>
+        <div style={{display:'flex',gap:'10px',marginTop:'24px',justifyContent:'flex-end'}}>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+          <button className="btn-green" onClick={save} disabled={saving}>{saving?'Salvando…':isEdit?'Salvar':'Criar Tenant'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ResetSenhaModal({targetUser, onSave, onClose}) {
+  const [pwd, setPwd] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState('');
+  const save = async () => {
+    setErr(''); setSaving(true);
+    try {
+      await API.post('/api/master/reset-password', { userId: targetUser.id, newPassword: pwd });
+      onSave();
+    } catch(e) { setErr(e.error||'Erro'); }
+    finally { setSaving(false); }
+  };
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.5)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'380px',padding:'24px'}}>
+        <h3 style={{fontWeight:700,fontSize:'15px',marginBottom:'4px'}}>Resetar senha</h3>
+        <div style={{fontSize:'13px',color:'#64748b',marginBottom:'16px'}}>{targetUser.name} · {targetUser.email}</div>
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',padding:'8px',borderRadius:'8px',fontSize:'13px',marginBottom:'12px'}}>{err}</div>}
+        <input className="input-field" type="password" placeholder="Nova senha (mín 6 caracteres)" value={pwd} onChange={e=>setPwd(e.target.value)}/>
+        <div style={{display:'flex',gap:'10px',marginTop:'16px',justifyContent:'flex-end'}}>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+          <button className="btn-blue" onClick={save} disabled={saving||pwd.length<6}>{saving?'Salvando…':'Resetar'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function NovoUsuarioModal({tenants, onSave, onClose}) {
+  const [form, setForm] = useState({name:'',email:'',password:'',role:'operator',tenant_id:tenants[0]?.id||''});
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState('');
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+  const save = async () => {
+    setErr(''); setSaving(true);
+    try { await API.post('/api/master/users', form); onSave(); }
+    catch(e) { setErr(e.error||'Erro'); }
+    finally { setSaving(false); }
+  };
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.5)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'400px',padding:'24px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
+          <h3 style={{fontWeight:700,fontSize:'15px'}}>Novo Usuário</h3>
+          <button onClick={onClose} style={{background:'none',border:'none',fontSize:'18px',cursor:'pointer',color:'#94a3b8'}}>✕</button>
+        </div>
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',padding:'8px',borderRadius:'8px',fontSize:'13px',marginBottom:'12px'}}>{err}</div>}
+        <div style={{display:'grid',gap:'12px'}}>
+          <input className="input-field" placeholder="Nome" value={form.name} onChange={e=>upd('name',e.target.value)}/>
+          <input className="input-field" placeholder="E-mail" type="email" value={form.email} onChange={e=>upd('email',e.target.value)}/>
+          <input className="input-field" placeholder="Senha (mín 6 caracteres)" type="password" value={form.password} onChange={e=>upd('password',e.target.value)}/>
+          <select className="input-field" value={form.role} onChange={e=>upd('role',e.target.value)}>
+            <option value="operator">Operador</option>
+            <option value="admin">Admin</option>
+          </select>
+          <select className="input-field" value={form.tenant_id} onChange={e=>upd('tenant_id',e.target.value)}>
+            {tenants.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+          </select>
+        </div>
+        <div style={{display:'flex',gap:'10px',marginTop:'16px',justifyContent:'flex-end'}}>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+          <button className="btn-green" onClick={save} disabled={saving}>{saving?'Salvando…':'Criar'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MasterDashboard({user, onLogout}) {
+  const [tab, setTab] = useState('dashboard');
+  const [tenants, setTenants] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tenantModal, setTenantModal] = useState(null); // null | 'new' | tenant obj
+  const [resetModal, setResetModal] = useState(null);
+  const [novoUserModal, setNovoUserModal] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const [ts, us] = await Promise.all([
+        API.get('/api/master/tenants'),
+        API.get('/api/master/users'),
+      ]);
+      setTenants(ts||[]);
+      setUsers(us||[]);
+    } catch {}
+    setLoading(false);
+  };
+  useEffect(()=>{ load(); },[]);
+
+  const PLAN_MAX = { basic:2, pro:5, enterprise:Infinity };
+
+  const [aprovacoes, setAprovacoes] = useState([]);
+
+  const loadAprovacoes = async () => {
+    try { const r = await API.get('/api/master/aprovacoes'); setAprovacoes(r||[]); } catch {}
+  };
+
+  useEffect(()=>{ if(tab==='aprovacoes') loadAprovacoes(); },[tab]);
+
+  const handleMasterAprovar = async (item) => {
+    try {
+      await API.post(`/api/master/extra-tasks/${item.tenant_id}/${item.id}/aprovar`, {});
+      loadAprovacoes();
+    } catch(e) { alert(e.error||'Erro ao aprovar'); }
+  };
+
+  const handleMasterRejeitar = async (item, reason) => {
+    try {
+      await API.post(`/api/master/extra-tasks/${item.tenant_id}/${item.id}/rejeitar`, { reason });
+      loadAprovacoes();
+    } catch(e) { alert(e.error||'Erro ao rejeitar'); }
+  };
+
+  const masterTabs = [
+    {id:'dashboard',  label:'📊 Dashboard'},
+    {id:'tenants',    label:'🏢 Tenants'},
+    {id:'users',      label:'👥 Usuários'},
+    {id:'aprovacoes', label:'⏳ Aprovações'},
+  ];
+
+  return (
+    <div style={{minHeight:'100vh',background:'#F4F5F7'}}>
+      {/* Header */}
+      <div className="nav-header" style={{position:'sticky',top:0,zIndex:40}}>
+        <div style={{maxWidth:'1200px',margin:'0 auto',padding:'0 16px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+              <div style={{width:'36px',height:'36px',borderRadius:'9px',background:'rgba(124,58,237,.2)',border:'1.5px solid rgba(124,58,237,.4)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <span style={{color:'#a78bfa',fontSize:'15px',fontWeight:800}}>M</span>
+              </div>
+              <div>
+                <div style={{fontSize:'14px',fontWeight:700,color:'#fff',lineHeight:1.2}}>Staff<span style={{color:'#a78bfa'}}>Master</span></div>
+                <div style={{fontSize:'10px',color:'#64748b',lineHeight:1.2}}>Painel de Controle · {tenants.length} tenant(s)</div>
+              </div>
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
+              <span style={{fontSize:'12px',color:'#a78bfa',fontWeight:600}}>👑 {user.name}</span>
+              <button onClick={onLogout} style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.1)',color:'#94a3b8',padding:'6px 12px',borderRadius:'8px',fontSize:'12px',cursor:'pointer'}}>Sair</button>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:'4px'}}>
+            {masterTabs.map(t=>(
+              <button key={t.id} onClick={()=>setTab(t.id)} className={tab===t.id?'tab-active':'tab-inactive'}
+                style={{padding:'10px 16px',fontSize:'13px',fontWeight:500,background:'none',border:'none',cursor:'pointer',whiteSpace:'nowrap'}}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{maxWidth:'1200px',margin:'0 auto',padding:'24px 16px 48px'}}>
+        {loading ? <Spinner/> : (<>
+
+          {/* ── TAB: DASHBOARD ── */}
+          {tab==='dashboard' && (
+            <div className="fade-in">
+              <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505',marginBottom:'20px'}}>Visão geral dos tenants</h2>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:'16px'}}>
+                {tenants.map(t=>{
+                  const planMax = PLAN_MAX[t.plan]||2;
+                  const usersT  = users.filter(u=>u.tenant_id===t.id);
+                  const pct     = planMax === Infinity ? 0 : Math.round((usersT.length/planMax)*100);
+                  return (
+                    <div key={t.id} className="card" style={{padding:'20px',borderTop:`3px solid ${t.primaryColor||'#00C48C'}`,opacity:t.active?1:.6}}>
+                      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'12px'}}>
+                        <div>
+                          <div style={{fontWeight:700,fontSize:'15px',color:'#060505'}}>{t.name}</div>
+                          <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'2px'}}>/{t.id}</div>
+                        </div>
+                        <div style={{display:'flex',gap:'6px',flexDirection:'column',alignItems:'flex-end'}}>
+                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}20`,color:PLAN_COLORS[t.plan]||'#64748b'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
+                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(0,196,140,.1)':'rgba(148,163,184,.1)',color:t.active?'#00C48C':'#94a3b8'}}>{t.active?'Ativo':'Inativo'}</span>
+                        </div>
+                      </div>
+                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',marginBottom:'14px'}}>
+                        {[['👥',usersT.length,'usuários'],['🏢',t.stats?.clients||0,'clientes'],['✅',t.stats?.tasks||0,'tarefas']].map(([icon,val,lbl])=>(
+                          <div key={lbl} style={{background:'#f8fafc',borderRadius:'8px',padding:'10px',textAlign:'center'}}>
+                            <div style={{fontSize:'18px'}}>{icon}</div>
+                            <div style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>{val}</div>
+                            <div style={{fontSize:'10px',color:'#94a3b8'}}>{lbl}</div>
+                          </div>
+                        ))}
+                      </div>
+                      {planMax !== Infinity && (
+                        <div style={{marginBottom:'12px'}}>
+                          <div style={{display:'flex',justifyContent:'space-between',fontSize:'11px',color:'#64748b',marginBottom:'4px'}}>
+                            <span>Usuários</span><span>{usersT.length}/{planMax}</span>
+                          </div>
+                          <div className="progress-track"><div className="progress-fill" style={{width:`${pct}%`,background:pct>=100?'#dc2626':t.primaryColor||'#00C48C'}}/></div>
+                        </div>
+                      )}
+                      {t.stats?.lastActivity && (
+                        <div style={{fontSize:'11px',color:'#94a3b8'}}>Última atividade: {new Date(t.stats.lastActivity).toLocaleDateString('pt-BR')}</div>
+                      )}
+                      <button onClick={()=>setTenantModal(t)} style={{marginTop:'12px',width:'100%',padding:'8px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
+                        ✏️ Editar configurações
+                      </button>
+                    </div>
+                  );
+                })}
+                {/* Card "Novo Tenant" */}
+                <button onClick={()=>setTenantModal('new')} className="card"
+                  style={{padding:'20px',border:'2px dashed #e2e8f0',background:'#fafbfc',cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'8px',minHeight:'200px'}}>
+                  <span style={{fontSize:'28px'}}>＋</span>
+                  <span style={{fontWeight:600,fontSize:'14px',color:'#64748b'}}>Novo Tenant</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── TAB: TENANTS ── */}
+          {tab==='tenants' && (
+            <div className="fade-in">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>Tenants</h2>
+                <button className="btn-green" onClick={()=>setTenantModal('new')}>+ Novo Tenant</button>
+              </div>
+              <div className="card" style={{overflow:'hidden'}}>
+                <table style={{width:'100%',borderCollapse:'collapse'}}>
+                  <thead><tr style={{background:'#f8fafc'}}>
+                    {['Tenant','Plano','Usuários','Clientes','Abas ativas','Status',''].map(h=>(
+                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#64748b',borderBottom:'1px solid #f1f5f9'}}>{h}</th>
+                    ))}
+                  </tr></thead>
+                  <tbody>
+                    {tenants.map(t=>{
+                      const planMax = PLAN_MAX[t.plan]||2;
+                      const usersT  = users.filter(u=>u.tenant_id===t.id).length;
+                      return (
+                        <tr key={t.id} style={{borderBottom:'1px solid #f1f5f9'}}>
+                          <td style={{padding:'14px 16px'}}>
+                            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+                              <div style={{width:'8px',height:'8px',borderRadius:'50%',background:t.primaryColor||'#00C48C',flexShrink:0}}/>
+                              <div>
+                                <div style={{fontWeight:600,fontSize:'14px',color:'#060505'}}>{t.name}</div>
+                                <div style={{fontSize:'11px',color:'#94a3b8'}}>/{t.id}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td style={{padding:'14px 16px'}}>
+                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}20`,color:PLAN_COLORS[t.plan]||'#64748b'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
+                          </td>
+                          <td style={{padding:'14px 16px',fontSize:'13px'}}>
+                            <span style={{color:usersT>=(planMax===Infinity?999:planMax)?'#dc2626':'#374151',fontWeight:600}}>{usersT}</span>
+                            <span style={{color:'#94a3b8'}}>/{planMax===Infinity?'∞':planMax}</span>
+                          </td>
+                          <td style={{padding:'14px 16px',fontSize:'13px',color:'#374151'}}>{t.stats?.clients||0}</td>
+                          <td style={{padding:'14px 16px',fontSize:'12px',color:'#64748b'}}>{(t.activeTabIds||BASIC_TABS).length} / {DEFAULT_TABS.length}</td>
+                          <td style={{padding:'14px 16px'}}>
+                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(0,196,140,.1)':'rgba(148,163,184,.1)',color:t.active?'#00C48C':'#94a3b8'}}>{t.active?'Ativo':'Inativo'}</span>
+                          </td>
+                          <td style={{padding:'14px 16px'}}>
+                            <button onClick={()=>setTenantModal(t)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>Editar</button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── TAB: USUÁRIOS ── */}
+          {tab==='users' && (
+            <div className="fade-in">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>Usuários ({users.length})</h2>
+                <button className="btn-green" onClick={()=>setNovoUserModal(true)}>+ Novo Usuário</button>
+              </div>
+              <div className="card" style={{overflow:'hidden'}}>
+                <table style={{width:'100%',borderCollapse:'collapse'}}>
+                  <thead><tr style={{background:'#f8fafc'}}>
+                    {['Nome','E-mail','Tenant','Cargo',''].map(h=>(
+                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#64748b',borderBottom:'1px solid #f1f5f9'}}>{h}</th>
+                    ))}
+                  </tr></thead>
+                  <tbody>
+                    {users.filter(u=>u.role!=='master').map(u=>{
+                      const t = tenants.find(x=>x.id===u.tenant_id);
+                      return (
+                        <tr key={u.id} style={{borderBottom:'1px solid #f1f5f9'}}>
+                          <td style={{padding:'12px 16px',fontWeight:600,fontSize:'14px',color:'#060505'}}>{u.name}</td>
+                          <td style={{padding:'12px 16px',fontSize:'13px',color:'#64748b'}}>{u.email||'—'}</td>
+                          <td style={{padding:'12px 16px'}}>
+                            {t && <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
+                              <div style={{width:'7px',height:'7px',borderRadius:'50%',background:t.primaryColor||'#00C48C'}}/>
+                              <span style={{fontSize:'13px',color:'#374151'}}>{t.name}</span>
+                            </div>}
+                          </td>
+                          <td style={{padding:'12px 16px'}}>
+                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,
+                              background:u.role==='admin'?'rgba(13,110,253,.1)':'rgba(148,163,184,.1)',
+                              color:u.role==='admin'?'#0D6EFD':'#64748b'}}>
+                              {u.role==='admin'?'Admin':'Operador'}
+                            </span>
+                          </td>
+                          <td style={{padding:'12px 16px'}}>
+                            {!u.noLogin && u.email && (
+                              <button onClick={()=>setResetModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
+                                🔑 Resetar senha
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── TAB: APROVAÇÕES ── */}
+          {tab==='aprovacoes' && (
+            <div className="fade-in">
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
+                <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>
+                  Aprovações Pendentes {aprovacoes.length>0&&<span style={{background:'#f59e0b',color:'#fff',borderRadius:'20px',padding:'2px 10px',fontSize:'13px',marginLeft:'8px'}}>{aprovacoes.length}</span>}
+                </h2>
+                <button onClick={loadAprovacoes} style={{padding:'7px 16px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'13px',fontWeight:600,color:'#475569'}}>🔄 Atualizar</button>
+              </div>
+              {aprovacoes.length===0
+                ? <div className="card" style={{textAlign:'center',padding:'40px',color:'#94a3b8'}}>Nenhuma tarefa aguardando aprovação. ✓</div>
+                : <div style={{display:'flex',flexDirection:'column',gap:'12px'}}>
+                    {aprovacoes.map(item=>{
+                      const [rejecting,setRejecting] = React.useState(false);
+                      const [reason,setReason]       = React.useState('');
+                      return (
+                        <div key={item.id+item.tenant_id} className="card" style={{borderLeft:'4px solid #f59e0b'}}>
+                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:'12px'}}>
+                            <div style={{flex:1}}>
+                              <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'4px'}}>
+                                <span style={{fontSize:'11px',fontWeight:700,padding:'2px 8px',borderRadius:'20px',background:'rgba(245,158,11,.15)',color:'#b45309'}}>{item.tenant_id}</span>
+                                <span style={{fontSize:'13px',color:'#64748b'}}>{item.client||'—'}</span>
+                              </div>
+                              <div style={{fontWeight:600,fontSize:'15px',color:'#060505',marginBottom:'4px'}}>{item.title||item.desc||'Tarefa'}</div>
+                              {item.desc && item.title && <div style={{fontSize:'13px',color:'#64748b'}}>{item.desc}</div>}
+                              <div style={{fontSize:'12px',color:'#94a3b8',marginTop:'4px'}}>
+                                por {item.assignedTo||'—'} • {item.completedAt ? new Date(item.completedAt).toLocaleString('pt-BR') : ''}
+                              </div>
+                            </div>
+                            {!rejecting && (
+                              <div style={{display:'flex',gap:'8px',flexShrink:0}}>
+                                <button onClick={()=>handleMasterAprovar(item)}
+                                  style={{padding:'7px 16px',borderRadius:'8px',border:'none',background:'#00C48C',color:'#fff',cursor:'pointer',fontWeight:700,fontSize:'13px'}}>
+                                  ✓ Aprovar
+                                </button>
+                                <button onClick={()=>setRejecting(true)}
+                                  style={{padding:'7px 16px',borderRadius:'8px',border:'none',background:'#ef4444',color:'#fff',cursor:'pointer',fontWeight:700,fontSize:'13px'}}>
+                                  ✗ Rejeitar
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                          {rejecting && (
+                            <div style={{marginTop:'12px',display:'flex',gap:'8px',alignItems:'center'}}>
+                              <input value={reason} onChange={e=>setReason(e.target.value)} placeholder="Motivo da rejeição..."
+                                style={{flex:1,padding:'8px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',fontSize:'13px'}}/>
+                              <button onClick={()=>handleMasterRejeitar(item,reason)}
+                                style={{padding:'7px 16px',borderRadius:'8px',border:'none',background:'#ef4444',color:'#fff',cursor:'pointer',fontWeight:700,fontSize:'13px'}}>
+                                Confirmar
+                              </button>
+                              <button onClick={()=>{setRejecting(false);setReason('');}}
+                                style={{padding:'7px 16px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'13px'}}>
+                                Cancelar
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+              }
+            </div>
+          )}
+
+        </>)}
+      </div>
+
+      {tenantModal && (
+        <TenantModal
+          tenant={tenantModal==='new'?null:tenantModal}
+          onSave={()=>{ setTenantModal(null); load(); }}
+          onClose={()=>setTenantModal(null)}
+        />
+      )}
+      {resetModal && (
+        <ResetSenhaModal
+          targetUser={resetModal}
+          onSave={()=>{ setResetModal(null); alert('Senha resetada com sucesso!'); }}
+          onClose={()=>setResetModal(null)}
+        />
+      )}
+      {novoUserModal && (
+        <NovoUsuarioModal
+          tenants={tenants}
+          onSave={()=>{ setNovoUserModal(false); load(); }}
+          onClose={()=>setNovoUserModal(false)}
+        />
+      )}
+    </div>
+  );
+}
+
 // ── ROOT ─────────────────────────────────────────────
 function Root() {
   const [state,setState] = useState('checking');
   const [user,setUser]   = useState(null);
+
   useEffect(()=>{
     const token=localStorage.getItem('sc_token'), saved=localStorage.getItem('sc_user');
-    if(token&&saved){setUser(JSON.parse(saved));setState('app');return;}
+    if(token&&saved){ setUser(JSON.parse(saved)); setState('app'); return; }
     fetch('/api/auth/setup').then(r=>r.json()).then(d=>setState(d.needsSetup?'setup':'auth')).catch(()=>setState('auth'));
   },[]);
-  const handleAuth   = u => { setUser(u); setState('app'); };
-  const handleLogout = () => { localStorage.removeItem('sc_token'); localStorage.removeItem('sc_user'); setUser(null); setState('auth'); };
+
+  const handleAuth = u => {
+    setUser(u);
+    setState('app');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('sc_token');
+    localStorage.removeItem('sc_user');
+    setUser(null);
+    setState('auth');
+  };
+
+  const handlePasswordChanged = updatedUser => {
+    setUser(updatedUser);
+  };
+
   if(state==='checking') return <div className="auth-bg"><div style={{color:'#00C48C',fontSize:'14px'}}>Carregando...</div></div>;
-  if(state==='setup')  return <AuthScreen onAuth={handleAuth} isSetup={true}/>;
-  if(state==='auth')   return <AuthScreen onAuth={handleAuth} isSetup={false}/>;
+  if(state==='setup')    return <AuthScreen onAuth={handleAuth} isSetup={true}/>;
+  if(state==='auth')     return <AuthScreen onAuth={handleAuth} isSetup={false}/>;
+
+  // Troca de senha obrigatória — intercepta antes de qualquer tela
+  if(user?.must_change_password) return <ChangePasswordScreen user={user} onDone={handlePasswordChanged}/>;
+
+  if(user?.role==='master') return <MasterDashboard user={user} onLogout={handleLogout}/>;
   return <Dashboard user={user} onLogout={handleLogout}/>;
 }
 

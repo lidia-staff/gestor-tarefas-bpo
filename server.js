@@ -7,44 +7,66 @@ const webpush = require('web-push');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const JWT_SECRET = process.env.JWT_SECRET || 'staffconect_jwt_2024_TROQUE_ISSO';
-const DATA = path.join(__dirname, 'data');
+const JWT_SECRET     = process.env.JWT_SECRET     || 'staffconect_jwt_2024_TROQUE_ISSO';
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || 'staffbot_email_2024';
+const CA_API_URL     = process.env.CA_API_URL     || 'https://app.staffconsult.com.br';
+const CA_API_SECRET  = process.env.CA_API_SECRET  || 'staffbot_email_2024';
+const DATA           = process.env.DATA_DIR       || path.join(__dirname, 'data');
 
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── ARMAZENAMENTO JSON ──────────────────────────────
-fs.mkdirSync(path.join(DATA, 'day_tasks'), { recursive: true });
-fs.mkdirSync(path.join(DATA, 'contas'), { recursive: true });
+fs.mkdirSync(DATA, { recursive: true });
 
 const read  = (file, def) => { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return def; } };
 const write = (file, data) => { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(data, null, 2)); };
 
-const DB = {
-  users:        ()         => read(path.join(DATA, 'users.json'), []),
-  saveUsers:    d          => write(path.join(DATA, 'users.json'), d),
-  clients:      ()         => read(path.join(DATA, 'clients.json'), []),
-  saveClients:  d          => write(path.join(DATA, 'clients.json'), d),
-  dayTasks:     date       => read(path.join(DATA, 'day_tasks', `${date}.json`), {}),
-  saveDayTasks: (date, d)  => write(path.join(DATA, 'day_tasks', `${date}.json`), d),
-  extraTasks:   ()         => read(path.join(DATA, 'extra_tasks.json'), []),
-  saveExtra:    d          => write(path.join(DATA, 'extra_tasks.json'), d),
-  manuals:      ()         => read(path.join(DATA, 'manuals.json'), []),
-  saveManuals:  d          => write(path.join(DATA, 'manuals.json'), d),
-  chat:         ()         => read(path.join(DATA, 'chat.json'), []),
-  saveChat:     d          => write(path.join(DATA, 'chat.json'), d),
-  contas:       ym         => read(path.join(DATA, 'contas', `${ym}.json`), {}),
-  saveContas:   (ym, d)    => write(path.join(DATA, 'contas', `${ym}.json`), d),
-  mensagens:    ()         => read(path.join(DATA, 'mensagens.json'), []),
-  saveMensagens:d          => write(path.join(DATA, 'mensagens.json'), d),
-  emailNotifs:        ()   => read(path.join(DATA, 'email_notifs.json'), []),
-  saveEmailNotifs:    d    => write(path.join(DATA, 'email_notifs.json'), d),
-  intakeLancamentos:  ()   => read(path.join(DATA, 'intake_lancamentos.json'), []),
-  saveIntakeLancamentos: d => write(path.join(DATA, 'intake_lancamentos.json'), d),
+// Global: users (com tenant_id) + tenants catalog
+const globalDB = {
+  users:       ()  => read(path.join(DATA, 'users.json'), []),
+  saveUsers:   d   => write(path.join(DATA, 'users.json'), d),
+  tenants:     ()  => read(path.join(DATA, 'tenants.json'), []),
+  saveTenants: d   => write(path.join(DATA, 'tenants.json'), d),
 };
 
+// Por tenant: dados isolados em data/{tenant_id}/
+function tenantDB(tid) {
+  const T = path.join(DATA, tid);
+  return {
+    clients:               ()         => read(path.join(T, 'clients.json'), []),
+    saveClients:           d          => write(path.join(T, 'clients.json'), d),
+    dayTasks:              date       => read(path.join(T, 'day_tasks', `${date}.json`), {}),
+    saveDayTasks:          (date, d)  => write(path.join(T, 'day_tasks', `${date}.json`), d),
+    extraTasks:            ()         => read(path.join(T, 'extra_tasks.json'), []),
+    saveExtra:             d          => write(path.join(T, 'extra_tasks.json'), d),
+    manuals:               ()         => read(path.join(T, 'manuals.json'), []),
+    saveManuals:           d          => write(path.join(T, 'manuals.json'), d),
+    chat:                  ()         => read(path.join(T, 'chat.json'), []),
+    saveChat:              d          => write(path.join(T, 'chat.json'), d),
+    contas:                ym         => read(path.join(T, 'contas', `${ym}.json`), {}),
+    saveContas:            (ym, d)    => write(path.join(T, 'contas', `${ym}.json`), d),
+    mensagens:             ()         => read(path.join(T, 'mensagens.json'), []),
+    saveMensagens:         d          => write(path.join(T, 'mensagens.json'), d),
+    emailNotifs:           ()         => read(path.join(T, 'email_notifs.json'), []),
+    saveEmailNotifs:       d          => write(path.join(T, 'email_notifs.json'), d),
+    intakeLancamentos:     ()         => read(path.join(T, 'intake_lancamentos.json'), []),
+    saveIntakeLancamentos: d          => write(path.join(T, 'intake_lancamentos.json'), d),
+    pushSubs:              ()         => read(path.join(T, 'push_subs.json'), {}),
+    savePushSubs:          d          => write(path.join(T, 'push_subs.json'), d),
+    lastDailyRun:          ()         => read(path.join(T, 'last_daily_run.json'), { date: '' }),
+    saveLastDailyRun:      d          => write(path.join(T, 'last_daily_run.json'), d),
+  };
+}
+
+// Retorna IDs de tenants ativos (bootstrap: ['staffconect'] se nenhum cadastrado ainda)
+function getActiveTenantIds() {
+  const tenants = globalDB.tenants();
+  if (tenants.length === 0) return ['staffconect'];
+  return tenants.filter(t => t.active !== false).map(t => t.id);
+}
+
 // ─── FUSO HORÁRIO BRASIL ─────────────────────────────
-// Retorna YYYY-MM-DD no horário de Brasília (UTC-3), independente do fuso do servidor
 function todayBR(){return new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});}
 
 // ─── FERIADOS E DIAS ÚTEIS ───────────────────────────
@@ -80,10 +102,11 @@ function calcNextDue(lastDue,freq){
 }
 
 // ─── TAREFAS RECORRENTES ─────────────────────────────
-function generateRecurring(){
+function generateRecurring(tid){
   const today=todayBR();
-  if(!isBusinessDay(today)){console.log('Hoje não é dia útil — recorrentes suspensas');return;}
-  const tasks=DB.extraTasks();
+  if(!isBusinessDay(today)){console.log(`[${tid}] Hoje não é dia útil — recorrentes suspensas`);return;}
+  const tDB=tenantDB(tid);
+  const tasks=tDB.extraTasks();
   const toAdd=[];
   tasks.filter(t=>t.recurring&&t.status==='done'&&t.due_date).forEach(t=>{
     let next=t.due_date;
@@ -91,7 +114,6 @@ function generateRecurring(){
     if(next!==today)return;
     const isDup=(arr)=>arr.some(x=>x.recurring&&x.status!=='done'&&x.title===t.title&&String(x.client_id)===String(t.client_id)&&String(x.operator_id)===String(t.operator_id)&&x.due_date===today);
     if(!isDup(tasks)&&!isDup(toAdd)){
-      // Arquiva a nota de execução do dia anterior no histórico
       const prevEntry = t.exec_notes?.trim() ? {date:t.due_date, note:t.exec_notes.trim()} : null;
       const history = [...(t.exec_notes_history||[]), ...(prevEntry?[prevEntry]:[])].slice(-60);
       toAdd.push({...t, id:String(Date.now()+Math.random()), status:'pending', due_date:today, done_at:null,
@@ -99,30 +121,30 @@ function generateRecurring(){
         steps:(t.steps||[]).map(s=>({...s,done:false})), createdAt:new Date().toISOString()});
     }
   });
-  if(toAdd.length){DB.saveExtra([...tasks,...toAdd]);console.log(`✓ ${toAdd.length} tarefas recorrentes geradas para ${today}`);}
+  if(toAdd.length){tDB.saveExtra([...tasks,...toAdd]);console.log(`[${tid}] ✓ ${toAdd.length} tarefas recorrentes geradas para ${today}`);}
 }
 
 // ─── BACKUP AUTOMÁTICO ───────────────────────────────
-function runBackup(){
+function runBackup(tid){
   const today=todayBR();
-  const dir=path.join(DATA,'backups',today);
+  const tPath=path.join(DATA,tid);
+  const dir=path.join(tPath,'backups',today);
   if(fs.existsSync(dir))return;
   fs.mkdirSync(dir,{recursive:true});
-  fs.readdirSync(DATA).filter(f=>f.endsWith('.json')).forEach(f=>fs.copyFileSync(path.join(DATA,f),path.join(dir,f)));
-  const dtDir=path.join(DATA,'day_tasks');
+  if(fs.existsSync(tPath))fs.readdirSync(tPath).filter(f=>f.endsWith('.json')).forEach(f=>fs.copyFileSync(path.join(tPath,f),path.join(dir,f)));
+  const dtDir=path.join(tPath,'day_tasks');
   if(fs.existsSync(dtDir)){fs.mkdirSync(path.join(dir,'day_tasks'),{recursive:true});fs.readdirSync(dtDir).slice(-14).forEach(f=>fs.copyFileSync(path.join(dtDir,f),path.join(dir,'day_tasks',f)));}
-  // Remove backups com mais de 30 dias
-  const bRoot=path.join(DATA,'backups');
+  const bRoot=path.join(tPath,'backups');
   const cutoff=addDaysISO(today,-30);
-  fs.readdirSync(bRoot).filter(d=>d<cutoff&&d.match(/^\d{4}-\d{2}-\d{2}$/)).forEach(d=>fs.rmSync(path.join(bRoot,d),{recursive:true,force:true}));
-  console.log(`✓ Backup criado: ${dir}`);
+  if(fs.existsSync(bRoot))fs.readdirSync(bRoot).filter(d=>d<cutoff&&d.match(/^\d{4}-\d{2}-\d{2}$/)).forEach(d=>fs.rmSync(path.join(bRoot,d),{recursive:true,force:true}));
+  console.log(`[${tid}] ✓ Backup criado: ${dir}`);
 }
 
 // ─── LIMPEZA DE IMAGENS DO CHAT ─────────────────────
 function cleanChatUploads(){
   const uploadDir=path.join(__dirname,'public','uploads','chat');
   if(!fs.existsSync(uploadDir))return;
-  const cutoff=Date.now()-10*24*60*60*1000; // 10 dias em ms
+  const cutoff=Date.now()-10*24*60*60*1000;
   let removed=0;
   fs.readdirSync(uploadDir).forEach(f=>{
     const fp=path.join(uploadDir,f);
@@ -133,80 +155,142 @@ function cleanChatUploads(){
 
 // ─── NOTIFICAÇÕES DE ATRASO ──────────────────────────
 async function sendOverdueNotifs(){
-  // Push de atraso desativado — notificações apenas via chat e e-mail
   const today=todayBR();
-  const tasks=DB.extraTasks();
-  const overdue=tasks.filter(t=>t.due_date&&t.due_date<today&&t.status!=='done'&&t.operator_id);
-  if(overdue.length)console.log(`ℹ Tarefas em atraso: ${overdue.length} (push desativado)`);
+  getActiveTenantIds().forEach(tid=>{
+    const tasks=tenantDB(tid).extraTasks();
+    const overdue=tasks.filter(t=>t.due_date&&t.due_date<today&&t.status!=='done'&&t.operator_id);
+    if(overdue.length)console.log(`[${tid}] ℹ Tarefas em atraso: ${overdue.length} (push desativado)`);
+  });
 }
 
 // ─── RUNNER DIÁRIO ───────────────────────────────────
-const LAST_RUN_FILE=path.join(DATA,'last_daily_run.json');
 function runDailyJobs(){
   const today=todayBR();
-  const last=read(LAST_RUN_FILE,{date:''});
-  if(last.date===today)return;
-  generateRecurring();
-  runBackup();
+  getActiveTenantIds().forEach(tid=>{
+    const tDB=tenantDB(tid);
+    const last=tDB.lastDailyRun();
+    if(last.date===today)return;
+    generateRecurring(tid);
+    runBackup(tid);
+    tDB.saveLastDailyRun({date:today,ts:new Date().toISOString()});
+    console.log(`[${tid}] ✓ Jobs diários executados para ${today}`);
+  });
   cleanChatUploads();
   sendOverdueNotifs();
-  write(LAST_RUN_FILE,{date:today,ts:new Date().toISOString()});
-  console.log(`✓ Jobs diários executados para ${today}`);
 }
-// Roda no startup e verifica a cada 30 minutos
 runDailyJobs();
 setInterval(runDailyJobs,30*60*1000);
 
 // ─── VAPID / PUSH ────────────────────────────────────
 const VAPID_FILE = path.join(DATA, 'vapid.json');
 let vapidKeys;
-if (fs.existsSync(VAPID_FILE)) {
+if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  vapidKeys = { publicKey: process.env.VAPID_PUBLIC_KEY, privateKey: process.env.VAPID_PRIVATE_KEY };
+} else if (fs.existsSync(VAPID_FILE)) {
   vapidKeys = JSON.parse(fs.readFileSync(VAPID_FILE, 'utf8'));
 } else {
   vapidKeys = webpush.generateVAPIDKeys();
   fs.writeFileSync(VAPID_FILE, JSON.stringify(vapidKeys));
+  console.log('⚠ VAPID gerado. Copie para env vars VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY:');
+  console.log('  VAPID_PUBLIC_KEY=' + vapidKeys.publicKey);
+  console.log('  VAPID_PRIVATE_KEY=' + vapidKeys.privateKey);
 }
 webpush.setVapidDetails('mailto:lidia@staffconsult.com.br', vapidKeys.publicKey, vapidKeys.privateKey);
-const getSubs = () => read(path.join(DATA, 'push_subs.json'), {});
-const saveSubs = d => write(path.join(DATA, 'push_subs.json'), d);
 
-// Popula clientes padrão se banco estiver vazio
-if (DB.clients().length === 0) {
-  DB.saveClients([
-    { id:'kimberly',    name:'Kimberly',    priority:1,  banks:['Asaas','Sicredi'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'up',          name:'UP',          priority:2,  banks:['Bradesco','Stone'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'agro',        name:'Agro',        priority:3,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'jsa',         name:'JSA',         priority:4,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'body',        name:'Body Face',   priority:5,  banks:['Asaas','Stone'],               whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'guimoo',      name:'Guimoo',      priority:6,  banks:['Cora','Asaas'],                whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'galiza',      name:'Galiza',      priority:7,  banks:['Bradesco','Cora'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'matsu',       name:'Matsu',       priority:8,  banks:['Itaú'],                        whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'ecofi',       name:'Ecofi',       priority:9,  banks:['Bradesco','Itaú'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    { id:'makinsthall', name:'Makinsthall', priority:10, banks:['Santander','Itaú','Bradesco'], whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-  ]);
+// ─── SEED DEFAULTS POR TENANT ────────────────────────
+function seedTenantDefaults(tid) {
+  const tDB = tenantDB(tid);
+
+  if (tDB.clients().length === 0) {
+    tDB.saveClients([
+      { id:'kimberly',    name:'Kimberly',    priority:1,  banks:['Asaas','Sicredi'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'up',          name:'UP',          priority:2,  banks:['Bradesco','Stone'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'agro',        name:'Agro',        priority:3,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'jsa',         name:'JSA',         priority:4,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'body',        name:'Body Face',   priority:5,  banks:['Asaas','Stone'],               whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'guimoo',      name:'Guimoo',      priority:6,  banks:['Cora','Asaas'],                whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'galiza',      name:'Galiza',      priority:7,  banks:['Bradesco','Cora'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'matsu',       name:'Matsu',       priority:8,  banks:['Itaú'],                        whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'ecofi',       name:'Ecofi',       priority:9,  banks:['Bradesco','Itaú'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+      { id:'makinsthall', name:'Makinsthall', priority:10, banks:['Santander','Itaú','Bradesco'], whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
+    ]);
+  }
+
+  const ex = tDB.manuals();
+  if (!ex.find(m => m.id === 'default_b1')) {
+    tDB.saveManuals([
+      { id:'default_b1', num:'1', title:'Bloco 1 — Abertura e Conciliação', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+        {n:1,action:'Acessar e-mail',detail:"Verificar todos os e-mails. Identificar boletos, NF's e solicitações."},
+        {n:2,action:"Salvar boletos e NF's",detail:"Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."},
+        {n:3,action:'Salvar na pasta do mês',detail:'Garantir que todos os documentos do dia estejam na pasta do mês corrente.'},
+        {n:4,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
+        {n:5,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
+        {n:6,action:'Acessar banco e extratos',detail:'Acessar internet banking. Baixar extrato PDF e OFX do dia.'},
+        {n:7,action:'Importar OFX',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
+        {n:8,action:'Conciliação bancária',detail:'Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir.'},
+        {n:9,action:'Salvar conciliação',detail:'Exportar e salvar o arquivo da conciliação na pasta do mês.'},
+      ]},
+      { id:'default_b2', num:'2', title:'Bloco 2 — Pagamentos', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+        {n:1,action:'Conferir contas a pagar',detail:'Verificar no Conta Azul todas as contas com vencimento no dia.'},
+        {n:2,action:"Conferir NF's e boletos",detail:"Verificar fisicamente se os boletos e NF's batem com o sistema."},
+        {n:3,action:'Conferir DDA',detail:'Verificar o DDA no banco para garantir que não há boletos não cadastrados.'},
+        {n:4,action:'Salvar contas a pagar',detail:'Salvar a relação de contas a pagar do dia na pasta do cliente.'},
+        {n:5,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
+        {n:6,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
+        {n:7,action:'Atualizar saldo bancário',detail:'Atualizar o saldo no Conta Azul após os agendamentos.'},
+        {n:8,action:'Enviar rotina ao cliente',detail:'Redigir mensagem de retorno com resumo do feito e enviar ao cliente.'},
+      ]},
+      ...ex,
+    ]);
+  }
 }
+
+// Seed para todos os tenants ativos no startup
+getActiveTenantIds().forEach(seedTenantDefaults);
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
 function auth(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Não autenticado' });
-  try { req.user = jwt.verify(token, JWT_SECRET); next(); }
-  catch { res.status(401).json({ error: 'Sessão expirada, faça login novamente' }); }
+  try {
+    req.user   = jwt.verify(token, JWT_SECRET);
+    req.tenant = req.user.tenant_id || 'staffconect';
+    req.tDB    = tenantDB(req.tenant);
+    next();
+  } catch {
+    res.status(401).json({ error: 'Sessão expirada, faça login novamente' });
+  }
 }
 
 // ─── AUTH ────────────────────────────────────────────
 app.get('/api/auth/setup', (req, res) => {
-  res.json({ needsSetup: DB.users().length === 0 });
+  res.json({ needsSetup: globalDB.users().length === 0 });
 });
 
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: 'Preencha todos os campos' });
-  const user = DB.users().find(u => u.email === email.toLowerCase().trim());
+  const user = globalDB.users().find(u => u.email === email.toLowerCase().trim());
   if (!user || !bcrypt.compareSync(password, user.password_hash))
     return res.status(401).json({ error: 'E-mail ou senha incorretos' });
-  const token = jwt.sign({ id:user.id, name:user.name, email:user.email, role:user.role }, JWT_SECRET, { expiresIn:'30d' });
-  res.json({ token, user: { id:user.id, name:user.name, email:user.email, role:user.role } });
+  const tid = user.tenant_id || 'staffconect';
+  const mustChange = !!user.must_change_password;
+  const token = jwt.sign({ id:user.id, name:user.name, email:user.email, role:user.role, tenant_id:tid }, JWT_SECRET, { expiresIn:'30d' });
+  res.json({ token, user: { id:user.id, name:user.name, email:user.email, role:user.role, tenant_id:tid, must_change_password:mustChange } });
+});
+
+app.post('/api/auth/change-password', auth, (req, res) => {
+  const { currentPassword, newPassword } = req.body || {};
+  if (!currentPassword || !newPassword) return res.status(400).json({ error: 'Preencha todos os campos' });
+  if (newPassword.length < 6) return res.status(400).json({ error: 'Nova senha deve ter mínimo 6 caracteres' });
+  const users = globalDB.users();
+  const idx = users.findIndex(u => u.id === req.user.id);
+  if (idx === -1) return res.status(404).json({ error: 'Usuário não encontrado' });
+  if (!bcrypt.compareSync(currentPassword, users[idx].password_hash))
+    return res.status(401).json({ error: 'Senha atual incorreta' });
+  users[idx] = { ...users[idx], password_hash: bcrypt.hashSync(newPassword, 10), must_change_password: false };
+  globalDB.saveUsers(users);
+  res.json({ ok: true });
 });
 
 app.post('/api/auth/register', (req, res) => {
@@ -214,40 +298,49 @@ app.post('/api/auth/register', (req, res) => {
   if (!name || !email || !password) return res.status(400).json({ error: 'Preencha todos os campos' });
   if (password.length < 6) return res.status(400).json({ error: 'Senha mínimo 6 caracteres' });
 
-  const users = DB.users();
+  const users = globalDB.users();
+  let tenant_id = 'staffconect';
+
   if (users.length > 0) {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(403).json({ error: 'Apenas admins podem adicionar operadores' });
-    try { const d = jwt.verify(token, JWT_SECRET); if (d.role !== 'admin') throw new Error(); }
+    try {
+      const d = jwt.verify(token, JWT_SECRET);
+      if (d.role !== 'admin') throw new Error();
+      tenant_id = d.tenant_id || 'staffconect';
+    }
     catch { return res.status(403).json({ error: 'Apenas admins podem adicionar operadores' }); }
   }
 
   const emailNorm = email.toLowerCase().trim();
   if (users.find(u => u.email === emailNorm)) return res.status(400).json({ error: 'E-mail já cadastrado' });
 
-  const role = users.length === 0 ? 'admin' : 'operator';
-  const newUser = { id: Date.now(), name, email: emailNorm, password_hash: bcrypt.hashSync(password, 10), role, assignedClients: assignedClients || [] };
-  DB.saveUsers([...users, newUser]);
+  const role = users.filter(u => (u.tenant_id||'staffconect') === tenant_id).length === 0 ? 'admin' : 'operator';
+  const newUser = { id: Date.now(), name, email: emailNorm, password_hash: bcrypt.hashSync(password, 10), role, tenant_id, assignedClients: assignedClients || [] };
+  globalDB.saveUsers([...users, newUser]);
 
-  const token = jwt.sign({ id:newUser.id, name, email:emailNorm, role }, JWT_SECRET, { expiresIn:'30d' });
-  res.json({ token, user: { id:newUser.id, name, email:emailNorm, role, assignedClients: newUser.assignedClients } });
+  // Garante seed de defaults ao criar primeiro usuário de um tenant
+  seedTenantDefaults(tenant_id);
+
+  const token = jwt.sign({ id:newUser.id, name, email:emailNorm, role, tenant_id }, JWT_SECRET, { expiresIn:'30d' });
+  res.json({ token, user: { id:newUser.id, name, email:emailNorm, role, tenant_id, assignedClients: newUser.assignedClients } });
 });
 
 // ─── CLIENTES ────────────────────────────────────────
 app.get('/api/clients', auth, (req, res) => {
-  res.json(DB.clients().sort((a, b) => a.priority - b.priority));
+  res.json(req.tDB.clients().sort((a, b) => a.priority - b.priority));
 });
 
 app.post('/api/clients', auth, (req, res) => {
-  const clients = DB.clients();
+  const clients = req.tDB.clients();
   const novo = { ...req.body, id: String(Date.now()) };
-  DB.saveClients([...clients, novo]);
+  req.tDB.saveClients([...clients, novo]);
   res.json(novo);
 });
 
 app.put('/api/clients/:id', auth, (req, res) => {
-  const clients = DB.clients().map(c => c.id === req.params.id ? { ...c, ...req.body, id: c.id } : c);
-  DB.saveClients(clients);
+  const clients = req.tDB.clients().map(c => c.id === req.params.id ? { ...c, ...req.body, id: c.id } : c);
+  req.tDB.saveClients(clients);
   res.json({ ok: true });
 });
 
@@ -258,9 +351,9 @@ app.get('/api/day-tasks/history', auth, (req, res) => {
   for (let i = 1; i <= days; i++) {
     const d = new Date(); d.setDate(d.getDate() - i);
     const date = d.toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
-    const tasks = DB.dayTasks(date);
+    const tasks = req.tDB.dayTasks(date);
     if (Object.keys(tasks).length > 0) {
-      const clients = DB.clients();
+      const clients = req.tDB.clients();
       const entries = Object.entries(tasks).map(([cid, t]) => {
         const client = clients.find(c => String(c.id) === String(cid));
         return { clientId: cid, clientName: client?.name || cid, fullyDone: !!t.fullyDone, b1Status: t.bloco1?.status, b2Active: !!t.bloco2?.active, b2Status: t.bloco2?.status };
@@ -272,48 +365,111 @@ app.get('/api/day-tasks/history', auth, (req, res) => {
 });
 
 app.get('/api/day-tasks/:date', auth, (req, res) => {
-  res.json(DB.dayTasks(req.params.date));
+  res.json(req.tDB.dayTasks(req.params.date));
 });
 
+// Nunca rebaixa status de um bloco: done > active > pending
+const STATUS_RANK = {pending:0, active:1, done:2};
+function mergeBloco(existing, incoming) {
+  if (!existing || !incoming) return incoming ?? existing;
+  if ((STATUS_RANK[existing.status] ?? 0) > (STATUS_RANK[incoming.status] ?? 0)) {
+    return { ...incoming, status: existing.status, doneAt: existing.doneAt,
+             ...(existing.opDone !== undefined ? {opDone: existing.opDone} : {}) };
+  }
+  return incoming;
+}
+
 app.put('/api/day-tasks/:date/:clientId', auth, (req, res) => {
-  const tasks = DB.dayTasks(req.params.date);
-  tasks[req.params.clientId] = req.body;
-  DB.saveDayTasks(req.params.date, tasks);
+  const tasks  = req.tDB.dayTasks(req.params.date);
+  const existing = tasks[req.params.clientId];
+  if (existing) {
+    const inc = req.body;
+    tasks[req.params.clientId] = {
+      ...inc,
+      bloco1:  mergeBloco(existing.bloco1,  inc.bloco1),
+      bloco2:  mergeBloco(existing.bloco2,  inc.bloco2),
+      bloco1b: mergeBloco(existing.bloco1b, inc.bloco1b),
+      fullyDone: existing.fullyDone || !!inc.fullyDone,
+    };
+  } else {
+    tasks[req.params.clientId] = req.body;
+  }
+  req.tDB.saveDayTasks(req.params.date, tasks);
   res.json({ ok: true });
 });
 
 // ─── TAREFAS EXTRAS ──────────────────────────────────
 app.get('/api/extra-tasks', auth, (req, res) => {
-  res.json(DB.extraTasks().sort((a, b) => b.created_at - a.created_at));
+  res.json(req.tDB.extraTasks().sort((a, b) => b.created_at - a.created_at));
 });
 
 app.post('/api/extra-tasks', auth, (req, res) => {
   const { title } = req.body;
   if (!title?.trim()) return res.status(400).json({ error: 'Título obrigatório' });
   const task = { id: Date.now(), ...req.body, status: 'pending', created_at: new Date().toISOString(), done_at: null };
-  DB.saveExtra([task, ...DB.extraTasks()]);
+  req.tDB.saveExtra([task, ...req.tDB.extraTasks()]);
   res.json(task);
 });
 
 app.put('/api/extra-tasks/:id', auth, (req, res) => {
   const id = String(req.params.id);
-  DB.saveExtra(DB.extraTasks().map(t => String(t.id) === id ? { ...t, ...req.body } : t));
+  const body = { ...req.body };
+
+  // Operadores não podem marcar diretamente como done — vai para pending_approval
+  if (body.status === 'done' && req.user.role === 'operator') {
+    body.status              = 'pending_approval';
+    body.approval_requested_at = new Date().toISOString();
+    body.approval_requested_by = req.user.name;
+    body.approval_comment    = null;
+    body.rejected_reason     = null;
+  }
+
+  req.tDB.saveExtra(req.tDB.extraTasks().map(t => String(t.id) === id ? { ...t, ...body } : t));
   res.json({ ok: true });
 });
 
-// Excluir tarefa — apenas admin
-// ?mode=single  → só esta instância
-// ?mode=all     → esta + todas recorrentes do mesmo grupo (title+client_id+operator_id)
+// Aprovar tarefa (admin ou master)
+app.post('/api/extra-tasks/:id/aprovar', auth, (req, res) => {
+  if (req.user.role === 'operator') return res.status(403).json({ error: 'Apenas admins podem aprovar' });
+  const id = String(req.params.id);
+  const { comment } = req.body || {};
+  const tasks = req.tDB.extraTasks();
+  const idx = tasks.findIndex(t => String(t.id) === id);
+  if (idx === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
+  if (tasks[idx].status !== 'pending_approval') return res.status(409).json({ error: 'Tarefa não está aguardando aprovação' });
+  tasks[idx] = { ...tasks[idx], status: 'done', done_at: new Date().toISOString(),
+    approved_at: new Date().toISOString(), approved_by: req.user.name,
+    approval_comment: comment || null, rejected_reason: null };
+  req.tDB.saveExtra(tasks);
+  res.json({ ok: true });
+});
+
+// Rejeitar tarefa (admin ou master)
+app.post('/api/extra-tasks/:id/rejeitar', auth, (req, res) => {
+  if (req.user.role === 'operator') return res.status(403).json({ error: 'Apenas admins podem rejeitar' });
+  const id = String(req.params.id);
+  const { reason } = req.body || {};
+  const tasks = req.tDB.extraTasks();
+  const idx = tasks.findIndex(t => String(t.id) === id);
+  if (idx === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
+  if (tasks[idx].status !== 'pending_approval') return res.status(409).json({ error: 'Tarefa não está aguardando aprovação' });
+  tasks[idx] = { ...tasks[idx], status: 'pending', done_at: null,
+    rejected_at: new Date().toISOString(), rejected_by: req.user.name,
+    rejected_reason: reason || '', approved_at: null, approved_by: null };
+  req.tDB.saveExtra(tasks);
+  res.json({ ok: true });
+});
+
+// ?mode=single → só esta instância | ?mode=all → todas do grupo recorrente
 app.delete('/api/extra-tasks/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const id = String(req.params.id);
   const mode = req.query.mode || 'single';
-  const tasks = DB.extraTasks();
+  const tasks = req.tDB.extraTasks();
   const target = tasks.find(t => String(t.id) === id);
   if (!target) return res.status(404).json({ error: 'Não encontrada' });
   let remaining;
   if (mode === 'all' && target.recurring) {
-    // Remove todas do mesmo grupo recorrente
     remaining = tasks.filter(t =>
       !(t.recurring &&
         t.title === target.title &&
@@ -323,23 +479,23 @@ app.delete('/api/extra-tasks/:id', auth, (req, res) => {
   } else {
     remaining = tasks.filter(t => String(t.id) !== id);
   }
-  DB.saveExtra(remaining);
+  req.tDB.saveExtra(remaining);
   res.json({ ok: true, removed: tasks.length - remaining.length });
 });
 
 // ─── OPERADORES ──────────────────────────────────────
 app.get('/api/operators', auth, (req, res) => {
-  res.json(DB.users().map(u => ({ id:u.id, name:u.name, email:u.email||null, role:u.role, noLogin:!!u.noLogin, assignedClients: u.assignedClients || [] })));
+  const users = globalDB.users().filter(u => (u.tenant_id||'staffconect') === req.tenant);
+  res.json(users.map(u => ({ id:u.id, name:u.name, email:u.email||null, role:u.role, noLogin:!!u.noLogin, assignedClients: u.assignedClients || [] })));
 });
 
-// Criar operador sem acesso ao sistema (apenas para delegação de tarefas)
 app.post('/api/operators/no-login', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const { name, assignedClients } = req.body || {};
   if (!name || !name.trim()) return res.status(400).json({ error: 'Nome é obrigatório' });
-  const users = DB.users();
-  const newUser = { id: Date.now(), name: name.trim(), email: null, password_hash: null, role: 'operator', noLogin: true, assignedClients: assignedClients || [] };
-  DB.saveUsers([...users, newUser]);
+  const users = globalDB.users();
+  const newUser = { id: Date.now(), name: name.trim(), email: null, password_hash: null, role: 'operator', noLogin: true, tenant_id: req.tenant, assignedClients: assignedClients || [] };
+  globalDB.saveUsers([...users, newUser]);
   res.json({ ok: true, user: { id:newUser.id, name:newUser.name, noLogin:true } });
 });
 
@@ -347,7 +503,7 @@ app.put('/api/operators/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const id = Number(req.params.id);
   const { assignedClients } = req.body;
-  DB.saveUsers(DB.users().map(u => u.id === id ? { ...u, assignedClients: assignedClients || [] } : u));
+  globalDB.saveUsers(globalDB.users().map(u => u.id === id ? { ...u, assignedClients: assignedClients || [] } : u));
   res.json({ ok: true });
 });
 
@@ -355,70 +511,49 @@ app.delete('/api/operators/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const id = Number(req.params.id);
   if (req.user.id === id) return res.status(400).json({ error: 'Não pode remover a si mesmo' });
-  DB.saveUsers(DB.users().filter(u => u.id !== id));
+  globalDB.saveUsers(globalDB.users().filter(u => u.id !== id));
   res.json({ ok: true });
 });
 
-// Seed manuais padrão no banco se ainda não existirem
-(function seedManuals() {
-  const ex = DB.manuals();
-  if (ex.find(m => m.id === 'default_b1')) return;
-  DB.saveManuals([
-    { id:'default_b1', num:'1', title:'Bloco 1 — Abertura e Conciliação', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
-      {n:1,action:'Acessar e-mail',detail:"Verificar todos os e-mails. Identificar boletos, NF's e solicitações."},
-      {n:2,action:"Salvar boletos e NF's",detail:"Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."},
-      {n:3,action:'Salvar na pasta do mês',detail:'Garantir que todos os documentos do dia estejam na pasta do mês corrente.'},
-      {n:4,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
-      {n:5,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
-      {n:6,action:'Acessar banco e extratos',detail:'Acessar internet banking. Baixar extrato PDF e OFX do dia.'},
-      {n:7,action:'Importar OFX',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
-      {n:8,action:'Conciliação bancária',detail:'Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir.'},
-      {n:9,action:'Salvar conciliação',detail:'Exportar e salvar o arquivo da conciliação na pasta do mês.'},
-    ]},
-    { id:'default_b2', num:'2', title:'Bloco 2 — Pagamentos', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
-      {n:1,action:'Conferir contas a pagar',detail:'Verificar no Conta Azul todas as contas com vencimento no dia.'},
-      {n:2,action:"Conferir NF's e boletos",detail:"Verificar fisicamente se os boletos e NF's batem com o sistema."},
-      {n:3,action:'Conferir DDA',detail:'Verificar o DDA no banco para garantir que não há boletos não cadastrados.'},
-      {n:4,action:'Salvar contas a pagar',detail:'Salvar a relação de contas a pagar do dia na pasta do cliente.'},
-      {n:5,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
-      {n:6,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
-      {n:7,action:'Atualizar saldo bancário',detail:'Atualizar o saldo no Conta Azul após os agendamentos.'},
-      {n:8,action:'Enviar rotina ao cliente',detail:'Redigir mensagem de retorno com resumo do feito e enviar ao cliente.'},
-    ]},
-    ...ex,
-  ]);
-})();
-
 // ─── TRILHA DO CONHECIMENTO (MANUAIS) ────────────────
 app.get('/api/manuals', auth, (req, res) => {
-  res.json(DB.manuals());
+  res.json(req.tDB.manuals());
 });
 
 app.post('/api/manuals', auth, (req, res) => {
   const { title, category, steps } = req.body;
   if (!title?.trim()) return res.status(400).json({ error: 'Título obrigatório' });
   const manual = { id: Date.now(), ...req.body, title: title.trim(), category: category || 'Geral', steps: steps || [], createdAt: new Date().toISOString() };
-  DB.saveManuals([...DB.manuals(), manual]);
+  req.tDB.saveManuals([...req.tDB.manuals(), manual]);
   res.json(manual);
 });
 
 app.put('/api/manuals/:id', auth, (req, res) => {
   const raw = req.params.id;
   const id = isNaN(raw) ? raw : Number(raw);
-  DB.saveManuals(DB.manuals().map(m => String(m.id) === String(id) ? { ...m, ...req.body, id: m.id } : m));
+  req.tDB.saveManuals(req.tDB.manuals().map(m => String(m.id) === String(id) ? { ...m, ...req.body, id: m.id } : m));
   res.json({ ok: true });
 });
 
 app.delete('/api/manuals/:id', auth, (req, res) => {
   const raw = req.params.id;
   const id = isNaN(raw) ? raw : Number(raw);
-  DB.saveManuals(DB.manuals().filter(m => String(m.id) !== String(id)));
+  req.tDB.saveManuals(req.tDB.manuals().filter(m => String(m.id) !== String(id)));
+  res.json({ ok: true });
+});
+
+// Salva array completo de manuais (para reordenação)
+app.put('/api/manuals', auth, (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
+  const list = req.body;
+  if (!Array.isArray(list)) return res.status(400).json({ error: 'Array esperado' });
+  req.tDB.saveManuals(list);
   res.json({ ok: true });
 });
 
 // ─── CHAT ────────────────────────────────────────────
 app.get('/api/chat', auth, (req, res) => {
-  const messages = DB.chat();
+  const messages = req.tDB.chat();
   const since = req.query.since;
   res.json(since ? messages.filter(m => m.createdAt > since) : messages.slice(-80));
 });
@@ -432,11 +567,10 @@ app.post('/api/chat', auth, (req, res) => {
   if (replyText)  msg.replyText = replyText;
   if (replyUser)  msg.replyUser = replyUser;
   if (source)     msg.source    = source;
-  const updated = [...DB.chat(), msg].slice(-200);
-  DB.saveChat(updated);
-  // Push apenas para mensagens reais de usuário direcionadas a um operador
+  const updated = [...req.tDB.chat(), msg].slice(-200);
+  req.tDB.saveChat(updated);
   if(type !== 'system' && targetOpId) {
-    const subs = getSubs();
+    const subs = req.tDB.pushSubs();
     const sub = subs[String(targetOpId)];
     if(sub) {
       const sender = req.user.name.split(' ')[0];
@@ -445,7 +579,7 @@ app.post('/api/chat', auth, (req, res) => {
         body: text.trim().replace(/\*/g,'').slice(0, 100),
         tag: 'chat',
       })).catch(err => {
-        if(err.statusCode === 410){ const s=getSubs(); delete s[String(targetOpId)]; saveSubs(s); }
+        if(err.statusCode === 410){ const s=req.tDB.pushSubs(); delete s[String(targetOpId)]; req.tDB.savePushSubs(s); }
       });
     }
   }
@@ -465,7 +599,7 @@ app.get('/api/contas', auth, (req, res) => {
     cur.setDate(cur.getDate() + 1);
   }
   months.forEach(ym => {
-    const data = DB.contas(ym);
+    const data = req.tDB.contas(ym);
     Object.keys(data).forEach(date => { if (date >= start && date <= end) result[date] = data[date]; });
   });
   res.json(result);
@@ -474,16 +608,16 @@ app.get('/api/contas', auth, (req, res) => {
 app.put('/api/contas/:date/:clientId', auth, (req, res) => {
   const { date, clientId } = req.params;
   const ym = date.substring(0, 7);
-  const data = DB.contas(ym);
+  const data = req.tDB.contas(ym);
   if (!data[date]) data[date] = {};
   data[date][clientId] = req.body;
-  DB.saveContas(ym, data);
+  req.tDB.saveContas(ym, data);
   res.json({ ok: true });
 });
 
 // ─── MENSAGENS PADRÃO ────────────────────────────────
 app.get('/api/mensagens', auth, (req, res) => {
-  res.json(DB.mensagens());
+  res.json(req.tDB.mensagens());
 });
 
 app.post('/api/mensagens', auth, (req, res) => {
@@ -491,67 +625,57 @@ app.post('/api/mensagens', auth, (req, res) => {
   const { title, text } = req.body;
   if (!title?.trim() || !text?.trim()) return res.status(400).json({ error: 'Título e texto obrigatórios' });
   const msg = { id: Date.now(), title: title.trim(), text: text.trim(), createdAt: new Date().toISOString() };
-  DB.saveMensagens([...DB.mensagens(), msg]);
+  req.tDB.saveMensagens([...req.tDB.mensagens(), msg]);
   res.json(msg);
 });
 
 app.put('/api/mensagens/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const id = Number(req.params.id);
-  DB.saveMensagens(DB.mensagens().map(m => m.id === id ? { ...m, ...req.body, id } : m));
+  req.tDB.saveMensagens(req.tDB.mensagens().map(m => m.id === id ? { ...m, ...req.body, id } : m));
   res.json({ ok: true });
 });
 
 app.delete('/api/mensagens/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const id = Number(req.params.id);
-  DB.saveMensagens(DB.mensagens().filter(m => m.id !== id));
+  req.tDB.saveMensagens(req.tDB.mensagens().filter(m => m.id !== id));
   res.json({ ok: true });
 });
 
-// Salva array completo de mensagens (para reordenação)
 app.put('/api/mensagens', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
   const list = req.body;
   if (!Array.isArray(list)) return res.status(400).json({ error: 'Array esperado' });
-  DB.saveMensagens(list);
+  req.tDB.saveMensagens(list);
   res.json({ ok: true });
 });
 
 // ─── EMAIL NOTIFICAÇÕES ──────────────────────────────
 app.get('/api/email-notifs', auth, (req, res) => {
-  res.json(DB.emailNotifs());
+  res.json(req.tDB.emailNotifs());
 });
 
 app.post('/api/email-notifs', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
-  const notifs = DB.emailNotifs();
+  const notifs = req.tDB.emailNotifs();
   const novo = { ...req.body, id: String(Date.now()), createdAt: new Date().toISOString(), readBy: [] };
-  DB.saveEmailNotifs([novo, ...notifs]);
+  req.tDB.saveEmailNotifs([novo, ...notifs]);
   res.json(novo);
 });
 
 app.patch('/api/email-notifs/:id/read', auth, (req, res) => {
   const uid = String(req.user.id);
-  const notifs = DB.emailNotifs().map(n =>
+  const notifs = req.tDB.emailNotifs().map(n =>
     n.id === req.params.id ? { ...n, readBy: [...new Set([...(n.readBy||[]), uid])] } : n
   );
-  DB.saveEmailNotifs(notifs);
+  req.tDB.saveEmailNotifs(notifs);
   res.json({ ok: true });
 });
 
 app.delete('/api/email-notifs/:id', auth, (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
-  DB.saveEmailNotifs(DB.emailNotifs().filter(n => n.id !== req.params.id));
-  res.json({ ok: true });
-});
-
-// Salva array completo de manuais (para reordenação)
-app.put('/api/manuals', auth, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Apenas admins' });
-  const list = req.body;
-  if (!Array.isArray(list)) return res.status(400).json({ error: 'Array esperado' });
-  DB.saveManuals(list);
+  req.tDB.saveEmailNotifs(req.tDB.emailNotifs().filter(n => n.id !== req.params.id));
   res.json({ ok: true });
 });
 
@@ -561,51 +685,42 @@ app.get('/api/push/vapid-key', auth, (req, res) => {
 });
 
 app.post('/api/push/subscribe', auth, (req, res) => {
-  const subs = getSubs();
+  const subs = req.tDB.pushSubs();
   subs[String(req.user.id)] = req.body;
-  saveSubs(subs);
+  req.tDB.savePushSubs(subs);
   res.json({ ok: true });
 });
 
 app.post('/api/push/notify', auth, (req, res) => {
   const { operatorId, title, body } = req.body;
-  const subs = getSubs();
+  const subs = req.tDB.pushSubs();
   const sub = subs[String(operatorId)];
   if (!sub) return res.json({ ok: false, reason: 'sem inscrição' });
   webpush.sendNotification(sub, JSON.stringify({ title, body }))
     .then(() => res.json({ ok: true }))
     .catch(err => {
-      if (err.statusCode === 410) { const s = getSubs(); delete s[String(operatorId)]; saveSubs(s); }
+      if (err.statusCode === 410) { const s = req.tDB.pushSubs(); delete s[String(operatorId)]; req.tDB.savePushSubs(s); }
       res.json({ ok: false, reason: err.message });
     });
 });
 
 // ─── WEBHOOK — EMAIL MONITOR ─────────────────────────
-// Chamado pelo email_monitor.py do StaffConsult-Bot
-// quando chega email novo em uma caixa de cliente.
-const WEBHOOK_SECRET  = process.env.WEBHOOK_SECRET  || 'staffbot_email_2024';
-const CA_API_URL      = process.env.CA_API_URL      || 'https://app.staffconsult.com.br';
-const CA_API_SECRET   = process.env.CA_API_SECRET   || 'staffbot_email_2024';
-
 app.post('/api/webhook/email-notify', (req, res) => {
-  const { secret, cliente, cliente_id, remetente, assunto, data_recebido } = req.body;
+  const { secret, tenant_id, cliente, cliente_id, remetente, assunto, data_recebido } = req.body;
   if (secret !== WEBHOOK_SECRET) return res.status(403).json({ error: 'Não autorizado' });
+  const tid = tenant_id || 'staffconect';
+  const tDB = tenantDB(tid);
+  const users   = globalDB.users().filter(u => (u.tenant_id||'staffconect') === tid);
+  const clients = tDB.clients();
 
-  const users   = DB.users();
-  const clients = DB.clients();
-
-  // Localiza o cliente no Staff Conect pelo id ou nome
   const client = clients.find(c =>
     String(c.id) === String(cliente_id) ||
     c.name.toLowerCase() === (cliente || '').toLowerCase()
   );
-
-  // Localiza o operador designado ao cliente
   const operator = client
     ? users.find(u => !u.noLogin && (u.assignedClients || []).map(String).includes(String(client.id)))
     : null;
 
-  // 1. Cria tarefa extra
   const task = {
     id: Date.now(),
     title: `📧 Email recebido — ${cliente}`,
@@ -619,12 +734,10 @@ app.post('/api/webhook/email-notify', (req, res) => {
     done_at: null,
     steps: [],
   };
-  DB.saveExtra([task, ...DB.extraTasks()]);
+  tDB.saveExtra([task, ...tDB.extraTasks()]);
 
-  // 2. Push notification para o operador (se inscrito)
   if (operator) {
-    const subs = getSubs();
-    const sub  = subs[String(operator.id)];
+    const sub = tDB.pushSubs()[String(operator.id)];
     if (sub) {
       webpush.sendNotification(sub, JSON.stringify({
         title: `📧 Email — ${cliente}`,
@@ -633,7 +746,6 @@ app.post('/api/webhook/email-notify', (req, res) => {
     }
   }
 
-  // 3. Registra no chat como mensagem de sistema
   const chatMsg = {
     id:         Date.now() + 1,
     userId:     0,
@@ -644,9 +756,9 @@ app.post('/api/webhook/email-notify', (req, res) => {
     targetOpId: operator?.id || null,
     createdAt:  new Date().toISOString(),
   };
-  DB.saveChat([...DB.chat(), chatMsg].slice(-200));
+  tDB.saveChat([...tDB.chat(), chatMsg].slice(-200));
 
-  console.log(`[webhook] Email notify: ${cliente} | ${remetente} | ${assunto}`);
+  console.log(`[webhook/${tid}] Email notify: ${cliente} | ${remetente} | ${assunto}`);
   res.json({ ok: true, task_id: task.id, operator: operator?.name || null });
 });
 
@@ -654,7 +766,6 @@ app.post('/api/webhook/email-notify', (req, res) => {
 app.post('/api/chat/upload', auth, (req, res) => {
   const { data, mimeType } = req.body || {};
   if (!data) return res.status(400).json({ error: 'Sem dados' });
-  // Limite ~2 MB em base64 ≈ ~1.5 MB de imagem
   if (data.length > 3 * 1024 * 1024) return res.status(400).json({ error: 'Imagem muito grande (máx ~1.5 MB)' });
   const ext = mimeType === 'image/jpeg' ? '.jpg' : mimeType === 'image/gif' ? '.gif' : '.png';
   const filename = `${Date.now()}_${Math.random().toString(36).slice(2)}${ext}`;
@@ -665,19 +776,17 @@ app.post('/api/chat/upload', auth, (req, res) => {
 });
 
 // ─── WEBHOOK — INTAKE WORKER (Fase 1) ────────────────
-// Chamado pelo intake worker no Railway quando processa um documento.
-// Autenticação: campo "secret" no body (não JWT).
-
 app.post('/api/webhook/intake-notify', (req, res) => {
   const {
-    secret, cliente, cliente_id, origem, remetente, assunto,
+    secret, tenant_id, cliente, cliente_id, origem, remetente, assunto,
     classificacao, fornecedor, drive_url, drive_pasta, nome_arquivo,
     data_recebido, confianca, processado, link_original, motivo_falha,
   } = req.body;
   if (secret !== WEBHOOK_SECRET) return res.status(403).json({ error: 'Não autorizado' });
-
-  const users   = DB.users();
-  const clients = DB.clients();
+  const tid = tenant_id || 'staffconect';
+  const tDB = tenantDB(tid);
+  const users   = globalDB.users().filter(u => (u.tenant_id||'staffconect') === tid);
+  const clients = tDB.clients();
 
   const client = clients.find(c =>
     String(c.id) === String(cliente_id) ||
@@ -687,7 +796,6 @@ app.post('/api/webhook/intake-notify', (req, res) => {
     ? users.find(u => !u.noLogin && (u.assignedClients || []).map(String).includes(String(client.id)))
     : null;
 
-  // Cria notificação na aba E-mails
   const notif = {
     id:          String(Date.now()),
     cliente,
@@ -708,14 +816,12 @@ app.post('/api/webhook/intake-notify', (req, res) => {
     readBy:      [],
     createdAt:   new Date().toISOString(),
   };
-  const notifs = DB.emailNotifs();
+  const notifs = tDB.emailNotifs();
   notifs.unshift(notif);
-  DB.saveEmailNotifs(notifs.slice(0, 500));
+  tDB.saveEmailNotifs(notifs.slice(0, 500));
 
-  // Push para o operador do cliente
   if (operator) {
-    const subs = getSubs();
-    const sub  = subs[String(operator.id)];
+    const sub = tDB.pushSubs()[String(operator.id)];
     if (sub) {
       webpush.sendNotification(sub, JSON.stringify({
         title: `📄 ${(classificacao || 'Documento').toUpperCase()} — ${cliente}`,
@@ -724,18 +830,19 @@ app.post('/api/webhook/intake-notify', (req, res) => {
     }
   }
 
-  console.log(`[intake-notify] ${cliente} | ${classificacao} | ${confianca} | ${nome_arquivo}`);
+  console.log(`[intake-notify/${tid}] ${cliente} | ${classificacao} | ${confianca} | ${nome_arquivo}`);
   res.json({ ok: true, notif_id: notif.id });
 });
 
 app.post('/api/webhook/intake-operacional', (req, res) => {
   const {
-    secret, cliente, cliente_id, origem, remetente, assunto,
+    secret, tenant_id, cliente, cliente_id, origem, remetente, assunto,
     descricao, texto_original, data_recebido, critico,
   } = req.body;
   if (secret !== WEBHOOK_SECRET) return res.status(403).json({ error: 'Não autorizado' });
+  const tid = tenant_id || 'staffconect';
+  const tDB = tenantDB(tid);
 
-  // Salva em email_notifs.json — aparece na aba E-mails, não cria tarefa
   const notif = {
     id:            String(Date.now()),
     tipo:          'operacional',
@@ -754,15 +861,15 @@ app.post('/api/webhook/intake-operacional', (req, res) => {
     readBy:        [],
     createdAt:     new Date().toISOString(),
   };
-  const notifs = DB.emailNotifs();
+  const notifs = tDB.emailNotifs();
   notifs.unshift(notif);
-  DB.saveEmailNotifs(notifs.slice(0, 500));
+  tDB.saveEmailNotifs(notifs.slice(0, 500));
 
-  // Push para o operador do cliente
-  const client   = DB.clients().find(c => String(c.id) === String(cliente_id) || c.name?.toLowerCase() === (cliente||'').toLowerCase());
-  const operator = client ? DB.users().find(u => !u.noLogin && (u.assignedClients||[]).map(String).includes(String(client.id))) : null;
+  const users   = globalDB.users().filter(u => (u.tenant_id||'staffconect') === tid);
+  const client  = tDB.clients().find(c => String(c.id) === String(cliente_id) || c.name?.toLowerCase() === (cliente||'').toLowerCase());
+  const operator = client ? users.find(u => !u.noLogin && (u.assignedClients||[]).map(String).includes(String(client.id))) : null;
   if (operator) {
-    const sub = getSubs()[String(operator.id)];
+    const sub = tDB.pushSubs()[String(operator.id)];
     if (sub) webpush.sendNotification(sub, JSON.stringify({
       title: critico ? `🔴 CRÍTICO — ${cliente}` : `📋 Operacional — ${cliente}`,
       body:  descricao || assunto,
@@ -770,19 +877,19 @@ app.post('/api/webhook/intake-operacional', (req, res) => {
     })).catch(() => {});
   }
 
-  console.log(`[intake-operacional] ${cliente} | ${assunto} | critico=${!!critico}`);
+  console.log(`[intake-operacional/${tid}] ${cliente} | ${assunto} | critico=${!!critico}`);
   res.json({ ok: true, notif_id: notif.id });
 });
 
 // ─── WEBHOOK — FILA DE LANÇAMENTOS (Fase 2) ──────────
-// Recebe lançamentos financeiros do intake worker para aprovação manual.
-
 app.post('/api/webhook/intake-lancamento', (req, res) => {
   const {
-    secret, cliente, cliente_id, origem, classificacao, fornecedor,
+    secret, tenant_id, cliente, cliente_id, origem, classificacao, fornecedor,
     drive_url, nome_arquivo, data_recebido, sugestao_ia, confianca, intake_id,
   } = req.body;
   if (secret !== WEBHOOK_SECRET) return res.status(401).json({ ok: false, error: 'unauthorized' });
+  const tid = tenant_id || 'staffconect';
+  const tDB = tenantDB(tid);
 
   const lancamento = {
     id:           String(Date.now()),
@@ -796,7 +903,7 @@ app.post('/api/webhook/intake-lancamento', (req, res) => {
     nome_arquivo: nome_arquivo || '',
     data_recebido,
     confianca:    confianca || 'media',
-    status:       'pendente',   // pendente | aprovado | rejeitado
+    status:       'pendente',
     sugestao_ia:  sugestao_ia || {},
     createdAt:    new Date().toISOString(),
     resolvedAt:   null,
@@ -807,30 +914,28 @@ app.post('/api/webhook/intake-lancamento', (req, res) => {
     lancamento_final: null,
   };
 
-  const lista = DB.intakeLancamentos();
+  const lista = tDB.intakeLancamentos();
   lista.unshift(lancamento);
-  DB.saveIntakeLancamentos(lista.slice(0, 500));
+  tDB.saveIntakeLancamentos(lista.slice(0, 500));
 
-  // Push para todos os operadores inscritos
-  const subs = getSubs();
+  const subs = tDB.pushSubs();
   Object.entries(subs).forEach(([, sub]) => {
     webpush.sendNotification(sub, JSON.stringify({
       title: `💰 Lançamento para aprovar — ${cliente}`,
       body:  `${fornecedor || classificacao}${sugestao_ia?.valor ? ' | R$ ' + sugestao_ia.valor : ''}`,
     })).catch(err => {
-      if (err.statusCode === 410) { const s = getSubs(); delete s[sub]; saveSubs(s); }
+      if (err.statusCode === 410) { const s = tDB.pushSubs(); delete s[sub]; tDB.savePushSubs(s); }
     });
   });
 
-  console.log(`[intake-lancamento] ${cliente} | ${fornecedor} | ${sugestao_ia?.valor || ''}`);
+  console.log(`[intake-lancamento/${tid}] ${cliente} | ${fornecedor} | ${sugestao_ia?.valor || ''}`);
   res.json({ ok: true, fila_id: lancamento.id });
 });
 
-// GET /api/intake-lancamentos — lista com filtro (auth necessária)
 app.get('/api/intake-lancamentos', auth, (req, res) => {
   const status = req.query.status || null;
   const limit  = parseInt(req.query.limit) || 100;
-  let lista = DB.intakeLancamentos();
+  let lista = req.tDB.intakeLancamentos();
   if (status === 'ca_pendente') {
     lista = lista.filter(l => l.status === 'aprovado' && !l.ca_id);
   } else if (status) {
@@ -873,17 +978,14 @@ async function _chamarCAApi(lancamento) {
   });
 }
 
-// POST /api/intake/aprovar/:id — operador aprova lançamento
 app.post('/api/intake/aprovar/:id', auth, async (req, res) => {
   const fila_id = req.params.id;
-  const lista   = DB.intakeLancamentos();
+  const lista   = req.tDB.intakeLancamentos();
   const idx     = lista.findIndex(l => l.id === fila_id);
   if (idx === -1) return res.status(404).json({ ok: false, error: 'Lançamento não encontrado' });
 
   const item = lista[idx];
-  if (item.status !== 'pendente') {
-    return res.status(409).json({ ok: false, error: `Já ${item.status}` });
-  }
+  if (item.status !== 'pendente') return res.status(409).json({ ok: false, error: `Já ${item.status}` });
 
   const lancamento = {
     cliente_id:          item.cliente_id,
@@ -898,15 +1000,13 @@ app.post('/api/intake/aprovar/:id', auth, async (req, res) => {
 
   let ca_id   = null;
   let ca_erro = null;
-
   try {
     const caRes = await _chamarCAApi(lancamento);
     if (caRes.status >= 400) {
       const detail = (() => { try { return JSON.parse(caRes.body)?.detail || caRes.body; } catch { return caRes.body; } })();
       throw new Error(`CA ${caRes.status}: ${detail}`);
     }
-    const caJson = JSON.parse(caRes.body);
-    ca_id = caJson.ca_id || null;
+    ca_id = JSON.parse(caRes.body).ca_id || null;
     console.log(`[intake-aprovar] CA ok | ca_id: ${ca_id}`);
   } catch (err) {
     ca_erro = err.message;
@@ -914,41 +1014,37 @@ app.post('/api/intake/aprovar/:id', auth, async (req, res) => {
   }
 
   lista[idx] = { ...item, status: 'aprovado', resolvedAt: new Date().toISOString(), resolvedBy: req.user.name, ca_id, ca_erro, lancamento_final: lancamento };
-  DB.saveIntakeLancamentos(lista);
+  req.tDB.saveIntakeLancamentos(lista);
 
   console.log(`[intake-aprovar] ${item.cliente} | ${item.fornecedor} | ca_id: ${ca_id}${ca_erro ? ` | ERRO: ${ca_erro}` : ''}`);
   res.json({ ok: true, ca_id, ca_erro });
 });
 
-// POST /api/intake/rejeitar/:id — operador rejeita
 app.post('/api/intake/rejeitar/:id', auth, (req, res) => {
   const fila_id = req.params.id;
-  const lista   = DB.intakeLancamentos();
+  const lista   = req.tDB.intakeLancamentos();
   const idx     = lista.findIndex(l => l.id === fila_id);
   if (idx === -1) return res.status(404).json({ ok: false, error: 'Lançamento não encontrado' });
 
   const item = lista[idx];
-  if (item.status !== 'pendente') {
-    return res.status(409).json({ ok: false, error: `Já ${item.status}` });
-  }
+  if (item.status !== 'pendente') return res.status(409).json({ ok: false, error: `Já ${item.status}` });
 
   lista[idx] = { ...item, status: 'rejeitado', resolvedAt: new Date().toISOString(), resolvedBy: req.user.name, rejeicao_motivo: req.body.motivo || '' };
-  DB.saveIntakeLancamentos(lista);
+  req.tDB.saveIntakeLancamentos(lista);
 
   console.log(`[intake-rejeitar] ${item.cliente} | ${item.fornecedor} | motivo: ${req.body.motivo || ''}`);
   res.json({ ok: true });
 });
 
-// POST /api/intake/retentar-ca/:id — retenta criação CA sem reaprovar
 app.post('/api/intake/retentar-ca/:id', auth, async (req, res) => {
   const fila_id = req.params.id;
-  const lista   = DB.intakeLancamentos();
+  const lista   = req.tDB.intakeLancamentos();
   const idx     = lista.findIndex(l => l.id === fila_id);
   if (idx === -1) return res.status(404).json({ ok: false, error: 'Lançamento não encontrado' });
 
   const item = lista[idx];
-  if (item.status !== 'aprovado')  return res.status(409).json({ ok: false, error: `Status atual: ${item.status} (precisa ser aprovado)` });
-  if (item.ca_id)                  return res.status(409).json({ ok: false, error: `Já lançado no CA: ${item.ca_id}` });
+  if (item.status !== 'aprovado') return res.status(409).json({ ok: false, error: `Status atual: ${item.status} (precisa ser aprovado)` });
+  if (item.ca_id)                 return res.status(409).json({ ok: false, error: `Já lançado no CA: ${item.ca_id}` });
 
   const lf = item.lancamento_final || {
     cliente_id:  item.cliente_id,
@@ -967,17 +1063,14 @@ app.post('/api/intake/retentar-ca/:id', auth, async (req, res) => {
     conta_financeira_id: req.body.conta_financeira_id || lf.conta_financeira_id || null,
   };
 
-  let ca_id   = null;
-  let ca_erro = null;
-
+  let ca_id = null, ca_erro = null;
   try {
     const caRes = await _chamarCAApi(lancamento);
     if (caRes.status >= 400) {
       const detail = (() => { try { return JSON.parse(caRes.body)?.detail || caRes.body; } catch { return caRes.body; } })();
       throw new Error(`CA ${caRes.status}: ${detail}`);
     }
-    const caJson = JSON.parse(caRes.body);
-    ca_id = caJson.ca_id || null;
+    ca_id = JSON.parse(caRes.body).ca_id || null;
     console.log(`[retentar-ca] CA ok | ca_id: ${ca_id}`);
   } catch (err) {
     ca_erro = err.message;
@@ -985,25 +1078,183 @@ app.post('/api/intake/retentar-ca/:id', auth, async (req, res) => {
   }
 
   lista[idx] = { ...item, ca_id, ca_erro, lancamento_final: lancamento };
-  DB.saveIntakeLancamentos(lista);
-
+  req.tDB.saveIntakeLancamentos(lista);
   res.json({ ok: !!ca_id, ca_id, ca_erro });
 });
 
-// DELETE /api/intake/lancamento/:id — remove lançamento com erro da fila
 app.delete('/api/intake/lancamento/:id', auth, (req, res) => {
-  const lista = DB.intakeLancamentos();
+  const lista = req.tDB.intakeLancamentos();
   const idx   = lista.findIndex(l => l.id === req.params.id);
   if (idx === -1) return res.status(404).json({ ok: false, error: 'Lançamento não encontrado' });
 
   const item = lista[idx];
-  // Só permite excluir se não foi lançado com sucesso no CA
   if (item.ca_id) return res.status(409).json({ ok: false, error: 'Lançamento já registrado no CA — não pode excluir' });
 
   lista.splice(idx, 1);
-  DB.saveIntakeLancamentos(lista);
-  console.log(`[intake-delete] Lançamento ${req.params.id} removido por ${req.user?.nome || 'operador'}`);
+  req.tDB.saveIntakeLancamentos(lista);
+  console.log(`[intake-delete] Lançamento ${req.params.id} removido por ${req.user?.name || 'operador'}`);
   res.json({ ok: true });
+});
+
+// ─── BOOTSTRAP MASTER ────────────────────────────────
+// Cria o primeiro usuário master. Desabilitado automaticamente após o primeiro uso.
+// Uso: POST /api/bootstrap-master { secret, name, email, password }
+// Secret definido via env BOOTSTRAP_SECRET (padrão: não funciona sem definir)
+app.post('/api/bootstrap-master', (req, res) => {
+  const BOOTSTRAP = process.env.BOOTSTRAP_SECRET;
+  if (!BOOTSTRAP) return res.status(403).json({ error: 'BOOTSTRAP_SECRET não configurado' });
+  const { secret, name, email, password } = req.body || {};
+  if (secret !== BOOTSTRAP) return res.status(403).json({ error: 'Secret inválido' });
+  if (!name || !email || !password) return res.status(400).json({ error: 'name, email e password obrigatórios' });
+  const users = globalDB.users();
+  if (users.find(u => u.role === 'master')) return res.status(409).json({ error: 'Usuário master já existe' });
+  const emailNorm = email.toLowerCase().trim();
+  if (users.find(u => u.email === emailNorm)) return res.status(409).json({ error: 'E-mail já cadastrado' });
+  const master = { id: Date.now(), name, email: emailNorm, password_hash: bcrypt.hashSync(password, 10), role: 'master', tenant_id: null };
+  globalDB.saveUsers([...users, master]);
+  console.log(`[bootstrap] Usuário master criado: ${emailNorm}`);
+  res.json({ ok: true, message: 'Master criado. Remova BOOTSTRAP_SECRET do env.' });
+});
+
+// ─── MASTER API ──────────────────────────────────────
+function masterAuth(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Não autenticado' });
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    if (req.user.role !== 'master') return res.status(403).json({ error: 'Acesso restrito ao Master' });
+    next();
+  } catch { res.status(401).json({ error: 'Sessão expirada' }); }
+}
+
+// GET /api/master/tenants — lista tenants com stats
+app.get('/api/master/tenants', masterAuth, (req, res) => {
+  const tenants = globalDB.tenants();
+  const allUsers = globalDB.users();
+  const result = tenants.map(t => {
+    const tDB = tenantDB(t.id);
+    const users = allUsers.filter(u => (u.tenant_id||'staffconect') === t.id);
+    const clients = tDB.clients();
+    const extra = tDB.extraTasks();
+    const lastRun = tDB.lastDailyRun();
+    return {
+      ...t,
+      stats: {
+        users:    users.length,
+        clients:  clients.length,
+        tasks:    extra.filter(x => x.status !== 'done').length,
+        lastActivity: lastRun.ts || null,
+      },
+    };
+  });
+  res.json(result);
+});
+
+// POST /api/master/tenants — cria novo tenant
+app.post('/api/master/tenants', masterAuth, (req, res) => {
+  const { id, name, plan, primaryColor, activeTabIds } = req.body;
+  if (!id || !name) return res.status(400).json({ error: 'id e name obrigatórios' });
+  const slug = id.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+  const tenants = globalDB.tenants();
+  if (tenants.find(t => t.id === slug)) return res.status(409).json({ error: 'Tenant já existe' });
+  const tenant = {
+    id: slug, name, plan: plan || 'basic', primaryColor: primaryColor || '#00C48C',
+    activeTabIds: activeTabIds || ['fila','tarefas','clientes','conhecimento','chat'],
+    active: true, createdAt: new Date().toISOString(),
+  };
+  globalDB.saveTenants([...tenants, tenant]);
+  seedTenantDefaults(slug);
+  res.json(tenant);
+});
+
+// PUT /api/master/tenants/:id — edita tenant
+app.put('/api/master/tenants/:id', masterAuth, (req, res) => {
+  const tenants = globalDB.tenants().map(t =>
+    t.id === req.params.id ? { ...t, ...req.body, id: t.id } : t
+  );
+  globalDB.saveTenants(tenants);
+  res.json({ ok: true });
+});
+
+// GET /api/master/users — todos os usuários com info de tenant
+app.get('/api/master/users', masterAuth, (req, res) => {
+  const users = globalDB.users().map(u => ({
+    id: u.id, name: u.name, email: u.email, role: u.role,
+    tenant_id: u.tenant_id || 'staffconect', noLogin: !!u.noLogin,
+    assignedClients: u.assignedClients || [],
+  }));
+  res.json(users);
+});
+
+// POST /api/master/reset-password — reseta senha de qualquer usuário
+app.post('/api/master/reset-password', masterAuth, (req, res) => {
+  const { userId, newPassword } = req.body;
+  if (!userId || !newPassword) return res.status(400).json({ error: 'userId e newPassword obrigatórios' });
+  if (newPassword.length < 6) return res.status(400).json({ error: 'Senha mínimo 6 caracteres' });
+  const users = globalDB.users();
+  const idx = users.findIndex(u => String(u.id) === String(userId));
+  if (idx === -1) return res.status(404).json({ error: 'Usuário não encontrado' });
+  users[idx] = { ...users[idx], password_hash: bcrypt.hashSync(newPassword, 10), must_change_password: true };
+  globalDB.saveUsers(users);
+  console.log(`[master] Reset de senha: ${users[idx].name} (${users[idx].email})`);
+  res.json({ ok: true });
+});
+
+// GET /api/master/aprovacoes — tarefas pending_approval de todos os tenants
+app.get('/api/master/aprovacoes', masterAuth, (req, res) => {
+  const result = [];
+  getActiveTenantIds().forEach(tid => {
+    const tenant = globalDB.tenants().find(t => t.id === tid);
+    tenantDB(tid).extraTasks()
+      .filter(t => t.status === 'pending_approval')
+      .forEach(t => result.push({ ...t, tenant_id: tid, tenant_name: tenant?.name || tid }));
+  });
+  result.sort((a,b) => new Date(b.approval_requested_at||0) - new Date(a.approval_requested_at||0));
+  res.json(result);
+});
+
+// POST /api/master/extra-tasks/:tenantId/:id/aprovar — master aprova de qualquer tenant
+app.post('/api/master/extra-tasks/:tenantId/:id/aprovar', masterAuth, (req, res) => {
+  const tDB = tenantDB(req.params.tenantId);
+  const tasks = tDB.extraTasks();
+  const idx = tasks.findIndex(t => String(t.id) === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
+  tasks[idx] = { ...tasks[idx], status: 'done', done_at: new Date().toISOString(),
+    approved_at: new Date().toISOString(), approved_by: req.user.name,
+    approval_comment: req.body.comment || null, rejected_reason: null };
+  tDB.saveExtra(tasks);
+  res.json({ ok: true });
+});
+
+// POST /api/master/extra-tasks/:tenantId/:id/rejeitar — master rejeita de qualquer tenant
+app.post('/api/master/extra-tasks/:tenantId/:id/rejeitar', masterAuth, (req, res) => {
+  const tDB = tenantDB(req.params.tenantId);
+  const tasks = tDB.extraTasks();
+  const idx = tasks.findIndex(t => String(t.id) === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
+  tasks[idx] = { ...tasks[idx], status: 'pending', done_at: null,
+    rejected_at: new Date().toISOString(), rejected_by: req.user.name,
+    rejected_reason: req.body.reason || '', approved_at: null, approved_by: null };
+  tDB.saveExtra(tasks);
+  res.json({ ok: true });
+});
+
+// POST /api/master/users — cria usuário em qualquer tenant
+app.post('/api/master/users', masterAuth, (req, res) => {
+  const { name, email, password, role, tenant_id } = req.body;
+  if (!name || !email || !password || !tenant_id) return res.status(400).json({ error: 'name, email, password e tenant_id obrigatórios' });
+  if (password.length < 6) return res.status(400).json({ error: 'Senha mínimo 6 caracteres' });
+  const users = globalDB.users();
+  const emailNorm = email.toLowerCase().trim();
+  if (users.find(u => u.email === emailNorm)) return res.status(409).json({ error: 'E-mail já cadastrado' });
+  const newUser = {
+    id: Date.now(), name, email: emailNorm,
+    password_hash: bcrypt.hashSync(password, 10),
+    role: role || 'operator', tenant_id, assignedClients: [],
+    must_change_password: true,
+  };
+  globalDB.saveUsers([...users, newUser]);
+  res.json({ ok: true, user: { id: newUser.id, name, email: emailNorm, role: newUser.role, tenant_id } });
 });
 
 // ─── SPA FALLBACK ────────────────────────────────────
