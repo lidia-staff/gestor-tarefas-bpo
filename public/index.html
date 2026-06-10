@@ -3702,6 +3702,177 @@ function Chat({currentUser}) {
   );
 }
 
+// ── HELP PANEL ───────────────────────────────────────
+const HELP_CONTENT = {
+  // Gestor
+  fila: {
+    title: '📋 Fila do Dia',
+    intro: 'Lista diária de tarefas por cliente. Marque itens conforme executa.',
+    items: [
+      ['✅ Concluir item','Clique no checkbox ao lado do item para marcar como feito.'],
+      ['🔁 Recorrência','Tarefas recorrentes aparecem automaticamente todo dia útil.'],
+      ['➕ Adicionar item','Use o botão "+ Tarefa" no card do cliente para inserir uma tarefa pontual.'],
+      ['🟡 Status amarelo','Indica tarefa parcialmente concluída (alguns itens pendentes).'],
+    ],
+  },
+  tarefas: {
+    title: '✅ Tarefas',
+    intro: 'Gerenciamento de tarefas extras e recorrentes por cliente.',
+    items: [
+      ['➕ Nova tarefa','Clique em "+ Nova Tarefa" e preencha título, cliente e operador.'],
+      ['🔁 Recorrente','Ative a opção "Recorrente" para repetir a tarefa todo dia útil.'],
+      ['⏳ Aprovação','Quando habilitado pelo Master, concluir envia para aprovação do Admin.'],
+      ['🗑️ Excluir','Ícone de lixeira no card. Para recorrentes, pode excluir só a ocorrência ou todas.'],
+    ],
+  },
+  chat: {
+    title: '💬 Chat',
+    intro: 'Canal interno de comunicação entre a equipe.',
+    items: [
+      ['📩 Enviar','Digite a mensagem e pressione Enter ou clique em Enviar.'],
+      ['🔴 Badge vermelho','Indica mensagens não lidas. Some ao abrir o Chat.'],
+      ['👤 Menção','Use @nome para chamar atenção de um colega.'],
+    ],
+  },
+  conhecimento: {
+    title: '📚 Trilha',
+    intro: 'Base de conhecimento e mensagens padrão da equipe.',
+    items: [
+      ['📄 Manuais','Documentos de processo. Apenas admins podem criar/editar.'],
+      ['💬 Mensagens padrão','Templates de resposta rápida para uso no dia a dia.'],
+      ['↕️ Reordenar','Arraste os itens para reorganizar a ordem de exibição.'],
+    ],
+  },
+  emails: {
+    title: '📧 E-mails',
+    intro: 'Notificações e e-mails recebidos via integração.',
+    items: [
+      ['📥 Recebidos','E-mails classificados automaticamente pelo intake bot.'],
+      ['🔴 Badge','Indica e-mails não lidos. Some ao abrir a aba.'],
+      ['🔗 Integração','Configurada pelo Master em Integrações > E-mail.'],
+    ],
+  },
+  lancamentos: {
+    title: '💰 Lançamentos',
+    intro: 'Fila de lançamentos financeiros pendentes de revisão.',
+    items: [
+      ['🟡 Pendente','Lançamento aguardando confirmação do operador.'],
+      ['✅ Confirmar','Clique em "Confirmar" para aprovar o lançamento no Conta Azul.'],
+      ['❌ Rejeitar','Clique em "Rejeitar" para devolver com observação.'],
+      ['🔄 Origem','Lançamentos chegam automaticamente via intake bot.'],
+    ],
+  },
+  clientes: {
+    title: '👥 Clientes',
+    intro: 'Cadastro e gestão da carteira de clientes.',
+    items: [
+      ['➕ Novo','Botão "+ Novo Cliente" no topo.'],
+      ['✏️ Editar','Clique no nome do cliente para abrir e editar.'],
+      ['👤 Operador','Cada cliente pode ser atribuído a um operador responsável.'],
+    ],
+  },
+  ops: {
+    title: '⚙️ Operadores',
+    intro: 'Gestão dos membros da equipe e suas permissões.',
+    items: [
+      ['➕ Novo','Crie o operador aqui. Login é criado separadamente em Usuários.'],
+      ['📋 Clientes atribuídos','Mostra quantos clientes cada operador gerencia.'],
+      ['🔒 Admin','Admins podem aprovar tarefas e gerenciar operadores.'],
+    ],
+  },
+  // Master
+  dashboard: {
+    title: '📊 Dashboard',
+    intro: 'Visão geral de todas as empresas cadastradas.',
+    items: [
+      ['🏢 Card empresa','Exibe usuários, clientes e tarefas de cada tenant.'],
+      ['📊 Barra de uso','Mostra ocupação do limite de usuários do plano.'],
+      ['✏️ Editar','Abre configurações da empresa (plano, cor, módulos ativos).'],
+      ['🔴 Inativo','Empresas inativas ficam opacas e não conseguem acessar o sistema.'],
+    ],
+  },
+  empresas: {
+    title: '🏢 Empresas',
+    intro: 'CRUD de tenants. Cada empresa é isolada das demais.',
+    items: [
+      ['➕ Nova Empresa','Slug único (ex: staffconect), nome, plano e cor primária.'],
+      ['📦 Plano','Básico=2 usuários, Pro=até 5, Enterprise=ilimitado.'],
+      ['🧩 Módulos','Habilite/desabilite abas por empresa (E-mails, Lançamentos...).'],
+      ['⚠️ Slug imutável','O ID da empresa não pode ser alterado após criação.'],
+    ],
+  },
+  users: {
+    title: '👥 Usuários',
+    intro: 'Todos os usuários do sistema, exceto o Master.',
+    items: [
+      ['➕ Novo','Cria usuário em qualquer empresa. Senha temporária gerada.'],
+      ['🔑 Resetar senha','Gera nova senha temporária. Usuário deve trocar no próximo login.'],
+      ['🟢 Admin','Pode aprovar tarefas e gerenciar operadores da própria empresa.'],
+    ],
+  },
+  integracoes: {
+    title: '🔌 Integrações',
+    intro: 'Configurações de integração por empresa.',
+    items: [
+      ['🔵 Conta Azul','URL da API + secret. Use "Testar conexão" para validar.',''],
+      ['📧 E-mail SMTP','Servidor, porta, usuário e senha para envio de e-mails.',''],
+      ['📁 Google Drive','ID da pasta e JSON da service account para upload de arquivos.',''],
+      ['💾 Salvar','As senhas são criptografadas e nunca exibidas após salvar.',''],
+    ],
+  },
+};
+
+function HelpPanel({screen}) {
+  const [open, setOpen] = React.useState(false);
+  const content = HELP_CONTENT[screen];
+  if (!content) return null;
+  return (
+    <>
+      {/* Botão flutuante ❓ */}
+      <button
+        onClick={()=>setOpen(o=>!o)}
+        title="Ajuda desta tela"
+        style={{position:'fixed',bottom:'24px',right:'24px',zIndex:1000,
+          width:'40px',height:'40px',borderRadius:'50%',
+          background: open ? '#22c55e' : '#060505',
+          border:'2px solid #22c55e',
+          color: open ? '#fff' : '#22c55e',
+          fontSize:'18px',fontWeight:700,cursor:'pointer',
+          boxShadow:'0 4px 12px rgba(0,0,0,.25)',
+          display:'flex',alignItems:'center',justifyContent:'center',
+          transition:'all .2s'}}>
+        {open ? '✕' : '❓'}
+      </button>
+
+      {/* Painel lateral */}
+      {open && (
+        <div style={{position:'fixed',top:0,right:0,bottom:0,width:'340px',zIndex:999,
+          background:'#fff',borderLeft:'1px solid #e2e8f0',
+          boxShadow:'-4px 0 24px rgba(0,0,0,.12)',
+          display:'flex',flexDirection:'column',overflowY:'auto'}}>
+          {/* Header */}
+          <div style={{padding:'20px 20px 16px',borderBottom:'1px solid #f1f5f9',background:'#f8fafc'}}>
+            <div style={{fontSize:'16px',fontWeight:700,color:'#060505',marginBottom:'4px'}}>{content.title}</div>
+            <div style={{fontSize:'13px',color:'#64748b',lineHeight:1.5}}>{content.intro}</div>
+          </div>
+          {/* Items */}
+          <div style={{padding:'16px 20px',flex:1}}>
+            {content.items.map(([action, desc], i)=>(
+              <div key={i} style={{marginBottom:'16px',paddingBottom:'16px',borderBottom: i<content.items.length-1 ?'1px solid #f1f5f9':'none'}}>
+                <div style={{fontWeight:600,fontSize:'13px',color:'#060505',marginBottom:'4px'}}>{action}</div>
+                <div style={{fontSize:'12px',color:'#64748b',lineHeight:1.6}}>{desc}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{padding:'12px 20px',borderTop:'1px solid #f1f5f9',fontSize:'11px',color:'#94a3b8',textAlign:'center'}}>
+            Staff Conect · Ajuda contextual
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ── DASHBOARD ────────────────────────────────────────
 function Dashboard({user, onLogout}) {
   const [tab,setTab]           = useState('fila');
@@ -4046,6 +4217,7 @@ function Dashboard({user, onLogout}) {
         </div>
 
       </div>
+      <HelpPanel screen={tab}/>
     </div>
   );
 }
@@ -4150,19 +4322,19 @@ function IntegracoesMaster({tenants, onReload}) {
 
   const tenant = tenants.find(t=>t.id===selected);
   const S = {
-    card:    {background:'#1a1a1a',borderRadius:'12px',padding:'20px',border:'1px solid rgba(255,255,255,.06)',marginBottom:'16px'},
-    label:   {display:'block',fontSize:'12px',fontWeight:600,color:'#6b7280',marginBottom:'6px'},
-    input:   {width:'100%',padding:'9px 12px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.1)',background:'#111111',color:'#ffffff',fontSize:'13px',boxSizing:'border-box'},
-    section: {fontSize:'14px',fontWeight:700,color:'#ffffff',marginBottom:'14px',display:'flex',alignItems:'center',gap:'8px'},
+    card:    {background:'#fff',borderRadius:'12px',padding:'20px',border:'1px solid #e2e8f0',marginBottom:'16px',boxShadow:'0 1px 3px rgba(0,0,0,.06)'},
+    label:   {display:'block',fontSize:'12px',fontWeight:600,color:'#64748b',marginBottom:'6px'},
+    input:   {width:'100%',padding:'9px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',color:'#060505',fontSize:'13px',boxSizing:'border-box'},
+    section: {fontSize:'14px',fontWeight:700,color:'#060505',marginBottom:'14px',display:'flex',alignItems:'center',gap:'8px'},
     row:     {display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px',marginBottom:'12px'},
   };
 
   return (
     <div className="fade-in">
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-        <h2 style={{fontWeight:700,fontSize:'18px',color:'#ffffff'}}>Integrações por Empresa</h2>
+        <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>Integrações por Empresa</h2>
         <select value={selected} onChange={e=>setSelected(e.target.value)}
-          style={{padding:'8px 12px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.1)',background:'#1a1a1a',color:'#ffffff',fontSize:'13px',cursor:'pointer'}}>
+          style={{padding:'8px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',color:'#060505',fontSize:'13px',cursor:'pointer'}}>
           {tenants.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
       </div>
@@ -4185,7 +4357,7 @@ function IntegracoesMaster({tenants, onReload}) {
           </div>
           <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
             <button onClick={testCA} disabled={testing==='ca'}
-              style={{padding:'7px 16px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.12)',background:'rgba(255,255,255,.06)',color:'#d1d5db',cursor:'pointer',fontSize:'13px',fontWeight:600}}>
+              style={{padding:'7px 16px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',color:'#475569',cursor:'pointer',fontSize:'13px',fontWeight:600}}>
               {testing==='ca'?'Testando…':'⚡ Testar conexão'}
             </button>
             {testResult.ca && (
@@ -4493,9 +4665,9 @@ function MasterDashboard({user, onLogout}) {
   ];
 
   return (
-    <div style={{minHeight:'100vh',background:'#111111',color:'#ffffff'}}>
+    <div style={{minHeight:'100vh',background:'#F4F5F7'}}>
       {/* Header */}
-      <div style={{background:'#000000',borderBottom:'1px solid rgba(255,255,255,.08)',position:'sticky',top:0,zIndex:40}}>
+      <div className="nav-header" style={{position:'sticky',top:0,zIndex:40}}>
         <div style={{maxWidth:'1200px',margin:'0 auto',padding:'0 16px'}}>
           <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'12px 0'}}>
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
@@ -4504,20 +4676,20 @@ function MasterDashboard({user, onLogout}) {
               </div>
               <div>
                 <div style={{fontSize:'14px',fontWeight:700,color:'#fff',lineHeight:1.2}}>Staff<span style={{color:'#22c55e'}}>Master</span></div>
-                <div style={{fontSize:'10px',color:'#4b5563',lineHeight:1.2}}>Painel de Controle · {tenants.length} empresa(s)</div>
+                <div style={{fontSize:'10px',color:'#64748b',lineHeight:1.2}}>Painel de Controle · {tenants.length} empresa(s)</div>
               </div>
             </div>
             <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
               <span style={{fontSize:'12px',color:'#22c55e',fontWeight:600}}>👑 {user.name}</span>
-              <button onClick={onLogout} style={{background:'rgba(255,255,255,.06)',border:'1px solid rgba(255,255,255,.1)',color:'#9ca3af',padding:'6px 12px',borderRadius:'8px',fontSize:'12px',cursor:'pointer'}}>Sair</button>
+              <button onClick={onLogout} style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.1)',color:'#94a3b8',padding:'6px 12px',borderRadius:'8px',fontSize:'12px',cursor:'pointer'}}>Sair</button>
             </div>
           </div>
           <div style={{display:'flex',gap:'2px'}}>
             {masterTabs.map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)}
                 style={{padding:'10px 16px',fontSize:'13px',fontWeight:tab===t.id?600:400,background:'none',border:'none',
-                  borderBottom:tab===t.id?'2px solid #22c55e':'2px solid transparent',
-                  color:tab===t.id?'#22c55e':'#6b7280',cursor:'pointer',whiteSpace:'nowrap',transition:'all .15s'}}>
+                  borderBottom:tab===t.id?'3px solid #22c55e':'3px solid transparent',
+                  color:tab===t.id?'#22c55e':'#94a3b8',cursor:'pointer',whiteSpace:'nowrap',transition:'all .15s'}}>
                 {t.label}
               </button>
             ))}
@@ -4531,45 +4703,45 @@ function MasterDashboard({user, onLogout}) {
           {/* ── TAB: DASHBOARD ── */}
           {tab==='dashboard' && (
             <div className="fade-in">
-              <h2 style={{fontWeight:700,fontSize:'18px',color:'#ffffff',marginBottom:'20px'}}>Visão geral das empresas</h2>
+              <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505',marginBottom:'20px'}}>Visão geral das empresas</h2>
               <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(300px,1fr))',gap:'16px'}}>
                 {tenants.map(t=>{
                   const planMax = PLAN_MAX[t.plan]||2;
                   const usersT  = users.filter(u=>u.tenant_id===t.id);
                   const pct     = planMax === Infinity ? 0 : Math.round((usersT.length/planMax)*100);
                   return (
-                    <div key={t.id} style={{background:'#1a1a1a',borderRadius:'12px',padding:'20px',borderTop:`3px solid ${t.primaryColor||'#22c55e'}`,opacity:t.active?1:.5}}>
+                    <div key={t.id} className="card" style={{padding:'20px',borderTop:`3px solid ${t.primaryColor||'#22c55e'}`,opacity:t.active?1:.6}}>
                       <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'12px'}}>
                         <div>
-                          <div style={{fontWeight:700,fontSize:'15px',color:'#ffffff'}}>{t.name}</div>
-                          <div style={{fontSize:'11px',color:'#4b5563',marginTop:'2px'}}>/{t.id}</div>
+                          <div style={{fontWeight:700,fontSize:'15px',color:'#060505'}}>{t.name}</div>
+                          <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'2px'}}>/{t.id}</div>
                         </div>
                         <div style={{display:'flex',gap:'6px',flexDirection:'column',alignItems:'flex-end'}}>
-                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}30`,color:PLAN_COLORS[t.plan]||'#9ca3af'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
-                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(34,197,94,.12)':'rgba(148,163,184,.1)',color:t.active?'#22c55e':'#6b7280'}}>{t.active?'Ativo':'Inativo'}</span>
+                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}20`,color:PLAN_COLORS[t.plan]||'#64748b'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
+                          <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(34,197,94,.1)':'rgba(148,163,184,.1)',color:t.active?'#22c55e':'#94a3b8'}}>{t.active?'Ativo':'Inativo'}</span>
                         </div>
                       </div>
                       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'8px',marginBottom:'14px'}}>
                         {[['👥',usersT.length,'usuários'],['🏢',t.stats?.clients||0,'clientes'],['✅',t.stats?.tasks||0,'tarefas']].map(([icon,val,lbl])=>(
-                          <div key={lbl} style={{background:'#111111',borderRadius:'8px',padding:'10px',textAlign:'center'}}>
+                          <div key={lbl} style={{background:'#f8fafc',borderRadius:'8px',padding:'10px',textAlign:'center'}}>
                             <div style={{fontSize:'18px'}}>{icon}</div>
-                            <div style={{fontWeight:700,fontSize:'16px',color:'#ffffff'}}>{val}</div>
-                            <div style={{fontSize:'10px',color:'#6b7280'}}>{lbl}</div>
+                            <div style={{fontWeight:700,fontSize:'16px',color:'#060505'}}>{val}</div>
+                            <div style={{fontSize:'10px',color:'#94a3b8'}}>{lbl}</div>
                           </div>
                         ))}
                       </div>
                       {planMax !== Infinity && (
                         <div style={{marginBottom:'12px'}}>
-                          <div style={{display:'flex',justifyContent:'space-between',fontSize:'11px',color:'#6b7280',marginBottom:'4px'}}>
+                          <div style={{display:'flex',justifyContent:'space-between',fontSize:'11px',color:'#64748b',marginBottom:'4px'}}>
                             <span>Usuários</span><span>{usersT.length}/{planMax}</span>
                           </div>
                           <div className="progress-track"><div className="progress-fill" style={{width:`${pct}%`,background:pct>=100?'#dc2626':t.primaryColor||'#22c55e'}}/></div>
                         </div>
                       )}
                       {t.stats?.lastActivity && (
-                        <div style={{fontSize:'11px',color:'#4b5563'}}>Última atividade: {new Date(t.stats.lastActivity).toLocaleDateString('pt-BR')}</div>
+                        <div style={{fontSize:'11px',color:'#94a3b8'}}>Última atividade: {new Date(t.stats.lastActivity).toLocaleDateString('pt-BR')}</div>
                       )}
-                      <button onClick={()=>setTenantModal(t)} style={{marginTop:'12px',width:'100%',padding:'8px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.05)',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#d1d5db'}}>
+                      <button onClick={()=>setTenantModal(t)} style={{marginTop:'12px',width:'100%',padding:'8px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
                         ✏️ Editar configurações
                       </button>
                     </div>
@@ -4589,14 +4761,14 @@ function MasterDashboard({user, onLogout}) {
           {tab==='empresas' && (
             <div className="fade-in">
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-                <h2 style={{fontWeight:700,fontSize:'18px',color:'#ffffff'}}>Empresas</h2>
+                <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>Empresas</h2>
                 <button onClick={()=>setTenantModal('new')} style={{padding:'8px 16px',borderRadius:'8px',border:'none',background:'#22c55e',color:'#fff',cursor:'pointer',fontWeight:700,fontSize:'13px'}}>+ Nova Empresa</button>
               </div>
-              <div style={{background:'#1a1a1a',borderRadius:'12px',overflow:'hidden',border:'1px solid rgba(255,255,255,.06)'}}>
+              <div className="card" style={{overflow:'hidden'}}>
                 <table style={{width:'100%',borderCollapse:'collapse'}}>
-                  <thead><tr style={{background:'#111111'}}>
+                  <thead><tr style={{background:'#f8fafc'}}>
                     {['Empresa','Plano','Usuários','Clientes','Módulos','Status',''].map(h=>(
-                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#4b5563',borderBottom:'1px solid rgba(255,255,255,.06)'}}>{h}</th>
+                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#64748b',borderBottom:'1px solid #f1f5f9'}}>{h}</th>
                     ))}
                   </tr></thead>
                   <tbody>
@@ -4604,30 +4776,30 @@ function MasterDashboard({user, onLogout}) {
                       const planMax = PLAN_MAX[t.plan]||2;
                       const usersT  = users.filter(u=>u.tenant_id===t.id).length;
                       return (
-                        <tr key={t.id} style={{borderBottom:'1px solid rgba(255,255,255,.05)'}}>
+                        <tr key={t.id} style={{borderBottom:'1px solid #f1f5f9'}}>
                           <td style={{padding:'14px 16px'}}>
                             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
                               <div style={{width:'8px',height:'8px',borderRadius:'50%',background:t.primaryColor||'#22c55e',flexShrink:0}}/>
                               <div>
-                                <div style={{fontWeight:600,fontSize:'14px',color:'#ffffff'}}>{t.name}</div>
-                                <div style={{fontSize:'11px',color:'#4b5563'}}>/{t.id}</div>
+                                <div style={{fontWeight:600,fontSize:'14px',color:'#060505'}}>{t.name}</div>
+                                <div style={{fontSize:'11px',color:'#94a3b8'}}>/{t.id}</div>
                               </div>
                             </div>
                           </td>
                           <td style={{padding:'14px 16px'}}>
-                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}30`,color:PLAN_COLORS[t.plan]||'#9ca3af'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
+                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:700,background:`${PLAN_COLORS[t.plan]||'#64748b'}20`,color:PLAN_COLORS[t.plan]||'#64748b'}}>{PLAN_LABELS[t.plan]||t.plan}</span>
                           </td>
                           <td style={{padding:'14px 16px',fontSize:'13px'}}>
-                            <span style={{color:usersT>=(planMax===Infinity?999:planMax)?'#ef4444':'#ffffff',fontWeight:600}}>{usersT}</span>
-                            <span style={{color:'#4b5563'}}>/{planMax===Infinity?'∞':planMax}</span>
+                            <span style={{color:usersT>=(planMax===Infinity?999:planMax)?'#dc2626':'#374151',fontWeight:600}}>{usersT}</span>
+                            <span style={{color:'#94a3b8'}}>/{planMax===Infinity?'∞':planMax}</span>
                           </td>
-                          <td style={{padding:'14px 16px',fontSize:'13px',color:'#d1d5db'}}>{t.stats?.clients||0}</td>
-                          <td style={{padding:'14px 16px',fontSize:'12px',color:'#6b7280'}}>{(t.activeTabIds||BASIC_TABS).length} / {DEFAULT_TABS.length}</td>
+                          <td style={{padding:'14px 16px',fontSize:'13px',color:'#374151'}}>{t.stats?.clients||0}</td>
+                          <td style={{padding:'14px 16px',fontSize:'12px',color:'#64748b'}}>{(t.activeTabIds||BASIC_TABS).length} / {DEFAULT_TABS.length}</td>
                           <td style={{padding:'14px 16px'}}>
-                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(34,197,94,.12)':'rgba(148,163,184,.08)',color:t.active?'#22c55e':'#6b7280'}}>{t.active?'Ativo':'Inativo'}</span>
+                            <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(34,197,94,.1)':'rgba(148,163,184,.1)',color:t.active?'#22c55e':'#94a3b8'}}>{t.active?'Ativo':'Inativo'}</span>
                           </td>
                           <td style={{padding:'14px 16px'}}>
-                            <button onClick={()=>setTenantModal(t)} style={{padding:'5px 12px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.05)',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#d1d5db'}}>Editar</button>
+                            <button onClick={()=>setTenantModal(t)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>Editar</button>
                           </td>
                         </tr>
                       );
@@ -4642,39 +4814,39 @@ function MasterDashboard({user, onLogout}) {
           {tab==='users' && (
             <div className="fade-in">
               <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'20px'}}>
-                <h2 style={{fontWeight:700,fontSize:'18px',color:'#ffffff'}}>Usuários ({users.filter(u=>u.role!=='master').length})</h2>
+                <h2 style={{fontWeight:700,fontSize:'18px',color:'#060505'}}>Usuários ({users.filter(u=>u.role!=='master').length})</h2>
                 <button onClick={()=>setNovoUserModal(true)} style={{padding:'8px 16px',borderRadius:'8px',border:'none',background:'#22c55e',color:'#fff',cursor:'pointer',fontWeight:700,fontSize:'13px'}}>+ Novo Usuário</button>
               </div>
-              <div style={{background:'#1a1a1a',borderRadius:'12px',overflow:'hidden',border:'1px solid rgba(255,255,255,.06)'}}>
+              <div className="card" style={{overflow:'hidden'}}>
                 <table style={{width:'100%',borderCollapse:'collapse'}}>
-                  <thead><tr style={{background:'#111111'}}>
+                  <thead><tr style={{background:'#f8fafc'}}>
                     {['Nome','E-mail','Empresa','Cargo',''].map(h=>(
-                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#4b5563',borderBottom:'1px solid rgba(255,255,255,.06)'}}>{h}</th>
+                      <th key={h} style={{padding:'12px 16px',textAlign:'left',fontSize:'12px',fontWeight:600,color:'#64748b',borderBottom:'1px solid #f1f5f9'}}>{h}</th>
                     ))}
                   </tr></thead>
                   <tbody>
                     {users.filter(u=>u.role!=='master').map(u=>{
                       const t = tenants.find(x=>x.id===u.tenant_id);
                       return (
-                        <tr key={u.id} style={{borderBottom:'1px solid rgba(255,255,255,.05)'}}>
-                          <td style={{padding:'12px 16px',fontWeight:600,fontSize:'14px',color:'#ffffff'}}>{u.name}</td>
-                          <td style={{padding:'12px 16px',fontSize:'13px',color:'#6b7280'}}>{u.email||'—'}</td>
+                        <tr key={u.id} style={{borderBottom:'1px solid #f1f5f9'}}>
+                          <td style={{padding:'12px 16px',fontWeight:600,fontSize:'14px',color:'#060505'}}>{u.name}</td>
+                          <td style={{padding:'12px 16px',fontSize:'13px',color:'#64748b'}}>{u.email||'—'}</td>
                           <td style={{padding:'12px 16px'}}>
                             {t && <div style={{display:'flex',alignItems:'center',gap:'6px'}}>
                               <div style={{width:'7px',height:'7px',borderRadius:'50%',background:t.primaryColor||'#22c55e'}}/>
-                              <span style={{fontSize:'13px',color:'#d1d5db'}}>{t.name}</span>
+                              <span style={{fontSize:'13px',color:'#374151'}}>{t.name}</span>
                             </div>}
                           </td>
                           <td style={{padding:'12px 16px'}}>
                             <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,
-                              background:u.role==='admin'?'rgba(34,197,94,.12)':'rgba(148,163,184,.08)',
-                              color:u.role==='admin'?'#22c55e':'#6b7280'}}>
+                              background:u.role==='admin'?'rgba(34,197,94,.1)':'rgba(148,163,184,.1)',
+                              color:u.role==='admin'?'#22c55e':'#64748b'}}>
                               {u.role==='admin'?'Admin':'Operador'}
                             </span>
                           </td>
                           <td style={{padding:'12px 16px'}}>
                             {!u.noLogin && u.email && (
-                              <button onClick={()=>setResetModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1px solid rgba(255,255,255,.1)',background:'rgba(255,255,255,.05)',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#d1d5db'}}>
+                              <button onClick={()=>setResetModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
                                 🔑 Resetar senha
                               </button>
                             )}
@@ -4781,6 +4953,7 @@ function MasterDashboard({user, onLogout}) {
           onClose={()=>setNovoUserModal(false)}
         />
       )}
+      <HelpPanel screen={tab}/>
     </div>
   );
 }
