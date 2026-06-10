@@ -52,6 +52,81 @@
   .chat-reply-btn { opacity:0; transition:opacity .15s; background:#f1f5f9; border:1px solid #e2e8f0; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; flex-shrink:0; margin-bottom:4px; }
   .chat-msg-row:hover .chat-reply-btn { opacity:1; }
   @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* ── SIDEBAR RESPONSIVA ── */
+  .sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: #060505;
+    border-right: 1px solid rgba(255,255,255,.06);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0;
+    transition: transform .25s ease, width .25s ease;
+  }
+  .sidebar-nav-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    margin: 1px 6px;
+    border-radius: 8px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 400;
+    cursor: pointer;
+    text-align: left;
+    transition: all .15s;
+    white-space: nowrap;
+    width: calc(100% - 12px);
+  }
+  .sidebar-nav-btn.active {
+    background: rgba(0,196,140,.12);
+    border-color: rgba(0,196,140,.25);
+    color: #00C48C;
+    font-weight: 600;
+  }
+  .sidebar-nav-btn:not(.active):hover { background: rgba(255,255,255,.05); color: #e2e8f0; }
+  .sidebar-overlay { display: none; }
+  .hamburger-btn { display: none; }
+  .content-area { flex: 1; padding: 20px 24px 48px; min-width: 0; overflow-x: hidden; }
+  .content-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* Tablet: 768–1023px — sidebar recolhível */
+  @media (max-width: 1023px) {
+    .sidebar { width: 56px; overflow: hidden; }
+    .sidebar.open { width: 200px; }
+    .sidebar-nav-btn { padding: 10px; margin: 1px 4px; justify-content: center; width: calc(100% - 8px); }
+    .sidebar-nav-btn .nav-label { display: none; }
+    .sidebar.open .sidebar-nav-btn { padding: 9px 12px; justify-content: flex-start; }
+    .sidebar.open .sidebar-nav-btn .nav-label { display: inline; }
+    .sidebar-version { display: none; }
+    .sidebar.open .sidebar-version { display: block; }
+    .sidebar-toggle-btn { display: flex; }
+  }
+
+  /* Mobile: até 767px — sidebar overlay */
+  @media (max-width: 767px) {
+    .hamburger-btn { display: flex; }
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 200;
+      width: 200px !important;
+      transform: translateX(-100%);
+      padding-top: 60px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 199; }
+    .sidebar-overlay.hidden { display: none; }
+    .sidebar-nav-btn { padding: 10px 14px !important; justify-content: flex-start !important; }
+    .sidebar-nav-btn .nav-label { display: inline !important; }
+    .sidebar-toggle-btn { display: none; }
+    .content-area { padding: 16px 12px 48px; }
+  }
 </style>
 </head>
 <body>
@@ -4131,62 +4206,96 @@ function Dashboard({user, onLogout}) {
   const pct=total?Math.round((totalDone/total)*100):0;
 
   const tabs=[
-    {id:'fila',         label:'📋 Fila do Dia'},
-    {id:'tarefas',      label:'✅ Tarefas'},
-    {id:'chat',         label:'💬 Chat'},
-    {id:'conhecimento', label:'📚 Trilha'},
-    {id:'emails',       label:'📧 E-mails'},
-    {id:'lancamentos',  label:'💰 Lançamentos'},
-    {id:'clientes',     label:'👥 Clientes'},
-    {id:'ops',          label:'⚙️ Operadores'},
+    {id:'fila',         icon:'📋', label:'Fila do Dia'},
+    {id:'tarefas',      icon:'✅', label:'Tarefas'},
+    {id:'chat',         icon:'💬', label:'Chat'},
+    {id:'conhecimento', icon:'📚', label:'Trilha'},
+    {id:'emails',       icon:'📧', label:'E-mails'},
+    {id:'lancamentos',  icon:'💰', label:'Lançamentos'},
+    {id:'clientes',     icon:'👥', label:'Clientes'},
+    {id:'ops',          icon:'⚙️', label:'Operadores'},
   ];
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navTo = id => {
+    setTab(id);
+    if(id==='chat') setUnreadChat(0);
+    if(id==='emails') setUnreadEmails(0);
+    // fecha overlay no mobile
+    if(window.innerWidth < 768) setSidebarOpen(false);
+  };
 
   return (
     <div style={{minHeight:'100vh',background:'#F4F5F7',display:'flex',flexDirection:'column'}}>
 
       {/* ── Header ── */}
-      <div className="nav-header" style={{position:'sticky',top:0,zIndex:40,flexShrink:0}}>
-        <div style={{maxWidth:'1600px',margin:'0 auto',padding:'0 16px'}}>
-          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'11px 0'}}>
+      <div className="nav-header" style={{position:'sticky',top:0,zIndex:150,flexShrink:0}}>
+        <div style={{padding:'0 16px'}}>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 0'}}>
+
+            {/* Esquerda: hamburger (mobile) + toggle (tablet) + logo */}
             <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-              <div style={{width:'34px',height:'34px',borderRadius:'9px',background:'rgba(0,196,140,.15)',border:'1.5px solid rgba(0,196,140,.4)',display:'flex',alignItems:'center',justifyContent:'center'}}>
-                <span style={{color:'#00C48C',fontSize:'14px',fontWeight:800}}>S</span>
-              </div>
-              <div>
-                <div style={{fontSize:'14px',fontWeight:700,color:'#fff',lineHeight:1.2}}>Staff<span style={{color:'#00C48C'}}>Conect</span></div>
-                <div style={{fontSize:'10px',color:'#64748b',lineHeight:1.2}}>Gestor de Tarefas · {fmtDate(today)}</div>
+              {/* Hamburguer — só mobile */}
+              <button className="hamburger-btn"
+                onClick={()=>setSidebarOpen(o=>!o)}
+                style={{background:'none',border:'none',cursor:'pointer',color:'#94a3b8',fontSize:'20px',
+                  padding:'4px',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                {sidebarOpen ? '✕' : '☰'}
+              </button>
+              {/* Toggle recolher — tablet */}
+              <button className="sidebar-toggle-btn"
+                onClick={()=>setSidebarOpen(o=>!o)}
+                style={{display:'none',background:'none',border:'none',cursor:'pointer',color:'#64748b',
+                  fontSize:'16px',padding:'4px',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                {sidebarOpen ? '◀' : '▶'}
+              </button>
+              <div style={{display:'flex',alignItems:'center',gap:'9px'}}>
+                <div style={{width:'32px',height:'32px',borderRadius:'9px',background:'rgba(0,196,140,.15)',border:'1.5px solid rgba(0,196,140,.4)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <span style={{color:'#00C48C',fontSize:'13px',fontWeight:800}}>S</span>
+                </div>
+                <div>
+                  <div style={{fontSize:'13px',fontWeight:700,color:'#fff',lineHeight:1.2}}>Staff<span style={{color:'#00C48C'}}>Conect</span></div>
+                  <div style={{fontSize:'10px',color:'#64748b',lineHeight:1.2,display:'none'}} className="header-date">Gestor · {fmtDate(today)}</div>
+                </div>
               </div>
             </div>
-            <div style={{display:'flex',alignItems:'center',gap:'12px'}}>
-              <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+
+            {/* Direita: progresso + status + sair */}
+            <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+              <div style={{display:'flex',alignItems:'center',gap:'7px'}}>
                 <div style={{textAlign:'right'}}>
-                  <div style={{fontSize:'11px',color:'#94a3b8'}}>{user.name}</div>
-                  <div style={{fontSize:'10px',color:'#00C48C'}}>{totalDone}/{total} clientes</div>
+                  <div style={{fontSize:'11px',color:'#94a3b8',lineHeight:1.2}}>{user.name}</div>
+                  <div style={{fontSize:'10px',color:'#00C48C',lineHeight:1.2}}>{totalDone}/{total}</div>
                 </div>
-                <svg viewBox="0 0 36 36" style={{width:'36px',height:'36px',transform:'rotate(-90deg)'}}>
+                <svg viewBox="0 0 36 36" style={{width:'32px',height:'32px',transform:'rotate(-90deg)',flexShrink:0}}>
                   <circle cx="18" cy="18" r="15.9" fill="none" stroke="#1a1a1a" strokeWidth="3"/>
                   <circle cx="18" cy="18" r="15.9" fill="none" stroke="#00C48C" strokeWidth="3" strokeDasharray={`${pct} 100`} strokeLinecap="round"/>
                 </svg>
               </div>
               {saveStatus&&(
-                <div style={{fontSize:'11px',fontWeight:600,padding:'4px 10px',borderRadius:'8px',
+                <div style={{fontSize:'11px',fontWeight:600,padding:'3px 8px',borderRadius:'6px',
                   background:saveStatus==='error'?'rgba(220,38,38,.15)':saveStatus==='saving'?'rgba(100,116,139,.15)':'rgba(0,196,140,.15)',
                   color:saveStatus==='error'?'#dc2626':saveStatus==='saving'?'#94a3b8':'#00C48C'}}>
-                  {saveStatus==='saving'?'💾 Salvando…':saveStatus==='ok'?'✓ Salvo':saveStatus==='error'?'⚠️ Erro':''}
+                  {saveStatus==='saving'?'💾':'✓ Salvo'}
                 </div>
               )}
-              <button onClick={onLogout} style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.1)',color:'#94a3b8',padding:'6px 12px',borderRadius:'8px',fontSize:'12px',cursor:'pointer'}}>Sair</button>
+              <button onClick={onLogout} style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.1)',color:'#94a3b8',padding:'5px 10px',borderRadius:'8px',fontSize:'12px',cursor:'pointer',whiteSpace:'nowrap'}}>Sair</button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Body: sidebar + conteúdo ── */}
-      <div style={{display:'flex',flex:1,maxWidth:'1600px',width:'100%',margin:'0 auto'}}>
+      {/* ── Body ── */}
+      <div style={{display:'flex',flex:1,position:'relative'}}>
+
+        {/* Overlay mobile */}
+        <div className={`sidebar-overlay${sidebarOpen?'':' hidden'}`} onClick={()=>setSidebarOpen(false)}/>
 
         {/* Sidebar */}
-        <div style={{width:'210px',flexShrink:0,background:'#060505',borderRight:'1px solid rgba(255,255,255,.06)',
-          position:'sticky',top:'57px',height:'calc(100vh - 57px)',overflowY:'auto',display:'flex',flexDirection:'column',padding:'12px 0'}}>
+        <div className={`sidebar${sidebarOpen?' open':''}`}
+          style={{position:'sticky',top:'53px',height:'calc(100vh - 53px)',overflowY:'auto',overflowX:'hidden'}}>
+
           {tabs.map(t=>{
             const isActive = tab===t.id;
             const badge = (t.id==='chat'&&unreadChat>0) ? unreadChat
@@ -4194,46 +4303,44 @@ function Dashboard({user, onLogout}) {
                         : (t.id==='lancamentos'&&pendentesLancamentos>0) ? pendentesLancamentos
                         : 0;
             return (
-              <button key={t.id}
-                onClick={()=>{setTab(t.id);if(t.id==='chat')setUnreadChat(0);if(t.id==='emails')setUnreadEmails(0);}}
-                style={{position:'relative',display:'flex',alignItems:'center',gap:'10px',
-                  padding:'10px 16px',margin:'1px 8px',borderRadius:'8px',
-                  background:isActive?'rgba(0,196,140,.12)':'transparent',
-                  border:isActive?'1px solid rgba(0,196,140,.25)':'1px solid transparent',
-                  color:isActive?'#00C48C':'#94a3b8',
-                  fontSize:'13px',fontWeight:isActive?600:400,
-                  cursor:'pointer',textAlign:'left',transition:'all .15s',whiteSpace:'nowrap'}}>
-                {t.label}
+              <button key={t.id} onClick={()=>navTo(t.id)}
+                className={`sidebar-nav-btn${isActive?' active':''}`}>
+                <span style={{fontSize:'15px',flexShrink:0,lineHeight:1}}>{t.icon}</span>
+                <span className="nav-label">{t.label}</span>
                 {badge>0&&(
-                  <span style={{marginLeft:'auto',background:t.id==='lancamentos'?'#f59e0b':'#dc2626',color:'#fff',
-                    borderRadius:'999px',fontSize:'10px',fontWeight:700,minWidth:'16px',height:'16px',
-                    display:'flex',alignItems:'center',justifyContent:'center',padding:'0 4px',lineHeight:1}}>
+                  <span style={{marginLeft:'auto',background:t.id==='lancamentos'?'#f59e0b':'#dc2626',
+                    color:'#fff',borderRadius:'999px',fontSize:'10px',fontWeight:700,
+                    minWidth:'16px',height:'16px',display:'flex',alignItems:'center',
+                    justifyContent:'center',padding:'0 4px',lineHeight:1,flexShrink:0}}>
                     {badge>9?'9+':badge}
                   </span>
                 )}
               </button>
             );
           })}
+
           <div style={{flex:1}}/>
-          <div style={{padding:'12px 16px',fontSize:'10px',color:'#334155',borderTop:'1px solid rgba(255,255,255,.04)'}}>
-            Staff Conect v2.3
+          <div className="sidebar-version" style={{padding:'10px 12px',fontSize:'10px',color:'#334155',borderTop:'1px solid rgba(255,255,255,.04)'}}>
+            v2.3
           </div>
         </div>
 
         {/* Conteúdo */}
-        <div style={{flex:1,padding:'24px 20px 48px',minWidth:0,overflowX:'hidden'}}>
-          {loading?<Spinner/>:(
-            <>
-              {tab==='fila'        && <FilaDoDia clients={clients} dayTasks={dayTasks} operators={operators} currentUser={user} onUpdateTask={updateDayTask} extraTasks={extraTasks} onUpdateExtra={updateExtra} onDeleteExtra={deleteExtra} onAddExtra={addExtra} manuals={manuals}/>}
-              {tab==='tarefas'     && <TarefasExtras clients={clients} operators={operators} extraTasks={extraTasks} currentUser={user} onAdd={addExtra} onUpdate={updateExtra} onDelete={deleteExtra} manuals={manuals}/>}
-              {tab==='chat'        && <Chat currentUser={user}/>}
-              {tab==='conhecimento'&& <Conhecimento manuals={manuals} onAdd={addManual} onEdit={editManual} onDelete={deleteManual} onReorderManuals={reorderManuals} mensagens={mensagens} onAddMsg={addMsg} onEditMsg={editMsg} onDeleteMsg={deleteMsg} onReorderMsgs={reorderMsgs} isAdmin={user?.role==='admin'} operators={operators} currentUser={user}/>}
-              {tab==='emails'      && <EmailNotificacoes currentUser={user}/>}
-              {tab==='lancamentos' && <IntakeLancamentos currentUser={user}/>}
-              {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user}/>}
-              {tab==='ops'         && <Operadores operators={operators} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
-            </>
-          )}
+        <div className="content-area">
+          <div className="content-inner">
+            {loading?<Spinner/>:(
+              <>
+                {tab==='fila'        && <FilaDoDia clients={clients} dayTasks={dayTasks} operators={operators} currentUser={user} onUpdateTask={updateDayTask} extraTasks={extraTasks} onUpdateExtra={updateExtra} onDeleteExtra={deleteExtra} onAddExtra={addExtra} manuals={manuals}/>}
+                {tab==='tarefas'     && <TarefasExtras clients={clients} operators={operators} extraTasks={extraTasks} currentUser={user} onAdd={addExtra} onUpdate={updateExtra} onDelete={deleteExtra} manuals={manuals}/>}
+                {tab==='chat'        && <Chat currentUser={user}/>}
+                {tab==='conhecimento'&& <Conhecimento manuals={manuals} onAdd={addManual} onEdit={editManual} onDelete={deleteManual} onReorderManuals={reorderManuals} mensagens={mensagens} onAddMsg={addMsg} onEditMsg={editMsg} onDeleteMsg={deleteMsg} onReorderMsgs={reorderMsgs} isAdmin={user?.role==='admin'} operators={operators} currentUser={user}/>}
+                {tab==='emails'      && <EmailNotificacoes currentUser={user}/>}
+                {tab==='lancamentos' && <IntakeLancamentos currentUser={user}/>}
+                {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user}/>}
+                {tab==='ops'         && <Operadores operators={operators} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
+              </>
+            )}
+          </div>
         </div>
 
       </div>
