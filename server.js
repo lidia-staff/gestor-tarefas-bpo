@@ -332,6 +332,12 @@ app.put('/api/clients/:id', auth, (req, res) => {
   res.json({ ok: true });
 });
 
+app.delete('/api/clients/:id', auth, (req, res) => {
+  if (!['admin','master'].includes(req.user.role)) return res.status(403).json({ error: 'Apenas admins podem excluir clientes' });
+  req.tDB.saveClients(req.tDB.clients().filter(c => c.id !== req.params.id));
+  res.json({ ok: true });
+});
+
 // ─── TAREFAS DO DIA ──────────────────────────────────
 app.get('/api/day-tasks/history', auth, (req, res) => {
   const days = parseInt(req.query.days) || 14;

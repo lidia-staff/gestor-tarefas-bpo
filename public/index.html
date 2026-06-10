@@ -2143,9 +2143,17 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
 }
 
 // ── CLIENTES ─────────────────────────────────────────
-function Clientes({clients, operators, onUpdate, onAdd}) {
+function Clientes({clients, operators, onUpdate, onAdd, onDelete, currentUser}) {
   const [editing,setEditing] = useState(null);
   const [criando,setCriando] = useState(false);
+  const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'master';
+
+  const handleDelete = (e, c) => {
+    e.stopPropagation();
+    if (!window.confirm(`Excluir o cliente "${c.name}"? Esta ação não pode ser desfeita.`)) return;
+    onDelete(c.id);
+  };
+
   return (
     <div>
       <div style={{display:'flex',justifyContent:'flex-end',marginBottom:'16px'}}>
@@ -2167,7 +2175,18 @@ function Clientes({clients, operators, onUpdate, onAdd}) {
                 {c.erp&&<div style={{fontSize:'12px',color:'#64748b'}}>💻 {c.erp}</div>}
                 {(c.passwords||[]).length>0&&<div style={{fontSize:'11px',color:'#00C48C',marginTop:'6px'}}>🔐 {c.passwords.length} senha{c.passwords.length!==1?'s':''}</div>}
               </div>
-              <span style={{color:'#00C48C',fontSize:'16px'}}>✎</span>
+              <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:'8px'}}>
+                <span style={{color:'#00C48C',fontSize:'16px'}}>✎</span>
+                {isAdmin && (
+                  <button onClick={e=>handleDelete(e,c)}
+                    title="Excluir cliente"
+                    style={{background:'none',border:'none',cursor:'pointer',fontSize:'14px',color:'#94a3b8',padding:'2px',lineHeight:1}}
+                    onMouseEnter={e=>e.currentTarget.style.color='#dc2626'}
+                    onMouseLeave={e=>e.currentTarget.style.color='#94a3b8'}>
+                    🗑️
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
@@ -4047,6 +4066,7 @@ function Dashboard({user, onLogout}) {
 
   const addClient      = async u => { try{const s=await API.post('/api/clients',u);setClients(cs=>[...cs,s]);}catch(e){alert(e.error||'Erro');} };
   const updateClient   = async u => { setClients(cs=>cs.map(c=>c.id===u.id?u:c)); try{await API.put('/api/clients/'+u.id,u);}catch{} };
+  const deleteClient   = async id => { setClients(cs=>cs.filter(c=>c.id!==id)); try{await API.del('/api/clients/'+id);}catch(e){alert(e.error||'Erro ao excluir');} };
   const updateDayTask = async (cid,t) => {
     setDayTasks(dt=>({...dt,[cid]:t}));
     lastSaveAtRef.current = Date.now();
@@ -4210,7 +4230,7 @@ function Dashboard({user, onLogout}) {
               {tab==='conhecimento'&& <Conhecimento manuals={manuals} onAdd={addManual} onEdit={editManual} onDelete={deleteManual} onReorderManuals={reorderManuals} mensagens={mensagens} onAddMsg={addMsg} onEditMsg={editMsg} onDeleteMsg={deleteMsg} onReorderMsgs={reorderMsgs} isAdmin={user?.role==='admin'} operators={operators} currentUser={user}/>}
               {tab==='emails'      && <EmailNotificacoes currentUser={user}/>}
               {tab==='lancamentos' && <IntakeLancamentos currentUser={user}/>}
-              {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient}/>}
+              {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user}/>}
               {tab==='ops'         && <Operadores operators={operators} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
             </>
           )}
