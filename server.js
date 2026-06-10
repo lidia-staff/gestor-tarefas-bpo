@@ -201,20 +201,8 @@ webpush.setVapidDetails('mailto:lidia@staffconsult.com.br', vapidKeys.publicKey,
 function seedTenantDefaults(tid) {
   const tDB = tenantDB(tid);
 
-  if (tDB.clients().length === 0) {
-    tDB.saveClients([
-      { id:'kimberly',    name:'Kimberly',    priority:1,  banks:['Asaas','Sicredi'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'up',          name:'UP',          priority:2,  banks:['Bradesco','Stone'],            whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'agro',        name:'Agro',        priority:3,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'jsa',         name:'JSA',         priority:4,  banks:['Sicoob'],                      whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'body',        name:'Body Face',   priority:5,  banks:['Asaas','Stone'],               whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'guimoo',      name:'Guimoo',      priority:6,  banks:['Cora','Asaas'],                whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'galiza',      name:'Galiza',      priority:7,  banks:['Bradesco','Cora'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'matsu',       name:'Matsu',       priority:8,  banks:['Itaú'],                        whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'ecofi',       name:'Ecofi',       priority:9,  banks:['Bradesco','Itaú'],             whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-      { id:'makinsthall', name:'Makinsthall', priority:10, banks:['Santander','Itaú','Bradesco'], whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[] },
-    ]);
-  }
+  // Clientes: novos tenants começam vazios — nunca herdar dados de outro tenant
+  // (staffconect importa os próprios clientes via migrate.js)
 
   const ex = tDB.manuals();
   if (!ex.find(m => m.id === 'default_b1')) {
