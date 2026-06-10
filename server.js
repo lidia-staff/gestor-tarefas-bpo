@@ -1176,6 +1176,71 @@ app.put('/api/master/tenants/:id', masterAuth, (req, res) => {
   res.json({ ok: true });
 });
 
+// GET /api/master/tenants/:id/integrations
+app.get('/api/master/tenants/:id/integrations', masterAuth, (req, res) => {
+  const tid = req.params.id;
+  const tPath = path.join(DATA, tid, 'integrations.json');
+  const cfg = fs.existsSync(tPath) ? JSON.parse(fs.readFileSync(tPath, 'utf8')) : {};
+  // Ofusca senhas antes de enviar
+  const safe = JSON.parse(JSON.stringify(cfg));
+  if (safe.ca?.secret)              safe.ca.secret = '••••••••';
+  if (safe.email?.pass)             safe.email.pass = '••••••••';
+  if (safe.drive?.serviceAccount)   safe.drive.serviceAccount = '••••••••';
+  res.json(safe);
+});
+
+// PUT /api/master/tenants/:id/integrations
+app.put('/api/master/tenants/:id/integrations', masterAuth, (req, res) => {
+  const tid = req.params.id;
+  const tDir = path.join(DATA, tid);
+  if (!fs.existsSync(tDir)) fs.mkdirSync(tDir, { recursive: true });
+  const tPath = path.join(tDir, 'integrations.json');
+  // Merge: se campo é '••••••••' mantém o valor anterior
+  const existing = fs.existsSync(tPath) ? JSON.parse(fs.readFileSync(tPath, 'utf8')) : {};
+  const body = req.body;
+  const merged = { ...existing };
+  if (body.ca) {
+    merged.ca = { ...existing.ca, ...body.ca };
+    if (body.ca.secret === '••••••••') merged.ca.secret = existing.ca?.secret || '';
+  }
+  if (body.email) {
+    merged.email = { ...existing.email, ...body.email };
+    if (body.email.pass === '••••••••') merged.email.pass = existing.email?.pass || '';
+  }
+  if (body.drive) {
+    merged.drive = { ...existing.drive, ...body.drive };
+    if (body.drive.serviceAccount === '••••••••') merged.drive.serviceAccount = existing.drive?.serviceAccount || '';
+  }
+  fs.writeFileSync(tPath, JSON.stringify(merged, null, 2));
+  res.json({ ok: true });
+});
+
+// POST /api/master/tenants/:id/integrations/test-ca
+app.post('/api/master/tenants/:id/integrations/test-ca', masterAuth, async (req, res) => {
+  const tid = req.params.id;
+  const tPath = path.join(DATA, tid, 'integrations.json');
+  const cfg = fs.existsSync(tPath) ? JSON.parse(fs.readFileSync(tPath, 'utf8')) : {};
+  const url    = cfg.ca?.url    || CA_API_URL;
+  const secret = cfg.ca?.secret || CA_API_SECRET;
+  try {
+    const https = require('https');
+    const http  = require('http');
+    const lib   = url.startsWith('https') ? https : http;
+    await new Promise((resolve, reject) => {
+      const req2 = lib.request(`${url}/api/health`, { method:'GET', headers:{ 'x-api-secret': secret }, timeout:5000 }, r => {
+        r.resume();
+        r.statusCode < 500 ? resolve(r.statusCode) : reject(new Error(`HTTP ${r.statusCode}`));
+      });
+      req2.on('error', reject);
+      req2.on('timeout', ()=>{ req2.destroy(); reject(new Error('Timeout')); });
+      req2.end();
+    });
+    res.json({ ok: true, message: 'Conexão com Conta Azul OK' });
+  } catch (e) {
+    res.status(502).json({ error: `Falha: ${e.message}` });
+  }
+});
+
 // GET /api/master/users — todos os usuários com info de tenant
 app.get('/api/master/users', masterAuth, (req, res) => {
   const users = globalDB.users().map(u => ({
