@@ -4219,6 +4219,7 @@ function Dashboard({user, onLogout}) {
     {id:'conhecimento', icon:'📚', label:'Trilha'},
     {id:'emails',       icon:'📧', label:'E-mails'},
     {id:'lancamentos',  icon:'💰', label:'Lançamentos'},
+    {id:'contas',       icon:'💳', label:'Contas a Pagar'},
     {id:'clientes',     icon:'👥', label:'Clientes'},
     {id:'ops',          icon:'⚙️', label:'Operadores'},
   ];
@@ -4344,6 +4345,7 @@ function Dashboard({user, onLogout}) {
                 {tab==='conhecimento'&& <Conhecimento manuals={manuals} onAdd={addManual} onEdit={editManual} onDelete={deleteManual} onReorderManuals={reorderManuals} mensagens={mensagens} onAddMsg={addMsg} onEditMsg={editMsg} onDeleteMsg={deleteMsg} onReorderMsgs={reorderMsgs} isAdmin={user?.role==='admin'} operators={operators} currentUser={user}/>}
                 {tab==='emails'      && <EmailNotificacoes currentUser={user}/>}
                 {tab==='lancamentos' && <IntakeLancamentos currentUser={user}/>}
+                {tab==='contas'      && <ContasAPagar clients={clients} operators={operators}/>}
                 {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user}/>}
                 {tab==='ops'         && <Operadores operators={operators} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
               </>
