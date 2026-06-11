@@ -307,14 +307,22 @@ const freshTask = () => ({
   bloco2: {steps:BLOCO2.map(s=>({...s,done:false})),active:false,status:'pending',notes:'',returnMsg:'',startedAt:null,doneAt:null},
   fullyDone:false, assignedTo:null,
 });
-const freshTaskForClient = (client) => {
+const manualSteps = (manual) =>
+  (manual?.steps||[]).map(s=>({id:'m_'+s.n, text: s.action + (s.detail?' — '+s.detail:''), done:false}));
+
+const freshTaskForClient = (client, manuals=[]) => {
   const ft = freshTask();
-  // Aplica modelo de rotina configurado no cliente
-  const tipo = client.rotina_tipo;
-  if(tipo && tipo !== 'padrao' && ROTINA_TIPOS[tipo]?.steps) {
-    const modelo = ROTINA_TIPOS[tipo];
-    ft.bloco1 = {...ft.bloco1, steps: modelo.steps.map(s=>({...s,done:false}))};
-    if(modelo.comCAP) { ft.bloco1.hasPayment = true; ft.bloco2.active = true; }
+  // Modelo de manhã: prefere manual da Trilha, cai para ROTINA_TIPOS (legado)
+  if(client.rotina_manual_id) {
+    const m = (manuals||[]).find(x=>String(x.id)===String(client.rotina_manual_id));
+    if(m?.steps?.length) ft.bloco1 = {...ft.bloco1, steps: manualSteps(m)};
+  } else {
+    const tipo = client.rotina_tipo;
+    if(tipo && tipo !== 'padrao' && ROTINA_TIPOS[tipo]?.steps) {
+      const modelo = ROTINA_TIPOS[tipo];
+      ft.bloco1 = {...ft.bloco1, steps: modelo.steps.map(s=>({...s,done:false}))};
+      if(modelo.comCAP) { ft.bloco1.hasPayment = true; ft.bloco2.active = true; }
+    }
   }
   if(client.op3_id && (client.bloco1b_steps||[]).length>0) {
     ft.bloco1b = {
@@ -322,14 +330,23 @@ const freshTaskForClient = (client) => {
       active:true, status:'pending', notes:'', startedAt:null, doneAt:null
     };
   }
-  // Bloco da tarde (ex: Auditoria)
-  const tipoTarde = client.rotina_tipo_tarde;
-  if(tipoTarde && ROTINA_TIPOS[tipoTarde]?.steps) {
-    ft.bloco_tarde = {
-      tipo: tipoTarde,
-      steps: ROTINA_TIPOS[tipoTarde].steps.map(s=>({...s,done:false})),
+  // Modelo de tarde: prefere manual da Trilha
+  if(client.rotina_tarde_manual_id) {
+    const m = (manuals||[]).find(x=>String(x.id)===String(client.rotina_tarde_manual_id));
+    if(m?.steps?.length) ft.bloco_tarde = {
+      tipo: 'manual_'+m.id,
+      steps: manualSteps(m),
       status:'pending', notes:'', startedAt:null, doneAt:null, active:true
     };
+  } else {
+    const tipoTarde = client.rotina_tipo_tarde;
+    if(tipoTarde && ROTINA_TIPOS[tipoTarde]?.steps) {
+      ft.bloco_tarde = {
+        tipo: tipoTarde,
+        steps: ROTINA_TIPOS[tipoTarde].steps.map(s=>({...s,done:false})),
+        status:'pending', notes:'', startedAt:null, doneAt:null, active:true
+      };
+    }
   }
   return ft;
 };
@@ -708,7 +725,7 @@ function AddOperatorModal({clients, onSave, onClose}) {
 }
 
 // ── MODAL CLIENTE ────────────────────────────────────
-function ClienteModal({client, operators, onSave, onClose}) {
+function ClienteModal({client, operators, manuals=[], onSave, onClose}) {
   const isNew = !client;
   const defRotina = {bloco1:{name:'',steps:[]},bloco2:{active:false,name:'',steps:[]}};
   const [form,setForm] = useState(client ? {...client, rotina: client.rotina||defRotina} : {name:'',priority:1,banks:[],passwords:[],rotina:defRotina});
@@ -738,7 +755,7 @@ function ClienteModal({client, operators, onSave, onClose}) {
           <div>
             <div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'8px'}}>Tipo de Rotina</div>
             <div style={{display:'flex',gap:'10px'}}>
-              {[['santos','🏢 Santos Inteligência (Bloco 1+2)'],['outros','📋 Outras Tarefas']].map(([v,l])=>(
+              {[['santos','🔄 Com Rotina BPO (Bloco 1+2)'],['outros','📋 Outras Tarefas']].map(([v,l])=>(
                 <label key={v} style={{display:'flex',alignItems:'center',gap:'8px',padding:'10px 14px',borderRadius:'8px',cursor:'pointer',border:`2px solid ${(form.tipo||'santos')===v?'#00C48C':'#e2e8f0'}`,background:(form.tipo||'santos')===v?'rgba(0,196,140,.06)':'#fff',flex:1}} onClick={()=>upd('tipo',v)}>
                   <input type="radio" name="tipo" value={v} checked={(form.tipo||'santos')===v} onChange={()=>upd('tipo',v)} style={{accentColor:'#00C48C'}}/>
                   <span style={{fontSize:'13px',fontWeight:600,color:(form.tipo||'santos')===v?'#00C48C':'#374151'}}>{l}</span>
@@ -775,74 +792,92 @@ function ClienteModal({client, operators, onSave, onClose}) {
               </div>
             </div>
           )}
-          {/* Modelos de rotina — Santos */}
-          {(form.tipo||'santos')==='santos'&&(
-            <div style={{border:'1px solid rgba(0,196,140,.2)',borderRadius:'10px',padding:'14px',background:'rgba(0,196,140,.03)'}}>
-              <div style={{fontSize:'11px',fontWeight:700,color:'#00C48C',marginBottom:'12px'}}>🔵 Modelos de Rotina Diária</div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
-                {/* Coluna Manhã */}
-                <div>
-                  <div style={{fontSize:'11px',fontWeight:700,color:'#64748b',marginBottom:'8px',display:'flex',alignItems:'center',gap:'5px'}}>🌅 Bloco da Manhã</div>
-                  <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
-                    {Object.entries(ROTINA_TIPOS).filter(([k])=>k!=='auditoria').map(([k,v])=>{
-                      const sel=(form.rotina_tipo||'padrao')===k;
-                      return (
-                        <div key={k}>
-                          <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${sel?'#00C48C':'#e2e8f0'}`,background:sel?'rgba(0,196,140,.07)':'#fff'}} onClick={()=>upd('rotina_tipo',k)}>
-                            <input type="radio" checked={sel} onChange={()=>upd('rotina_tipo',k)} style={{accentColor:'#00C48C',flexShrink:0}}/>
-                            <div style={{flex:1}}>
-                              <div style={{fontSize:'12px',fontWeight:600,color:sel?'#00C48C':'#374151'}}>{v.icon} {v.label}</div>
-                              <div style={{fontSize:'10px',color:'#94a3b8'}}>{v.steps?`${v.steps.length} passos`:''}</div>
-                            </div>
-                          </label>
-                          {sel&&v.steps&&(
-                            <div style={{marginTop:'4px',marginLeft:'8px',paddingLeft:'8px',borderLeft:'2px solid #00C48C'}}>
-                              {v.steps.map((s,i)=>(
-                                <div key={s.id} style={{fontSize:'11px',color:'#64748b',padding:'2px 0'}}>{i+1}. {s.text}</div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+          {/* Modelos de rotina — da Trilha ou padrão */}
+          {(form.tipo||'santos')==='santos'&&(()=>{
+            const rotinaManuals = manuals.filter(m=>m.category==='Rotina Diária');
+            const useManuals = rotinaManuals.length > 0;
+            // Opções de manhã
+            const manhaOpts = useManuals
+              ? rotinaManuals.map(m=>({key:'m_'+m.id, label:m.title, steps:m.steps?.length||0, isManual:true, manualId:m.id, steps_data:m.steps}))
+              : Object.entries(ROTINA_TIPOS).filter(([k])=>k!=='auditoria').map(([k,v])=>({key:k, label:v.icon+' '+v.label, steps:v.steps?.length||0, isManual:false, steps_data:v.steps}));
+            const tardeOpts = useManuals
+              ? rotinaManuals.map(m=>({key:'mt_'+m.id, label:m.title, steps:m.steps?.length||0, isManual:true, manualId:m.id, steps_data:m.steps}))
+              : [['auditoria',ROTINA_TIPOS.auditoria]].map(([k,v])=>({key:k, label:v.icon+' '+v.label, steps:v.steps?.length||0, isManual:false, steps_data:v.steps}));
+            // Verifica seleção atual
+            const selManha = useManuals ? String(form.rotina_manual_id||'') : (form.rotina_tipo||'padrao');
+            const selTarde = useManuals ? String(form.rotina_tarde_manual_id||'') : (form.rotina_tipo_tarde||'');
+            const pickManha = (opt) => {
+              if(opt.isManual) { upd('rotina_manual_id', opt.manualId); upd('rotina_tipo', undefined); }
+              else             { upd('rotina_tipo', opt.key); upd('rotina_manual_id', undefined); }
+            };
+            const pickTarde = (opt) => {
+              if(opt.isManual) { upd('rotina_tarde_manual_id', opt.manualId); upd('rotina_tipo_tarde', undefined); }
+              else             { upd('rotina_tipo_tarde', opt.key); upd('rotina_tarde_manual_id', undefined); }
+            };
+            const clearTarde = () => { upd('rotina_tipo_tarde', null); upd('rotina_tarde_manual_id', null); };
+            return (
+              <div style={{border:'1px solid rgba(0,196,140,.2)',borderRadius:'10px',padding:'14px',background:'rgba(0,196,140,.03)'}}>
+                <div style={{fontSize:'11px',fontWeight:700,color:'#00C48C',marginBottom:'4px'}}>🔵 Modelos de Rotina Diária</div>
+                {useManuals&&<div style={{fontSize:'10px',color:'#64748b',marginBottom:'10px'}}>Modelos da Trilha do Conhecimento. Alterar o modelo na Trilha atualiza todos os clientes.</div>}
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
+                  {/* Manhã */}
+                  <div>
+                    <div style={{fontSize:'11px',fontWeight:700,color:'#64748b',marginBottom:'8px'}}>🌅 Bloco da Manhã</div>
+                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                      {manhaOpts.map(opt=>{
+                        const sel = useManuals ? String(form.rotina_manual_id||'')===String(opt.manualId||'') : selManha===opt.key;
+                        return (
+                          <div key={opt.key}>
+                            <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${sel?'#00C48C':'#e2e8f0'}`,background:sel?'rgba(0,196,140,.07)':'#fff'}} onClick={()=>pickManha(opt)}>
+                              <input type="radio" checked={sel} onChange={()=>pickManha(opt)} style={{accentColor:'#00C48C',flexShrink:0}}/>
+                              <div style={{flex:1}}>
+                                <div style={{fontSize:'12px',fontWeight:600,color:sel?'#00C48C':'#374151'}}>{opt.label}</div>
+                                <div style={{fontSize:'10px',color:'#94a3b8'}}>{opt.steps} passos</div>
+                              </div>
+                            </label>
+                            {sel&&opt.steps_data&&(
+                              <div style={{marginTop:'4px',marginLeft:'8px',paddingLeft:'8px',borderLeft:'2px solid #00C48C'}}>
+                                {opt.steps_data.slice(0,4).map((s,i)=>(
+                                  <div key={i} style={{fontSize:'11px',color:'#64748b',padding:'2px 0'}}>{i+1}. {s.text||s.action}</div>
+                                ))}
+                                {opt.steps_data.length>4&&<div style={{fontSize:'10px',color:'#94a3b8'}}>+{opt.steps_data.length-4} mais…</div>}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-                {/* Coluna Tarde */}
-                <div>
-                  <div style={{fontSize:'11px',fontWeight:700,color:'#64748b',marginBottom:'8px',display:'flex',alignItems:'center',gap:'5px'}}>🌆 Bloco da Tarde</div>
-                  <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
-                    {/* Opção: sem bloco da tarde */}
-                    <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${!form.rotina_tipo_tarde?'#64748b':'#e2e8f0'}`,background:!form.rotina_tipo_tarde?'rgba(100,116,139,.07)':'#fff'}} onClick={()=>upd('rotina_tipo_tarde',null)}>
-                      <input type="radio" checked={!form.rotina_tipo_tarde} onChange={()=>upd('rotina_tipo_tarde',null)} style={{accentColor:'#64748b',flexShrink:0}}/>
-                      <div style={{flex:1}}>
-                        <div style={{fontSize:'12px',fontWeight:600,color:!form.rotina_tipo_tarde?'#64748b':'#374151'}}>— Sem bloco da tarde</div>
-                        <div style={{fontSize:'10px',color:'#94a3b8'}}>Somente bloco da manhã</div>
-                      </div>
-                    </label>
-                    {/* Opção: Auditoria tarde */}
-                    {(()=>{const [k,v]=['auditoria',ROTINA_TIPOS.auditoria]; const sel=form.rotina_tipo_tarde===k; return (
-                      <div key={k}>
-                        <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${sel?'#f59e0b':'#e2e8f0'}`,background:sel?'rgba(245,158,11,.08)':'#fff'}} onClick={()=>upd('rotina_tipo_tarde',k)}>
-                          <input type="radio" checked={sel} onChange={()=>upd('rotina_tipo_tarde',k)} style={{accentColor:'#f59e0b',flexShrink:0}}/>
-                          <div style={{flex:1}}>
-                            <div style={{fontSize:'12px',fontWeight:600,color:sel?'#d97706':'#374151'}}>{v.icon} {v.label}</div>
-                            <div style={{fontSize:'10px',color:'#94a3b8'}}>{v.steps?`${v.steps.length} passos`:''}</div>
+                  {/* Tarde */}
+                  <div>
+                    <div style={{fontSize:'11px',fontWeight:700,color:'#64748b',marginBottom:'8px'}}>🌆 Bloco da Tarde</div>
+                    <div style={{display:'flex',flexDirection:'column',gap:'5px'}}>
+                      <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${!selTarde?'#64748b':'#e2e8f0'}`,background:!selTarde?'rgba(100,116,139,.07)':'#fff'}} onClick={clearTarde}>
+                        <input type="radio" checked={!selTarde} onChange={clearTarde} style={{accentColor:'#64748b',flexShrink:0}}/>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:'12px',fontWeight:600,color:!selTarde?'#64748b':'#374151'}}>— Sem bloco da tarde</div>
+                        </div>
+                      </label>
+                      {tardeOpts.map(opt=>{
+                        const sel = useManuals ? String(form.rotina_tarde_manual_id||'')===String(opt.manualId||'') : selTarde===opt.key;
+                        return (
+                          <div key={opt.key}>
+                            <label style={{display:'flex',alignItems:'center',gap:'8px',padding:'7px 10px',borderRadius:'8px',cursor:'pointer',border:`1.5px solid ${sel?'#f59e0b':'#e2e8f0'}`,background:sel?'rgba(245,158,11,.08)':'#fff'}} onClick={()=>pickTarde(opt)}>
+                              <input type="radio" checked={sel} onChange={()=>pickTarde(opt)} style={{accentColor:'#f59e0b',flexShrink:0}}/>
+                              <div style={{flex:1}}>
+                                <div style={{fontSize:'12px',fontWeight:600,color:sel?'#d97706':'#374151'}}>{opt.label}</div>
+                                <div style={{fontSize:'10px',color:'#94a3b8'}}>{opt.steps} passos</div>
+                              </div>
+                            </label>
                           </div>
-                        </label>
-                        {sel&&v.steps&&(
-                          <div style={{marginTop:'4px',marginLeft:'8px',paddingLeft:'8px',borderLeft:'2px solid #f59e0b'}}>
-                            {v.steps.map((s,i)=>(
-                              <div key={s.id} style={{fontSize:'11px',color:'#64748b',padding:'2px 0'}}>{i+1}. {s.text}</div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );})()}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
           {/* Passos do Bloco 1b — aparece quando op3 selecionado em Santos */}
           {(form.tipo||'santos')==='santos'&&form.op3_id&&(
             <div style={{border:'1px solid rgba(124,58,237,.2)',borderRadius:'10px',padding:'14px',background:'rgba(124,58,237,.03)'}}>
@@ -2218,7 +2253,7 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
 }
 
 // ── CLIENTES ─────────────────────────────────────────
-function Clientes({clients, operators, onUpdate, onAdd, onDelete, currentUser}) {
+function Clientes({clients, operators, onUpdate, onAdd, onDelete, currentUser, manuals=[]}) {
   const [editing,setEditing] = useState(null);
   const [criando,setCriando] = useState(false);
   const isAdmin = currentUser?.role === 'admin' || currentUser?.role === 'master';
@@ -2266,8 +2301,8 @@ function Clientes({clients, operators, onUpdate, onAdd, onDelete, currentUser}) 
           </div>
         ))}
       </div>
-      {editing&&<ClienteModal client={editing} operators={operators} onSave={u=>{onUpdate(u);setEditing(null);}} onClose={()=>setEditing(null)}/>}
-      {criando&&<ClienteModal client={null} operators={operators} onSave={u=>{onAdd(u);setCriando(false);}} onClose={()=>setCriando(false)}/>}
+      {editing&&<ClienteModal client={editing} operators={operators} manuals={manuals} onSave={u=>{onUpdate(u);setEditing(null);}} onClose={()=>setEditing(null)}/>}
+      {criando&&<ClienteModal client={null} operators={operators} manuals={manuals} onSave={u=>{onAdd(u);setCriando(false);}} onClose={()=>setCriando(false)}/>}
     </div>
   );
 }
@@ -4000,7 +4035,7 @@ function Dashboard({user, onLogout}) {
         setClients(cls||[]);
         setOps(ops||[]);
         const tasks={};
-        (cls||[]).forEach(c=>{tasks[c.id]=dt[c.id]||freshTaskForClient(c);});
+        (cls||[]).forEach(c=>{tasks[c.id]=dt[c.id]||freshTaskForClient(c, mn);});
         setDayTasks(tasks);
         setExtra(et||[]);
         setManuals(mn||[]);
@@ -4346,7 +4381,7 @@ function Dashboard({user, onLogout}) {
                 {tab==='emails'      && <EmailNotificacoes currentUser={user}/>}
                 {tab==='lancamentos' && <IntakeLancamentos currentUser={user}/>}
                 {tab==='contas'      && <ContasAPagar clients={clients} operators={operators}/>}
-                {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user}/>}
+                {tab==='clientes'    && <Clientes clients={clients} operators={operators} onUpdate={updateClient} onAdd={addClient} onDelete={deleteClient} currentUser={user} manuals={manuals}/>}
                 {tab==='ops'         && <Operadores operators={operators} clients={clients} currentUser={user} onOperatorsChange={setOps}/>}
               </>
             )}
