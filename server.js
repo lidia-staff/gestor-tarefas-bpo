@@ -233,8 +233,8 @@ function seedTenantDefaults(tid) {
   }
 }
 
-// Seed para todos os tenants ativos no startup
-getActiveTenantIds().forEach(seedTenantDefaults);
+// Seed apenas para staffconect no startup
+seedTenantDefaults('staffconect');
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
 function auth(req, res, next) {
@@ -1168,6 +1168,25 @@ app.put('/api/master/tenants/:id', masterAuth, (req, res) => {
   );
   globalDB.saveTenants(tenants);
   res.json({ ok: true });
+});
+
+// GET /api/tenant-info — retorna config do tenant atual (activeTabIds etc.)
+app.get('/api/tenant-info', auth, (req, res) => {
+  const tenants = globalDB.tenants();
+  const tenant  = tenants.find(t => t.id === req.tenant) || { id: req.tenant, activeTabIds: null };
+  res.json({ id: tenant.id, name: tenant.name, activeTabIds: tenant.activeTabIds || null, primaryColor: tenant.primaryColor || '#00C48C' });
+});
+
+// POST /api/master/impersonate/:tenantId — master obtém token de admin para visualizar o Gestor de um tenant
+app.post('/api/master/impersonate/:tenantId', masterAuth, (req, res) => {
+  const tid = req.params.tenantId;
+  const tenants = globalDB.tenants();
+  if (!tenants.find(t => t.id === tid)) return res.status(404).json({ error: 'Empresa não encontrada' });
+  const token = jwt.sign(
+    { id: req.user.id, name: req.user.name + ' (Master)', email: req.user.email, role: 'admin', tenant_id: tid, _impersonated: true },
+    JWT_SECRET, { expiresIn: '8h' }
+  );
+  res.json({ token });
 });
 
 // GET /api/master/tenants/:id/integrations

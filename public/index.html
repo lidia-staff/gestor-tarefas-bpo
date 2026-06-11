@@ -4205,7 +4205,14 @@ function Dashboard({user, onLogout}) {
   const total=clients.length;
   const pct=total?Math.round((totalDone/total)*100):0;
 
-  const tabs=[
+  const [activeTabIds, setActiveTabIds] = useState(null);
+  useEffect(()=>{
+    API.get('/api/tenant-info').then(info=>{
+      if(info?.activeTabIds) setActiveTabIds(info.activeTabIds);
+    }).catch(()=>{});
+  },[]);
+
+  const ALL_TABS=[
     {id:'fila',         icon:'📋', label:'Fila do Dia'},
     {id:'tarefas',      icon:'✅', label:'Tarefas'},
     {id:'chat',         icon:'💬', label:'Chat'},
@@ -4215,6 +4222,7 @@ function Dashboard({user, onLogout}) {
     {id:'clientes',     icon:'👥', label:'Clientes'},
     {id:'ops',          icon:'⚙️', label:'Operadores'},
   ];
+  const tabs = activeTabIds ? ALL_TABS.filter(t=>activeTabIds.includes(t.id)) : ALL_TABS;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -4737,7 +4745,7 @@ function NovoUsuarioModal({tenants, onSave, onClose}) {
   );
 }
 
-function MasterDashboard({user, onLogout}) {
+function MasterDashboard({user, onLogout, onViewGestor}) {
   const [tab, setTab] = useState('dashboard');
   const [tenants, setTenants] = useState([]);
   const [users, setUsers] = useState([]);
@@ -4926,7 +4934,10 @@ function MasterDashboard({user, onLogout}) {
                             <span style={{padding:'3px 10px',borderRadius:'20px',fontSize:'11px',fontWeight:600,background:t.active?'rgba(34,197,94,.1)':'rgba(148,163,184,.1)',color:t.active?'#22c55e':'#94a3b8'}}>{t.active?'Ativo':'Inativo'}</span>
                           </td>
                           <td style={{padding:'14px 16px'}}>
-                            <button onClick={()=>setTenantModal(t)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>Editar</button>
+                            <div style={{display:'flex',gap:'6px'}}>
+                              <button onClick={()=>setTenantModal(t)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>Editar</button>
+                              <button onClick={()=>onViewGestor(t.id)} style={{padding:'5px 12px',borderRadius:'8px',border:'none',background:'rgba(0,196,140,.1)',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#00C48C'}}>👁️ Gestor</button>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -5087,8 +5098,9 @@ function MasterDashboard({user, onLogout}) {
 
 // ── ROOT ─────────────────────────────────────────────
 function Root() {
-  const [state,setState] = useState('checking');
-  const [user,setUser]   = useState(null);
+  const [state,setState]             = useState('checking');
+  const [user,setUser]               = useState(null);
+  const [impersonToken,setImperson]  = useState(null); // token temporário para visualizar Gestor
 
   useEffect(()=>{
     const token=localStorage.getItem('sc_token'), saved=localStorage.getItem('sc_user');
@@ -5105,11 +5117,31 @@ function Root() {
     localStorage.removeItem('sc_token');
     localStorage.removeItem('sc_user');
     setUser(null);
+    setImperson(null);
     setState('auth');
   };
 
   const handlePasswordChanged = updatedUser => {
     setUser(updatedUser);
+  };
+
+  const handleViewGestor = async (tenantId) => {
+    try {
+      const masterToken = localStorage.getItem('sc_token');
+      const r = await fetch('/api/master/impersonate/'+tenantId, {
+        method:'POST', headers:{'Authorization':'Bearer '+masterToken,'Content-Type':'application/json'}
+      });
+      const d = await r.json();
+      if(d.token) {
+        localStorage.setItem('sc_token', d.token);
+        setImperson({ token: d.token, masterToken, tenantId });
+      } else alert(d.error||'Erro ao acessar Gestor');
+    } catch { alert('Erro ao acessar Gestor'); }
+  };
+
+  const handleExitImperson = () => {
+    if(impersonToken?.masterToken) localStorage.setItem('sc_token', impersonToken.masterToken);
+    setImperson(null);
   };
 
   if(state==='checking') return <div className="auth-bg"><div style={{color:'#00C48C',fontSize:'14px'}}>Carregando...</div></div>;
@@ -5119,7 +5151,27 @@ function Root() {
   // Troca de senha obrigatória — intercepta antes de qualquer tela
   if(user?.must_change_password) return <ChangePasswordScreen user={user} onDone={handlePasswordChanged}/>;
 
-  if(user?.role==='master') return <MasterDashboard user={user} onLogout={handleLogout}/>;
+  // Master visualizando Gestor de um tenant
+  if(impersonToken) {
+    const fakeUser = { ...user, role:'admin', tenant_id: impersonToken.tenantId, name: user.name+' (Master)' };
+    return (
+      <div style={{position:'relative'}}>
+        <div style={{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#7c3aed',color:'#fff',
+          padding:'6px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:'13px'}}>
+          <span>👁️ Visualizando Gestor: <strong>{impersonToken.tenantId}</strong> (modo Master)</span>
+          <button onClick={handleExitImperson}
+            style={{background:'rgba(255,255,255,.2)',border:'none',color:'#fff',padding:'4px 12px',borderRadius:'6px',cursor:'pointer',fontWeight:600,fontSize:'12px'}}>
+            ← Voltar ao Master
+          </button>
+        </div>
+        <div style={{paddingTop:'32px'}}>
+          <Dashboard user={fakeUser} onLogout={handleExitImperson}/>
+        </div>
+      </div>
+    );
+  }
+
+  if(user?.role==='master') return <MasterDashboard user={user} onLogout={handleLogout} onViewGestor={handleViewGestor}/>;
   return <Dashboard user={user} onLogout={handleLogout}/>;
 }
 
