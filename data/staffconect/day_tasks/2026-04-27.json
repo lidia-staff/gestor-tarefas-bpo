@@ -1,0 +1,1069 @@
+{
+  "agro": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288573123",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288573123",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288573123",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288573123",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288573123",
+          "text": "Acessar banco e extratos",
+          "done": true
+        },
+        {
+          "id": "m_6_1777288573123",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "m_7_1777288573123",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "m_8_1777288573123",
+          "text": "Salvar conciliação",
+          "done": true
+        },
+        {
+          "id": "m_9_1777288573123",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288573123",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288573123",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:16",
+      "doneAt": "10:54"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "galiza": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288544538",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288544538",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288544538",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288544538",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288544538",
+          "text": "Acessar banco e extratos",
+          "done": false
+        },
+        {
+          "id": "m_6_1777288544538",
+          "text": "Importar OFX",
+          "done": false
+        },
+        {
+          "id": "m_7_1777288544538",
+          "text": "Conciliação bancária",
+          "done": false
+        },
+        {
+          "id": "m_8_1777288544538",
+          "text": "Salvar conciliação",
+          "done": false
+        },
+        {
+          "id": "m_9_1777288544538",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288544538",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288544538",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "Rotina enviada, falta conciliacao",
+      "returnMsg": "",
+      "startedAt": "12:52",
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "guimoo": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288548050",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288548050",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288548050",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288548050",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288548050",
+          "text": "Acessar banco e extratos",
+          "done": true
+        },
+        {
+          "id": "m_6_1777288548050",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "m_7_1777288548050",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "m_8_1777288548050",
+          "text": "Salvar conciliação",
+          "done": true
+        },
+        {
+          "id": "m_9_1777288548050",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288548050",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288548050",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:26",
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "12:51",
+      "doneAt": "12:51"
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "body": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288550839",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288550839",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288550839",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288550839",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288550839",
+          "text": "Acessar banco e extratos",
+          "done": false
+        },
+        {
+          "id": "m_6_1777288550839",
+          "text": "Importar OFX",
+          "done": false
+        },
+        {
+          "id": "m_7_1777288550839",
+          "text": "Conciliação bancária",
+          "done": false
+        },
+        {
+          "id": "m_8_1777288550839",
+          "text": "Salvar conciliação",
+          "done": false
+        },
+        {
+          "id": "m_9_1777288550839",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288550839",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288550839",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "11:39",
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "12:03",
+      "doneAt": "12:05"
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "jsa": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288554787",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288554787",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288554787",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288554787",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288554787",
+          "text": "Acessar banco e extratos",
+          "done": true
+        },
+        {
+          "id": "m_6_1777288554787",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "m_7_1777288554787",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "m_8_1777288554787",
+          "text": "Salvar conciliação",
+          "done": true
+        },
+        {
+          "id": "m_9_1777288554787",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288554787",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288554787",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:18",
+      "doneAt": "11:29"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "11:29",
+      "doneAt": "11:29"
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "up": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288560067",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288560067",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288560067",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288560067",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288560067",
+          "text": "Acessar banco e extratos",
+          "done": false
+        },
+        {
+          "id": "m_6_1777288560067",
+          "text": "Importar OFX",
+          "done": false
+        },
+        {
+          "id": "m_7_1777288560067",
+          "text": "Conciliação bancária",
+          "done": false
+        },
+        {
+          "id": "m_8_1777288560067",
+          "text": "Salvar conciliação",
+          "done": true
+        },
+        {
+          "id": "m_9_1777288560067",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288560067",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288560067",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:07",
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "Rotina enviada",
+      "returnMsg": "",
+      "startedAt": "10:23",
+      "doneAt": "12:04"
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "kimberly": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "m_1_1777288563430",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "m_2_1777288563430",
+          "text": "Salvar boletos e NF's",
+          "done": true
+        },
+        {
+          "id": "m_3_1777288563430",
+          "text": "Verificar WhatsApp",
+          "done": true
+        },
+        {
+          "id": "m_4_1777288563430",
+          "text": "Lançar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "m_5_1777288563430",
+          "text": "Acessar banco e extratos",
+          "done": false
+        },
+        {
+          "id": "m_6_1777288563430",
+          "text": "Importar OFX",
+          "done": false
+        },
+        {
+          "id": "m_7_1777288563430",
+          "text": "Conciliação bancária",
+          "done": false
+        },
+        {
+          "id": "m_8_1777288563430",
+          "text": "Salvar conciliação",
+          "done": false
+        },
+        {
+          "id": "m_9_1777288563430",
+          "text": "Conferir contas a pagar",
+          "done": true
+        },
+        {
+          "id": "m_10_1777288563430",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "m_11_1777288563430",
+          "text": "Atualizar posição bancária",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "Rotina enviada, falta fazer conciliação.",
+      "returnMsg": "",
+      "startedAt": "10:48",
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "matsu": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "custom_1777318762222",
+          "text": "Cadastrar conta bancaria",
+          "done": true
+        },
+        {
+          "id": "custom_1777321399919",
+          "text": "Cadastrar centro de custo",
+          "done": true
+        },
+        {
+          "id": "custom_1777321421448",
+          "text": "Cadastrar contas a pagar desde 01/04",
+          "done": true
+        },
+        {
+          "id": "custom_1777321480086",
+          "text": "Colocar como a identificar as contas que nao localizar a categoria",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "active",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "20:47",
+      "doneAt": null
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "ecofi": {
+    "bloco1": {
+      "steps": [],
+      "hasPayment": null,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  },
+  "makinsthall": {
+    "bloco1": {
+      "steps": [],
+      "hasPayment": null,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": false,
+    "assignedTo": null
+  }
+}

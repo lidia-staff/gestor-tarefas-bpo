@@ -1,0 +1,1091 @@
+{
+  "kimberly": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "22:02",
+      "doneAt": "19:33"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true
+  },
+  "up": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:01",
+      "doneAt": "19:34"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "agro": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:02",
+      "doneAt": "12:21"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "12:57",
+      "doneAt": "13:08"
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "jsa": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:04",
+      "doneAt": "19:34"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "19:35",
+      "doneAt": "19:35"
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "body": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:04",
+      "doneAt": "19:34"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": true
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": true
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": true
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": true
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": true
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": true
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "19:35",
+      "doneAt": "19:35"
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "guimoo": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:04",
+      "doneAt": "19:34"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "galiza": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "08:05",
+      "doneAt": "19:34"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "makinsthall": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "13:20",
+      "doneAt": "13:31"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "ecofi": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "13:31",
+      "doneAt": "13:31"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "matsu": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "b1_1",
+          "text": "Acessar e-mail",
+          "done": true
+        },
+        {
+          "id": "b1_2",
+          "text": "Salvar boletos e NF's → pasta NF's e Boletos de Fornecedores",
+          "done": true
+        },
+        {
+          "id": "b1_3",
+          "text": "Salvar na pasta do mês",
+          "done": true
+        },
+        {
+          "id": "b1_4",
+          "text": "WhatsApp — verificar solicitações (grupo + individual)",
+          "done": true
+        },
+        {
+          "id": "b1_5",
+          "text": "Lançar solicitações de pagamento no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_6",
+          "text": "Acessar banco · Salvar extrato PDF e OFX",
+          "done": true
+        },
+        {
+          "id": "b1_7",
+          "text": "Importar OFX no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "b1_8",
+          "text": "Conciliação bancária  ⚠️  dúvidas → perguntar no grupo",
+          "done": true
+        },
+        {
+          "id": "b1_9",
+          "text": "Salvar arquivo da conciliação na pasta",
+          "done": true
+        }
+      ],
+      "hasPayment": false,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "13:31",
+      "doneAt": "13:31"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "b2_1",
+          "text": "Conferir contas a pagar no Conta Azul",
+          "done": false
+        },
+        {
+          "id": "b2_2",
+          "text": "Conferir NF's e boletos na pasta",
+          "done": false
+        },
+        {
+          "id": "b2_3",
+          "text": "Conferir DDA",
+          "done": false
+        },
+        {
+          "id": "b2_4",
+          "text": "Salvar contas a pagar do dia",
+          "done": false
+        },
+        {
+          "id": "b2_5",
+          "text": "Agendar pagamentos",
+          "done": false
+        },
+        {
+          "id": "b2_6",
+          "text": "Salvar programação bancária",
+          "done": false
+        },
+        {
+          "id": "b2_7",
+          "text": "Atualizar saldo bancário",
+          "done": false
+        },
+        {
+          "id": "b2_8",
+          "text": "Enviar rotina ao cliente ✓",
+          "done": false
+        }
+      ],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  }
+}
