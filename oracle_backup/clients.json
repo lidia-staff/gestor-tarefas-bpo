@@ -1,0 +1,554 @@
+[
+  {
+    "id": "kimberly",
+    "name": "Kimberly",
+    "priority": 1,
+    "banks": [
+      "Asaas",
+      "Sicredi"
+    ],
+    "whatsapp": "",
+    "cnpj": "27.808.440/0001-26",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "op3_id": "1777317713733",
+    "bloco1b_steps": [
+      "Importar OFX",
+      "Conciliação bancária",
+      "Salvar conciliação"
+    ],
+    "rotina_tipo": "bancos_rev",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "kimberlybpofinanceirosantosif@gmail.com"
+  },
+  {
+    "id": "up",
+    "name": "UP",
+    "priority": 2,
+    "banks": [
+      "Bradesco",
+      "Stone"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1777741610724,
+        "link": "https://v65.medx.med.br/Login_Unificado/loginUnificado.html",
+        "sistema": "Medx",
+        "usuario": "dermapelle01@outlook.com",
+        "senha": "upclinique2024",
+        "obs": ""
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "upbpofinanceirosantosif@gmail.com"
+  },
+  {
+    "id": "agro",
+    "name": "Agro",
+    "priority": 3,
+    "banks": [
+      "Sicoob"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "op3_id": "1777317713733",
+    "bloco1b_steps": [
+      "Importar OFX",
+      "Conciliação bancária",
+      "Salvar conciliação"
+    ],
+    "rotina_tipo": "bancos_rev",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "agroselectionbpofinanceiroawn@gmail.com"
+  },
+  {
+    "id": "jsa",
+    "name": "JSA",
+    "priority": 4,
+    "banks": [
+      "Sicoob"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "op3_id": "1777317713733",
+    "bloco1b_steps": [
+      "Importar OFX",
+      "Conciliação bancária",
+      "Salvar conciliação"
+    ],
+    "rotina_tipo": "bancos_rev",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "jsabpofinanceiroawn@gmail.com"
+  },
+  {
+    "id": "body",
+    "name": "Body Face",
+    "priority": 5,
+    "banks": [
+      "Asaas",
+      "Stone"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1780521190134,
+        "link": "https://agenciavirtual.light.com.br/portal/",
+        "sistema": "Light",
+        "usuario": "clinicaroundgluteorio@gmail.com",
+        "senha": "2412Vss@",
+        "obs": ""
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "bodyefacebpofinanceirosantosif@gmail.com"
+  },
+  {
+    "id": "guimoo",
+    "name": "Guimoo",
+    "priority": 6,
+    "banks": [
+      "Cora",
+      "Asaas"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1776989303545,
+        "link": "https://www.asaas.com/",
+        "sistema": "Asaas",
+        "usuario": "guimoobpofinanceirosantosif@gmail.com",
+        "senha": "Santos@2808",
+        "obs": ""
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "op3_id": "1777317713733",
+    "bloco1b_steps": [
+      "Importar OFX",
+      "Conciliação bancária",
+      "Salvar conciliação"
+    ],
+    "rotina_tipo": "bancos_rev",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "guimoobpofinanceirosantosif@gmail.com"
+  },
+  {
+    "id": "galiza",
+    "name": "Galiza",
+    "priority": 7,
+    "banks": [
+      "Bradesco",
+      "Cora"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "galizabpofinanceirosantosif@gmail.com"
+  },
+  {
+    "id": "matsu",
+    "name": "Matsu",
+    "priority": 8,
+    "banks": [
+      "Itaú"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1778058872654,
+        "link": "https://www.itau.com.br/empresas",
+        "sistema": "Banco Itau - Conta 98716-9",
+        "usuario": "871367162",
+        "senha": "120382",
+        "obs": "Acessos - Opcoes de acesso: Codigo do operador (871367162) - acesso básico"
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "matsufinanceiro@gmail.com"
+  },
+  {
+    "id": "ecofi",
+    "name": "Ecofi",
+    "priority": 9,
+    "banks": [
+      "Bradesco",
+      "Itaú"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1778058962486,
+        "link": "",
+        "sistema": "Banco Itau - Conta 98720-1",
+        "usuario": "871367162",
+        "senha": "120382",
+        "obs": "Acessos - Opcoes de acesso: Codigo do operador (871367162) - acesso básico"
+      },
+      {
+        "id": 1778059109717,
+        "link": "",
+        "sistema": "Bradesco - Conta 0648607-0",
+        "usuario": "LCSC00222",
+        "senha": "12031982",
+        "obs": "Mesmo acesso da UP e Galiza"
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "financeiroecofi@gmail.com"
+  },
+  {
+    "id": "makinsthall",
+    "name": "Makinsthall",
+    "priority": 10,
+    "banks": [
+      "Santander",
+      "Itaú",
+      "Bradesco"
+    ],
+    "whatsapp": "",
+    "cnpj": "",
+    "contact": "",
+    "erp": "Conta Azul",
+    "email": "",
+    "notes": "",
+    "passwords": [
+      {
+        "id": 1778059237585,
+        "link": "",
+        "sistema": "Banco Itau - Conta 98483-6",
+        "usuario": "871367162",
+        "senha": "120382",
+        "obs": "Mesmo acesso da Ecofi e Matsu"
+      },
+      {
+        "id": 1778059300787,
+        "link": "",
+        "sistema": "Bradesco - Conta 0648623-1",
+        "usuario": "LCSC00222",
+        "senha": "12031982",
+        "obs": "Mesmo acesso da UP e Galiza"
+      },
+      {
+        "id": 1778059336479,
+        "link": "",
+        "sistema": "Banco Itau - Conta 98721-9",
+        "usuario": "871367162",
+        "senha": "120382",
+        "obs": "Mesmo acesso da Ecofi e Matsu"
+      },
+      {
+        "id": 1778059471279,
+        "link": "https://www.santander.com.br/",
+        "sistema": "Santander - Conta 13004989-4",
+        "usuario": "83082913334",
+        "senha": "120382",
+        "obs": "Pessoa Juridica Ag 4198 Conta 130049894"
+      },
+      {
+        "id": 1778782639828,
+        "link": "https://nfe.osasco.sp.gov.br/EissnfeWebApp/Portal/Default.aspx",
+        "sistema": "Acesso prefeitura de Osasco",
+        "usuario": "IM126265",
+        "senha": "126265",
+        "obs": "Emissao de NF"
+      }
+    ],
+    "op1_id": "1776819683538",
+    "op2_id": "1776819616478",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "rotina_tipo": "completo",
+    "rotina_tipo_tarde": null,
+    "email_conta_ai": "makinsthal.financeiro@gmail.com"
+  },
+  {
+    "name": "RBJ Transportes",
+    "priority": 11,
+    "banks": [],
+    "passwords": [
+      {
+        "id": 1776945305184,
+        "label": "Simples Cte: lidia@staffconsult.com.br",
+        "value": "St12345*"
+      },
+      {
+        "id": 1776945338290,
+        "label": "Prefeitura: 628.669.233-91",
+        "value": "Rochab2020*"
+      }
+    ],
+    "tipo": "outros",
+    "cnpj": "03.407.215/0001-10",
+    "contact": "Romualdo",
+    "erp": "Simples Cte",
+    "id": "1776945416932",
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "op1_id": "1776819616478",
+    "op2_id": "1776819616478",
+    "email": "romualdo.rbj@hotmail.com; adm.rbjtransportes@gmail.com",
+    "whatsapp": " 85 98901-7997"
+  },
+  {
+    "name": "Staff Consult e Conect",
+    "priority": 12,
+    "banks": [],
+    "passwords": [
+      {
+        "id": 1777644876700,
+        "link": "",
+        "sistema": "Instagram",
+        "usuario": "staff.consult",
+        "senha": "St12345*",
+        "obs": ""
+      },
+      {
+        "id": 1777644919534,
+        "link": "",
+        "sistema": "Instagram StaffConect",
+        "usuario": "lidia@staffconsult.com.br",
+        "senha": "St12345",
+        "obs": ""
+      },
+      {
+        "id": 1777645300128,
+        "link": "",
+        "sistema": "Google meu negocio",
+        "usuario": "adm.staffconsult@gmail.com",
+        "senha": "",
+        "obs": "Enviei um convite para este email"
+      },
+      {
+        "id": 1777645773849,
+        "link": "",
+        "sistema": "Linkedin",
+        "usuario": "",
+        "senha": "",
+        "obs": "Te convidei como Administrador"
+      },
+      {
+        "id": 1777645796239,
+        "link": "",
+        "sistema": "Meta",
+        "usuario": "adm.staffconsult@gmail.com",
+        "senha": "",
+        "obs": "Enviei um convite para este email"
+      },
+      {
+        "id": 1778677793240,
+        "link": "",
+        "sistema": "Qualitycert",
+        "usuario": "LIDIAA.CRISTINA",
+        "senha": "@lidiaa2025",
+        "obs": "Link videoconferencia padrao : https://vline.soluti.com.br/arqualitycert     Link de consulta para ver se pode fazer videoconferencia: https://arjoare2.acsoluti.com.br/site/emissao-online"
+      },
+      {
+        "id": 1778677858288,
+        "link": "",
+        "sistema": "Conta Azul Santos",
+        "usuario": "contato.staffconsult@gmail.com",
+        "senha": "Sif12345*",
+        "obs": ""
+      }
+    ],
+    "rotina": {
+      "bloco1": {
+        "name": "",
+        "steps": []
+      },
+      "bloco2": {
+        "active": false,
+        "name": "",
+        "steps": []
+      }
+    },
+    "tipo": "outros",
+    "id": "1777644575935",
+    "rotina_tipo": "padrao",
+    "op1_id": "1776819616478",
+    "op2_id": "1776819616478"
+  }
+]

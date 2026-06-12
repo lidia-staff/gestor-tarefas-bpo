@@ -11,9 +11,9 @@
 
 # ---- CONFIG ------------------------------------------------------------------
 $ORACLE_HOST    = "136.248.112.181"
-$ORACLE_USER    = "opc"
+$ORACLE_USER    = "ubuntu"
 $ORACLE_KEY     = ".\oracle ssh-key-2026-04-21.key"
-$ORACLE_DATADIR = "/home/opc/gestor/data"
+$ORACLE_DATADIR = "/home/ubuntu/gestor/data"
 $LOCAL_BACKUP   = ".\oracle_backup"
 $TENANT         = "staffconect"
 $LOCAL_DATA     = ".\data"

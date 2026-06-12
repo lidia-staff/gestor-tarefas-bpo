@@ -1,0 +1,1823 @@
+[
+  {
+    "id": 1779973396887,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "voltou",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:03:16.887Z"
+  },
+  {
+    "id": 1779973401802,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "pede de novo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:03:21.802Z"
+  },
+  {
+    "id": 1779973436678,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ta",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:03:56.678Z"
+  },
+  {
+    "id": 1779973541459,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "pedi",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:05:41.459Z"
+  },
+  {
+    "id": 1779973773383,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "mirela pedindo extrato guimoo cora",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:09:33.383Z"
+  },
+  {
+    "id": 1779974135527,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "de novo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:15:35.527Z",
+    "replyToId": 1779973541459,
+    "replyText": "pedi",
+    "replyUser": "LEONARDO CUNHA CAVALCANTI"
+  },
+  {
+    "id": 1779974152623,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não consegui parar para gerar cora e sicoob",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:15:52.623Z",
+    "replyToId": 1779973773383,
+    "replyText": "mirela pedindo extrato guimoo cora",
+    "replyUser": "LEONARDO CUNHA CAVALCANTI"
+  },
+  {
+    "id": 1779974156796,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ja ja envio",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:15:56.796Z"
+  },
+  {
+    "id": 1779974558899,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "a stone ta caindo, pede ja ja",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:22:38.899Z"
+  },
+  {
+    "id": 1779975430666,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "leo, ve o suporte da Algar",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:37:10.666Z"
+  },
+  {
+    "id": 1779975447600,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Para enviar o comprovante de pagamento da fatura que eles dizem que esta em atraso",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:37:27.600Z"
+  },
+  {
+    "id": 1779975464458,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Vou salvar o comprovante na pasta do mes 5",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:37:44.458Z"
+  },
+  {
+    "id": 1779976376430,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "vou tentar resolver aqui,a cho que paguei errado",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T13:52:56.430Z"
+  },
+  {
+    "id": 1779977938081,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ish",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T14:18:58.081Z"
+  },
+  {
+    "id": 1779981707104,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone de novo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T15:21:47.104Z"
+  },
+  {
+    "id": 1779983655521,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "manda",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T15:54:15.521Z"
+  },
+  {
+    "id": 1779985590965,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "vou almoçar",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T16:26:30.965Z"
+  },
+  {
+    "id": 1779991782892,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "finalizou todas as conciliações?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T18:09:42.892Z"
+  },
+  {
+    "id": 1779996904757,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Esse da Agro que a Ana Marcela enviou é para eu programar pagamento para amanha, salvou na pasta?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T19:35:04.757Z"
+  },
+  {
+    "id": 1779998754139,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "salvei",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-28T20:05:54.139Z"
+  },
+  {
+    "id": 1780056239260,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Bom dia! Hoje é o ultimo dia do mes, então precisa concluir e deixar tudo organizado para não termos pendencias em junho : Todas as pastas conferidas (com extrato dos bancos, conciliações salvas) / todas pendencias de lançamento  de fatura de cartões ou outras finalizadas / todas as conciliações concluidas e qualquer outra pendencias que tiver. Quando voce concluir me envia uma mensagem para conferir. Hoje só vamos parar quando tiver tudo ok. Ao longo do dia vou te passando mais coisas se tiver, para não ficar pendencias.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-29T12:03:59.260Z"
+  },
+  {
+    "id": 1780056247232,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Mirela cobrando os extratos.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-29T12:04:07.232Z"
+  },
+  {
+    "id": 1780079872711,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "As conciliacoes vao ficar pendentes para voce fazer na segunda. Inclusive da Body.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-05-29T18:37:52.711Z"
+  },
+  {
+    "id": 1780086790367,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Emitir NF Diária\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-05-29T20:33:10.367Z"
+  },
+  {
+    "id": 1780087149783,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Cancelamento NF´s de vendas estornadas\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-05-29T20:39:09.783Z"
+  },
+  {
+    "id": 1780095854065,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Configurar emissao de boletos no Conta Azul\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-05-29T23:04:14.065Z"
+  },
+  {
+    "id": 1780097408386,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Emitir NF´s\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-05-29T23:30:08.386Z"
+  },
+  {
+    "id": 1780097494879,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Emitir NF´s\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-05-29T23:31:34.879Z"
+  },
+  {
+    "id": 1780274565700,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"CONFERIR PASTAS - FALTA \" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-01T00:42:45.700Z"
+  },
+  {
+    "id": 1780313184889,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone]",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T11:26:24.889Z"
+  },
+  {
+    "id": 1780314003937,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "a agro quer as contas a pagar da semana e não so do dia hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T11:40:03.937Z"
+  },
+  {
+    "id": 1780314168851,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T11:42:48.851Z",
+    "imageUrl": "/uploads/chat/1780314168774_m4akv0v7mgg.png"
+  },
+  {
+    "id": 1780314171519,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "agro",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T11:42:51.519Z"
+  },
+  {
+    "id": 1780315976857,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Ok, ainda estou organizando",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:12:56.857Z"
+  },
+  {
+    "id": 1780315999556,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Galiza Cora, enviei para o email adm acho que ja enviei uns 3 dias",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:13:19.556Z"
+  },
+  {
+    "id": 1780316263372,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "deixa as conciliações em dias. ontem vi que tem algumas atrasadas. ja organizei as pastas deixei so as dessa semana para voce conferir e fazer isso a partir de agora.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:17:43.372Z"
+  },
+  {
+    "id": 1780316306591,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "eu ja conciliei ontem a noite",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:18:26.591Z"
+  },
+  {
+    "id": 1780316366631,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "depois voce vai olhar pasta por pasta dessa semana de todos, ver se falta algum arquivo ou conciliação",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:19:26.631Z"
+  },
+  {
+    "id": 1780316376073,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "veja se salvou nas pastas do drive",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:19:36.073Z"
+  },
+  {
+    "id": 1780316379977,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T12:19:39.977Z"
+  },
+  {
+    "id": 1780340310141,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ja esta trabalhando?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T18:58:30.141Z"
+  },
+  {
+    "id": 1780340664346,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "sim",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:04:24.346Z"
+  },
+  {
+    "id": 1780340690668,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "finaliza as conciliações, body não estava feita",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:04:50.668Z"
+  },
+  {
+    "id": 1780340745759,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "tem certeza?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:05:45.759Z"
+  },
+  {
+    "id": 1780340772289,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "eu que baixei os pagamentos",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:06:12.289Z"
+  },
+  {
+    "id": 1780340954413,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone entao pfv",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:09:14.413Z"
+  },
+  {
+    "id": 1780341924845,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "vou incluir os boletos da matsu, ecofi e makinsthal para voce lançar no conta azul, finalizar ainda hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:25:24.845Z"
+  },
+  {
+    "id": 1780342015229,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "observar a data de vencimento do arquivo certinho, tem alguns que foram lançados com as datas erradas",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T19:26:55.229Z"
+  },
+  {
+    "id": 1780347171384,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "tem mensagem da nova print, ana marcela não lida e sem retorno",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T20:52:51.384Z"
+  },
+  {
+    "id": 1780357457467,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-01T23:44:17.467Z",
+    "imageUrl": "/uploads/chat/1780357457387_dbolq2e6erf.png"
+  },
+  {
+    "id": 1780360478318,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"VER SE OS BOLETOS DA LIDER FORAM CANCELADOS NO SICOOB\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-02T00:34:38.318Z"
+  },
+  {
+    "id": 1780397522978,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Bom dia! Ja coloquei os extratos nas pastas, escreva para Mirella e junte com as suas informações, os extratos que voce salva (se tiver duvida me pergunte): Bom dia! Extratos da Agro; JSA 1602 - 29/05 (ja substituí pelo novo extrato), 01/06;  JSA 7216 - 29/05 (ja substituí pelo novo extrato), 01/06 nas pastas. Cora enviado por e-mail.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T10:52:02.978Z"
+  },
+  {
+    "id": 1780398667351,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:11:07.351Z"
+  },
+  {
+    "id": 1780399244796,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "nao da pra ver a imagem mas ja to salvando e respondendo as que ficaram sem resposta",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:20:44.796Z"
+  },
+  {
+    "id": 1780399285627,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "como assim?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:21:25.627Z"
+  },
+  {
+    "id": 1780399310516,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "a imagem que a mae mandou ontem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:21:50.516Z"
+  },
+  {
+    "id": 1780399314910,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "nao da pra ver",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:21:54.910Z"
+  },
+  {
+    "id": 1780399336991,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "aqui ne? ok. pensei que era no sm",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:22:16.991Z"
+  },
+  {
+    "id": 1780400251858,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "zap da body ta pedindo uma nota",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T11:37:31.858Z"
+  },
+  {
+    "id": 1780403626097,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "eu ja mandei, não é a mesma de onetm?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:33:46.097Z"
+  },
+  {
+    "id": 1780403676142,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "bianca kald",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:34:36.142Z"
+  },
+  {
+    "id": 1780403693253,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "mandaram a noite",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:34:53.253Z"
+  },
+  {
+    "id": 1780403697644,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "n sei",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:34:57.644Z"
+  },
+  {
+    "id": 1780403733060,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "eu emiti a nota errada affff",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:35:33.060Z"
+  },
+  {
+    "id": 1780403740391,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Vou fazer",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:35:40.391Z"
+  },
+  {
+    "id": 1780404886119,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:54:46.119Z"
+  },
+  {
+    "id": 1780404962862,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T12:56:02.862Z"
+  },
+  {
+    "id": 1780405842176,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "quero falar contigo rapido",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T13:10:42.176Z"
+  },
+  {
+    "id": 1780405868580,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T13:11:08.580Z"
+  },
+  {
+    "id": 1780412465505,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"[PENDÊNCIA] Divergência de valor — Guimoo\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-02T15:01:05.505Z"
+  },
+  {
+    "id": 1780413123552,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "fez a up?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T15:12:03.552Z"
+  },
+  {
+    "id": 1780413551679,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Essas faturas da UP onde voce salvou ?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T15:19:11.679Z"
+  },
+  {
+    "id": 1780416643550,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "to mandando as faturas de cartão para voce lançar, o que tem de pendencia?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:10:43.550Z"
+  },
+  {
+    "id": 1780416654430,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "por email",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:10:54.430Z"
+  },
+  {
+    "id": 1780416681644,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "salvei no computador",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:11:21.644Z"
+  },
+  {
+    "id": 1780416686190,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "email o que?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:11:26.190Z"
+  },
+  {
+    "id": 1780416832916,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "mandando as faturas que faltam lançar por email, estou conferindo um por um",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:13:52.916Z"
+  },
+  {
+    "id": 1780417409495,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LEONARDO* — \"CONFERIR AS RECEITAS E DESPESAS A IDENTIFICAR DE TODOS OS CLIENTES\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819683538",
+    "createdAt": "2026-06-02T16:23:29.495Z"
+  },
+  {
+    "id": 1780417490210,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "fez body? não tem nada marcado",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:24:50.210Z"
+  },
+  {
+    "id": 1780418165160,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "body fiz",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T16:36:05.160Z"
+  },
+  {
+    "id": 1780424080144,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Os pagamentos da matsu nao aparecem no conta azul, voce lançou?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:14:40.144Z"
+  },
+  {
+    "id": 1780424097359,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ainda nao, to lançando",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:14:57.359Z"
+  },
+  {
+    "id": 1780424222588,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "lança logo os de hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:17:02.588Z"
+  },
+  {
+    "id": 1780424232615,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ta",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:17:12.615Z"
+  },
+  {
+    "id": 1780424240168,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Vou fazer a ecofi e depois volto na matsu",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:17:20.168Z"
+  },
+  {
+    "id": 1780424253790,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ecofi ja lancei",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:17:33.790Z"
+  },
+  {
+    "id": 1780426308629,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "vou lançar o da matsu de hooje, voce lança o restante",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:51:48.629Z"
+  },
+  {
+    "id": 1780426341097,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T18:52:21.097Z"
+  },
+  {
+    "id": 1780428966087,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "o que voce ja concluiu?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T19:36:06.087Z"
+  },
+  {
+    "id": 1780431291241,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "to lancando matsu",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T20:14:51.241Z"
+  },
+  {
+    "id": 1780433240114,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "conseguiu terminar?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T20:47:20.114Z"
+  },
+  {
+    "id": 1780433699488,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "da matsu sim agora vou pra mak",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-02T20:54:59.488Z"
+  },
+  {
+    "id": 1780433758859,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LEONARDO* — \"GERAR BOLETOS IPTU E ENERGIA ELETRICA BODY\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819683538",
+    "createdAt": "2026-06-02T20:55:58.859Z"
+  },
+  {
+    "id": 1780486050041,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Enviar para a Mirella - Bom dia! Extratos da Agro; JSA 1602 - 01/06 (ja substituí pelo novo extrato), 02/06;  JSA 7216 - 01/06 (ja substituí pelo novo extrato), 02/06 nas pastas. Cora enviado por e-mail.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T11:27:30.041Z"
+  },
+  {
+    "id": 1780491996640,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "me avise quando os clientes estiverem ok para eu iniciar os pagamentos",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T13:06:36.640Z"
+  },
+  {
+    "id": 1780492012831,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ta",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T13:06:52.831Z"
+  },
+  {
+    "id": 1780494291771,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"BOLETO MAO DE OBRA RURAL\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-03T13:44:51.771Z"
+  },
+  {
+    "id": 1780494622564,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T13:50:22.564Z"
+  },
+  {
+    "id": 1780494631553,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ta faltando so up e body",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T13:50:31.553Z"
+  },
+  {
+    "id": 1780496738201,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "manda de novo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T14:25:38.201Z"
+  },
+  {
+    "id": 1780497096754,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "saldo da kim desatualizado",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T14:31:36.754Z"
+  },
+  {
+    "id": 1780497650522,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "so esse que eu devo ter esquecid",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T14:40:50.522Z"
+  },
+  {
+    "id": 1780497934492,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T14:45:34.492Z"
+  },
+  {
+    "id": 1780498016219,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "salva estas faturas que a Alessandra da UP mandou na pasta do mes 6 - criei uma pasta FATURAS CARTOES - PARA LANÇAR. Salva tudo que ela mandou ontem. Vou responder so para nao ficar sem resposta, mas nao esqueça de salvar",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T14:46:56.219Z"
+  },
+  {
+    "id": 1780498223975,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"VER FATURAS DE AGUA E ENERGIA DA UP\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-03T14:50:23.975Z"
+  },
+  {
+    "id": 1780498850944,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Temos que enviar hoje as receitas e despesas a identificar. veja as tarefas que criei",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T15:00:50.944Z"
+  },
+  {
+    "id": 1780498929590,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ta certo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T15:02:09.590Z"
+  },
+  {
+    "id": 1780499766952,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "olha a mensagem da onvio",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T15:16:06.952Z"
+  },
+  {
+    "id": 1780507338068,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "olha o sm na conversa com a clinica kim oliver",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T17:22:18.068Z"
+  },
+  {
+    "id": 1780507343960,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "é sobre cartao swile",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T17:22:23.960Z"
+  },
+  {
+    "id": 1780509757744,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Misturou as coisas rsrsr. Swile é cartão de beneficios, so que tem é JSA e Agro",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:02:37.744Z"
+  },
+  {
+    "id": 1780509782368,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Aí o que ela mandou foi o cadastro de clientes, ja pode fazer o cadastro no conta azul",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:03:02.368Z"
+  },
+  {
+    "id": 1780509791945,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "entendi",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:03:11.945Z"
+  },
+  {
+    "id": 1780509801259,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "vou fazer entao",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:03:21.259Z"
+  },
+  {
+    "id": 1780509940765,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:05:40.765Z",
+    "imageUrl": "/uploads/chat/1780509940704_97zszrosuu.png"
+  },
+  {
+    "id": 1780509958000,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Tarefas pendentes para hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:05:58.000Z"
+  },
+  {
+    "id": 1780509971651,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "vou fazer ate hj a noite",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:06:11.651Z"
+  },
+  {
+    "id": 1780510037019,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "tá, 1 º relatorio de receitas e despesas a identificar para enviar ainda hoje nos grupos / 2º - boletos de energia e iptu da body para eu agendar os pagamentos",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:07:17.019Z"
+  },
+  {
+    "id": 1780510066371,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "de todos as receitas e despesas?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:07:46.371Z"
+  },
+  {
+    "id": 1780510385671,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "escrevi na tarefa como voce faz",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T18:13:05.671Z"
+  },
+  {
+    "id": 1780516450012,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "eu pedi para falar comigo antes de enviar nos grupos",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:54:10.012Z"
+  },
+  {
+    "id": 1780516467486,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "me manda para eu ver",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:54:27.486Z"
+  },
+  {
+    "id": 1780516598937,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📄 despesas a identificar.pdf",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:56:38.937Z"
+  },
+  {
+    "id": 1780516615957,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📄 despesas a identificar up.pdf",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:56:55.957Z"
+  },
+  {
+    "id": 1780516627661,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "aqui não to cosneguindo abrir",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:57:07.661Z"
+  },
+  {
+    "id": 1780516646102,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "vou mandar no whatsapp pode ser?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:57:26.102Z"
+  },
+  {
+    "id": 1780516651443,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "sim",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T19:57:31.443Z"
+  },
+  {
+    "id": 1780523879339,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "TODOS IPTU E LIGHT JA NA PASTA",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T21:57:59.339Z"
+  },
+  {
+    "id": 1780524684077,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "JA LANCEI AS DESPESAS MAK TAMBEM",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T22:11:24.077Z"
+  },
+  {
+    "id": 1780524785660,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "amem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T22:13:05.660Z"
+  },
+  {
+    "id": 1780524792430,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "os cartoes , conseguiu?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T22:13:12.430Z"
+  },
+  {
+    "id": 1780525328006,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "TO FAZENDO",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T22:22:08.006Z"
+  },
+  {
+    "id": 1780525402058,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-03T22:23:22.058Z"
+  },
+  {
+    "id": 1780659853299,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Os extratos de hoje são do dia 3 ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T11:44:13.299Z"
+  },
+  {
+    "id": 1780660351139,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Mensagem para Mirella (voce ajusta os seus): Extratos da Agro - 01/06 (ja substituí pelo novo extrato), dia 3 sem movimentação / JSA 1602 - sem movimentacao /  JSA 7216 - 03/06 / Kim    / Guimoo Asaas    . Guimoo Cora enviado por e-mail",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T11:52:31.139Z"
+  },
+  {
+    "id": 1780661804629,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ah ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T12:16:44.629Z",
+    "replyToId": 1780659853299,
+    "replyText": "Os extratos de hoje são do dia 3 ok",
+    "replyUser": "LIDIA CAVALCANTI"
+  },
+  {
+    "id": 1780661826368,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera asaas, mandou codigo no celular",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T12:17:06.368Z"
+  },
+  {
+    "id": 1780662627678,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "manda de novo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T12:30:27.678Z"
+  },
+  {
+    "id": 1780662644044,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "achei 159270",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T12:30:44.044Z"
+  },
+  {
+    "id": 1780674585016,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "De alguns clientes eu salvei os extratos, os que faltarem voce salva ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T15:49:45.016Z"
+  },
+  {
+    "id": 1780678110395,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não manda receitas e despesas a identifiacr para o grupo mak",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T16:48:30.395Z"
+  },
+  {
+    "id": 1780678115617,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "nenhum dos 3",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-05T16:48:35.617Z"
+  },
+  {
+    "id": 1780861181665,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "🔔 *LIDIA* — \"Pendencias Body\" adicionada para você",
+    "type": "system",
+    "targetOpId": "1776819616478",
+    "createdAt": "2026-06-07T19:39:41.665Z"
+  },
+  {
+    "id": 1780915789297,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Mensagem para Mirella (voce ajusta os seus): Extratos da Agro / JSA 1602 / JSA 7216 - 03 e 05/06 / Kim    / Guimoo Asaas    . Guimoo Cora enviado por e-mail",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T10:49:49.297Z"
+  },
+  {
+    "id": 1780919006721,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "libera stone",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T11:43:26.721Z"
+  },
+  {
+    "id": 1780921061979,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:17:41.979Z",
+    "imageUrl": "/uploads/chat/1780921061905_fkc9a6t432u.png"
+  },
+  {
+    "id": 1780921071212,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "itau ta com problema?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:17:51.212Z"
+  },
+  {
+    "id": 1780921944758,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Atualiza a pagina",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:32:24.758Z",
+    "replyToId": 1780921071212,
+    "replyText": "itau ta com problema?",
+    "replyUser": "LEONARDO CUNHA CAVALCANTI"
+  },
+  {
+    "id": 1780921967541,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "mas o dowlload as vezes demora mesmo",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:32:47.541Z"
+  },
+  {
+    "id": 1780921974401,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "esta de olho nos grupos?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:32:54.401Z"
+  },
+  {
+    "id": 1780922155295,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "sim, so teve mensagem da galiza sobre reuniao",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T12:35:55.295Z"
+  },
+  {
+    "id": 1780924727794,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ainda preciso do stone",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:18:47.794Z"
+  },
+  {
+    "id": 1780925449124,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "quando eu conseguir acessar te aviso",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:30:49.124Z"
+  },
+  {
+    "id": 1780925456061,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "esta travando o app",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:30:56.061Z"
+  },
+  {
+    "id": 1780925578339,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "itau tambem demorando bastante pra gerar o extrato",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:32:58.339Z"
+  },
+  {
+    "id": 1780925950706,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ve se deu certo a Stone",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:39:10.706Z"
+  },
+  {
+    "id": 1780926034647,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "deu",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:40:34.647Z"
+  },
+  {
+    "id": 1780926051505,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "itau tambem respondeu",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:40:51.505Z"
+  },
+  {
+    "id": 1780926068713,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "tem 3 mensagens aguardando no sm click mas acho que não é com a gente",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:41:08.713Z"
+  },
+  {
+    "id": 1780926892583,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:54:52.583Z",
+    "imageUrl": "/uploads/chat/1780926892514_9udzris0v7p.png"
+  },
+  {
+    "id": 1780926903877,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "nesse caso é repasse da dra amanda",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:55:03.877Z"
+  },
+  {
+    "id": 1780926910269,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "eu coloco assim emprestimo de socio?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:55:10.269Z"
+  },
+  {
+    "id": 1780926947675,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "deixa pra la",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:55:47.675Z"
+  },
+  {
+    "id": 1780926950855,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não . os 3 são os repasses. só que eu nao lancei o contas a pagar",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:55:50.855Z"
+  },
+  {
+    "id": 1780927024102,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ja coloquei certo como comissao e descrevendo que era repasse",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T13:57:04.102Z"
+  },
+  {
+    "id": 1780932732476,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "A categoria é Comissoes , confere no mes passado. Todos lançados nesta categoria",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T15:32:12.476Z",
+    "replyToId": 1780927024102,
+    "replyText": "ja coloquei certo como comissao e descrevendo que era repasse",
+    "replyUser": "LEONARDO CUNHA CAVALCANTI"
+  },
+  {
+    "id": 1780932947745,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ja alterei",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T15:35:47.745Z"
+  },
+  {
+    "id": 1780933053300,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não manda mais relatorios de despesas e receitas a identificar para ninguem. temos que ajustar o processo.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T15:37:33.300Z"
+  },
+  {
+    "id": 1780937030187,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "terminou de lançar as faturas de todos os cartoes?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T16:43:50.187Z"
+  },
+  {
+    "id": 1780937036673,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "de todos os clientes?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T16:43:56.673Z"
+  },
+  {
+    "id": 1780945089224,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "lançando",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T18:58:09.224Z"
+  },
+  {
+    "id": 1780949457401,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Antes de finalizar o dia me passa o que foi feito e o que ficou pendente.",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-08T20:10:57.401Z"
+  },
+  {
+    "id": 1781003364181,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ja que a mirella ta com problema de energia eu posso fazer as conciliações dela",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:09:24.181Z"
+  },
+  {
+    "id": 1781003717478,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:15:17.478Z"
+  },
+  {
+    "id": 1781003724635,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "deixa com ela",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:15:24.635Z"
+  },
+  {
+    "id": 1781003735982,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "tem muita coisa para fazer",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:15:35.982Z"
+  },
+  {
+    "id": 1781003759916,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "salva os arquivos nas pastas e faz as tuas",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:15:59.916Z"
+  },
+  {
+    "id": 1781003769476,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "vou te passar umas coisas hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:16:09.476Z"
+  },
+  {
+    "id": 1781004614199,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "Ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T11:30:14.199Z"
+  },
+  {
+    "id": 1781007518406,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "9:30 vamos fazer uma call",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T12:18:38.406Z"
+  },
+  {
+    "id": 1781008394567,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T12:33:14.567Z"
+  },
+  {
+    "id": 1781008871345,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "https://meet.google.com/qzp-mjxo-pui?authuser=0",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T12:41:11.345Z"
+  },
+  {
+    "id": 1781008877535,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "bora",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T12:41:17.535Z"
+  },
+  {
+    "id": 1781014692939,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "📷 Imagem",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:18:12.939Z",
+    "imageUrl": "/uploads/chat/1781014692868_r6j8ie26wch.png"
+  },
+  {
+    "id": 1781014745020,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "tá",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:19:05.020Z"
+  },
+  {
+    "id": 1781014955298,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "não esquece de mandar a mensagem para a Mirela , que os extratos estão nas pastas",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:22:35.298Z"
+  },
+  {
+    "id": 1781014971565,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "mae, tem um lancamento de 6400 vai passar 1400 do pro labore do mario",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:22:51.565Z"
+  },
+  {
+    "id": 1781014975605,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "como faço?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:22:55.605Z"
+  },
+  {
+    "id": 1781015034151,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "clica em criar um pagamento a partir da diferença e coloca como retirada de socio. ele ja calcula a diferença",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:23:54.151Z"
+  },
+  {
+    "id": 1781015200246,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:26:40.246Z"
+  },
+  {
+    "id": 1781015228568,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "fiz",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T14:27:08.568Z"
+  },
+  {
+    "id": 1781018015194,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "conseguiu salvar o extrato da body?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T15:13:35.194Z"
+  },
+  {
+    "id": 1781018021201,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "A Stone esta um terror hoje",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T15:13:41.201Z"
+  },
+  {
+    "id": 1781028244162,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "Ve na aba Contas a Pagar - os boletos que estão pendentes. gera e coloca na pasta. tem boleto pendente para amanha",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T18:04:04.162Z"
+  },
+  {
+    "id": 1781029159422,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "E pode deixar que eu vejo o whatsapp. ja tem muita gente olhando kkk. Quando eu sair, te falo para voce ficar de olho",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T18:19:19.422Z"
+  },
+  {
+    "id": 1781029191622,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "ok",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T18:19:51.622Z"
+  },
+  {
+    "id": 1781033386905,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "esse boleto da galiza ja ta na pasta, neolink é o condominio ne?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T19:29:46.905Z"
+  },
+  {
+    "id": 1781033411813,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "o desse mes?",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T19:30:11.813Z"
+  },
+  {
+    "id": 1781033443682,
+    "userId": 1776819616478,
+    "userName": "LIDIA CAVALCANTI",
+    "text": "ela tem varios em atraso, entra no contas a pagar que deve ter a forma de gerar. é no site deles",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T19:30:43.682Z"
+  },
+  {
+    "id": 1781033487671,
+    "userId": 1776819683538,
+    "userName": "LEONARDO CUNHA CAVALCANTI",
+    "text": "deixa pra la confundi",
+    "type": "user",
+    "targetOpId": null,
+    "createdAt": "2026-06-09T19:31:27.671Z"
+  }
+]

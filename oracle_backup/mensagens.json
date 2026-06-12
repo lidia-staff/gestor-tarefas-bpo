@@ -1,0 +1,198 @@
+[
+  {
+    "id": 1776859623876,
+    "title": "Sem pagamento no dia",
+    "text": "✅ Não temos Contas a Pagar para hoje.",
+    "createdAt": "2026-04-22T12:07:03.876Z",
+    "num": "5.1"
+  },
+  {
+    "id": 1776859609557,
+    "title": "Inicio rotina",
+    "text": "Prezados,\n\nVenho informá-los que os lançamentos financeiros já estão conciliados no Conta Azul e disponíveis para o acesso no link https://app.contaazul.com/\n\nQuaisquer dúvidas, estamos à disposição.",
+    "createdAt": "2026-04-22T12:06:49.557Z",
+    "num": "5"
+  },
+  {
+    "id": 1776859686048,
+    "title": "Programacao KIM/B&F",
+    "text": "Kimberly / Vinicius segue programação bancária, gentileza validar e aprovar.\n\nVinicius / Kimberly segue programação bancária, gentileza validar e aprovar.\n\nOs pagamentos foram agendados para a data de vencimento, porém a aprovação precisa ser realizada hoje.\n",
+    "createdAt": "2026-04-22T12:08:06.048Z",
+    "num": "6"
+  },
+  {
+    "id": 1776859705694,
+    "title": "Programacao UP",
+    "text": "Alessandra segue programação bancária, gentileza validar e aprovar.",
+    "createdAt": "2026-04-22T12:08:25.694Z",
+    "num": "6.1"
+  },
+  {
+    "id": 1776859767916,
+    "title": "Programacao Agro",
+    "text": "Gilson Brito / Marco Elísio segue programação bancária, gentileza validar e aprovar. \nSerá necessário aporte mínimo de R$",
+    "createdAt": "2026-04-22T12:09:27.916Z",
+    "num": "6.2"
+  },
+  {
+    "id": 1776859787763,
+    "title": "Programacao JSA",
+    "text": "Andreia segue programação bancária, gentileza validar e aprovar.",
+    "createdAt": "2026-04-22T12:09:47.763Z",
+    "num": "6.3"
+  },
+  {
+    "id": 1776859826379,
+    "title": "Programacao Guimoo",
+    "text": "Guilherme, Myllena segue programação bancária, gentileza validar e aprovar.",
+    "createdAt": "2026-04-22T12:10:26.379Z",
+    "num": "6.4"
+  },
+  {
+    "id": 1776859838674,
+    "title": "Programacao Galiza",
+    "text": "Kassia segue programação bancária, gentileza validar e aprovar.",
+    "createdAt": "2026-04-22T12:10:38.674Z",
+    "num": "6.5"
+  },
+  {
+    "id": 1776859870230,
+    "title": "Resposta Automática 1",
+    "text": "✅ Ok, solicitação registrada.",
+    "createdAt": "2026-04-22T12:11:10.230Z",
+    "num": "2"
+  },
+  {
+    "id": 1776859884682,
+    "title": "Resposta Automática 2",
+    "text": "✅ Ok, solicitação registrada. Se for necessário algum alinhamento, aviso por aqui.",
+    "createdAt": "2026-04-22T12:11:24.682Z",
+    "num": "2.1"
+  },
+  {
+    "id": 1776859904465,
+    "title": "Saudações, envio no privado",
+    "text": "Bom dia! Espero que esteja bem!",
+    "createdAt": "2026-04-22T12:11:44.465Z",
+    "num": "1"
+  },
+  {
+    "id": 1776859913765,
+    "title": "Despesas a Identificar diario",
+    "text": "Gentileza informar a que se refere",
+    "createdAt": "2026-04-22T12:11:53.765Z",
+    "num": "3"
+  },
+  {
+    "id": 1776859928315,
+    "title": "Boleto no DDA",
+    "text": "Informo que o boleto acima consta no DDA. Gentileza confirmar se devemos incluí-lo na programação de pagamentos.",
+    "createdAt": "2026-04-22T12:12:08.315Z",
+    "num": "4"
+  },
+  {
+    "id": 1776860011332,
+    "title": "Relatórios para envio junto com a rotina, após informação do contas a pagar ou programação bancária",
+    "text": "1 - Inadimplencia - Segue relatório de inadimplência\n2 - Contas a pagar em aberto - Segue relatório de contas a pagar em aberto\n3 - Despesas a identificar - Segue relatório de despesas a identificar",
+    "createdAt": "2026-04-22T12:13:31.332Z",
+    "num": "5.3"
+  },
+  {
+    "id": 1776861811760,
+    "title": "Outras - ver depois",
+    "text": "*Saldo Caixinha\t\nNome do Cliente gentileza informar qual saldo do caixinha - dinheiro para que eu possa atualizar no sistema.\n\n*@nome do cliente *Segue o relatório semanal de Contas a Pagar, elaborado para apoiar a análise do fluxo de caixa da empresa. Nosso objetivo é garantir previsibilidade financeira, apoiar a tomada de decisão e evitar ajustes de última hora.* Gentileza analisar e confirmar: *quais pagamentos devem ser realizados na próxima semana;* *se algum pagamento será postergado;* *se há necessidade de ajustes ou redefinição de prioridades.* Após a validação, daremos sequência à programação bancária conforme alinhado. ",
+    "createdAt": "2026-04-22T12:43:31.760Z",
+    "num": "11"
+  },
+  {
+    "id": 1776861883450,
+    "title": "Cobrar autorização de agendamento (enviar no individual do aprovador)",
+    "text": "Boa tarde! ☀ Tudo bem? \nPassando para reforçar que a aprovação da programação bancária 🏦✅ é uma etapa essencial e faz parte da etapa final das rotinas financeiras diárias 🔐. \nSe ainda NÃO realizou a análise e aprovação, esse é o momento ideal. \nAssim, garantimos que os pagamentos sejam efetuados no prazo ⏰, evitando juros, multas 🚫💸 e reprogramações das contas no banco. \nLembrando que, por segurança, essa etapa é exclusiva da liderança da empresa. \nContamos com seu apoio nesse fechamento diário!",
+    "createdAt": "2026-04-22T12:44:43.450Z",
+    "num": "7"
+  },
+  {
+    "id": 1776861976891,
+    "title": "Relatorios semanais",
+    "text": "@nome do cliente \n*Segue o relatório semanal de Contas a Pagar, elaborado para apoiar a análise do fluxo de caixa da empresa. Nosso objetivo é garantir previsibilidade financeira, apoiar a tomada de decisão e evitar ajustes de última hora.* \n* Gentileza analisar e confirmar se há necessidade de ajustes ou redefinição de prioridades.*\n* Após a validação, daremos sequência à programação bancária conforme alinhado.*",
+    "createdAt": "2026-04-22T12:46:16.891Z",
+    "num": "8"
+  },
+  {
+    "id": 1776862056831,
+    "title": "Cobrança clientes Galiza",
+    "text": "Prezado(a) [Nome do Cliente], \nEncaminhamos o boleto referente ao [mês/ano], com vencimento em [data]. \nPedimos a gentileza de realizar o pagamento até a data informada para evitar encargos adicionais. \nEm caso de dúvidas ou necessidade de suporte, permanecemos à disposição. \nAtenciosamente, \nFinanceiro Galiza Assessoria Jurídica",
+    "createdAt": "2026-04-22T12:47:36.831Z",
+    "num": "9"
+  },
+  {
+    "id": 1776862108871,
+    "title": "Relatorios NF Kim e Body",
+    "text": "Olá, Vinicius. Solicito, por gentileza, o envio da planilha de vendas referente às duas primeiras semanas de novembro para que possamos lançar as vendas no sistema e providenciar a emissão das NF´s. \n*Reforço que, para as vendas realizadas via cartão, é necessário encaminhar também os cadastros correspondentes, de modo que possamos proceder com a emissão das respectivas notas fiscais.*",
+    "createdAt": "2026-04-22T12:48:28.871Z",
+    "num": "10"
+  },
+  {
+    "id": 1776862249137,
+    "title": "Agendamentos por e-mail",
+    "text": "1 - DEP FISCAL AWN - fiscal@awnsolucoescontabeis.com.br\n\nBom dia! \nGentileza enviar a alíquota de ISS vigente para o mês. \nJSA Solucoes - CNPJ 16.368.081/0001-17\n\n\n2 - CTB KIM E BODY\n\nBom dia! \nGentileza enviar a alíquota de ISS vigente para o mês da Clinica A K Lab e Kimberly\n\nObrigada",
+    "createdAt": "2026-04-22T12:50:49.137Z",
+    "num": "12"
+  },
+  {
+    "id": 1777464150683,
+    "title": "Extratos diarios",
+    "text": "Bom dia! Extratos nas pastas.                          \n* Agro, JSA 1602, Guimoo Asaas, Kimberly\n* JSA 7216 - 05/05 e 06/05\n* Guimoo Cora - pdf enviado por e-mail, cliente com integração automática.\n\n*JSA 7216 - o banco só está atualizando 2 dias depois. Extrato de 05/05 só está ok hoje. Então minha sugestão é fazer a conciliação D-1 e no outro dia gero o extrato novamente, voce substitui e lança o que falta e bate o saldo. Se tiver outra sugestão eu agradeço* \n\n",
+    "createdAt": "2026-04-29T12:02:30.683Z",
+    "num": "13"
+  },
+  {
+    "id": 1777924720648,
+    "title": "Pagamentos não previstos",
+    "text": "⚠️Se por acaso tiver alguma conta que precisa ser paga na data de hoje, por favor, informar aqui para que possamos inclui-la na programação bancária.",
+    "createdAt": "2026-05-04T19:58:40.648Z",
+    "num": "5.2"
+  },
+  {
+    "id": 1777924907414,
+    "title": "Mensagens Grupo MAK - MATSU",
+    "text": "MATSU\n\nPrezados,\n\nVenho informá-los que os lançamentos financeiros já estão conciliados no Sienge e disponíveis para o acesso no link https://makinsthal.sienge.com.br/sienge.\n\nQualquer dúvida, estamos à disposição. \n\n✅ 06042026 CONCILIAÇÃO BANCÁRIA ITAÚ 98716-9 - OK \n\n1.1 - Sem pagamento no dia\t\n✅ Não temos Contas a Pagar para hoje.\n\n\n10042026 CONTAS A PAGAR HOJE - MATSU  \n\n10042026 PROGRAMACAO BANCARIA - MATSU",
+    "createdAt": "2026-05-04T20:01:47.414Z",
+    "num": "14"
+  },
+  {
+    "id": 1777924955740,
+    "title": "Programacao Matsu",
+    "text": "Marcos, segue programação bancária, gentileza validar e aprovar.",
+    "createdAt": "2026-05-04T20:02:35.740Z",
+    "num": "6.6"
+  },
+  {
+    "id": 1777925176186,
+    "title": "Mensagens Grupo MAK - ECOFI",
+    "text": "ECOFI\n\nPrezados,\n\nVenho informá-los que os lançamentos financeiros já estão conciliados no Sienge e disponíveis para o acesso no link https://makinsthal.sienge.com.br/sienge.\n\nQualquer dúvida, estamos à disposição.\n\n✅ 08042026 CONCILIAÇÃO BANCÁRIA ITAÚ 98720-1 - OK\n✅ 08042026 CONCILIAÇÃO BANCÁRIA BRADESCO 0648607-0 - OK\n\n1.1 - Sem pagamento no dia\t\n✅ Não temos Contas a Pagar para hoje.\n\n10042026 CONTAS A PAGAR HOJE - ECOFI   \n\n10042026 PROGRAMACAO BANCARIA ECOFI",
+    "createdAt": "2026-05-04T20:06:16.186Z",
+    "num": "15"
+  },
+  {
+    "id": 1777925206518,
+    "title": "Programacao Ecofi",
+    "text": "Marcos, segue programação bancária, gentileza validar e aprovar na conta do Itau.",
+    "createdAt": "2026-05-04T20:06:46.518Z",
+    "num": "6.7"
+  },
+  {
+    "id": 1777925261507,
+    "title": "Mensagens Grupo MAK - MAKINSTHAL",
+    "text": "MAKINSTAL\n\nSANTANDER\nAgência 4198 - Conta: 130049894\nUSUÁRIO : CPF\nSENHA: 120382\n\nPrezados,\n\nVenho informá-los que os lançamentos financeiros já estão conciliados no Sienge e disponíveis para o acesso no link https://makinsthal.sienge.com.br/sienge.\n\nQualquer dúvida, estamos à disposição. \n\n✅ 07042026 CONCILIAÇÃO BANCÁRIA ITAÚ 98721-9 - OK\n✅ 07042026 CONCILIAÇÃO BANCÁRIA ITAÚ PROVISÃO 98483-6 - OK\n✅ 07042026 CONCILIAÇÃO BANCÁRIA BRADESCO 0648623-1 - OK\n✅ 07042026 CONCILIAÇÃO BANCÁRIA SANTANDER 13004989-4 - OK\n\n1.1 - Sem pagamento no dia\t\n✅ Não temos Contas a Pagar para hoje.\n\n\n10042026 CONTAS A PAGAR HOJE - MAKINSTHAL  \n\n10042026 PROGRAMACAO BANCARIA - MAKINSTHAL",
+    "createdAt": "2026-05-04T20:07:41.507Z",
+    "num": "16"
+  },
+  {
+    "id": 1777925311293,
+    "title": "Programacao Makinsthal",
+    "text": "Marcos, segue programação bancária, gentileza validar e aprovar na CC Itaú 98721-9.",
+    "createdAt": "2026-05-04T20:08:31.293Z",
+    "num": "6.8"
+  }
+]

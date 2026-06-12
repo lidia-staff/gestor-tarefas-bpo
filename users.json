@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1776819616478,
+    "name": "LIDIA CAVALCANTI",
+    "email": "lidia@staffconsult.com.br",
+    "password_hash": "$2a$10$BiGXcoFBTZCAY2tq6W16SOoiucgf6eNwk4sKU.F0Qrvreh5BSQDYG",
+    "role": "admin",
+    "assignedClients": [
+      "1776945416932",
+      "1777644575935"
+    ]
+  },
+  {
+    "id": 1776819683538,
+    "name": "LEONARDO CUNHA CAVALCANTI",
+    "email": "adm.staffconsult@gmail.com",
+    "password_hash": "$2a$10$Xe9fWZpEagn9OqS.58imsOvSbcReGh508MmIhT1AhIjRpGhAUsBvO",
+    "role": "operator",
+    "assignedClients": [
+      "kimberly",
+      "up",
+      "agro",
+      "jsa",
+      "body",
+      "guimoo",
+      "galiza",
+      "matsu",
+      "ecofi",
+      "makinsthall"
+    ]
+  },
+  {
+    "id": 1777317713733,
+    "name": "MIRELLA - SANTOS INTELIGENCIA",
+    "email": null,
+    "password_hash": null,
+    "role": "operator",
+    "noLogin": true,
+    "assignedClients": [
+      "kimberly",
+      "agro",
+      "jsa",
+      "guimoo"
+    ]
+  }
+]

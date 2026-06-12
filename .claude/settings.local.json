@@ -1,78 +1,31 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(npm install *)",
-      "Bash(node server.js)",
-      "Bash(curl -s http://localhost:3000/api/auth/setup)",
-      "Bash(curl -s -X POST http://localhost:3000/api/auth/register -H \"Content-Type: application/json\" -d \"{\\\\\"name\\\\\":\\\\\"Lidia Admin\\\\\",\\\\\"email\\\\\":\\\\\"lidia@staffconsult.com.br\\\\\",\\\\\"password\\\\\":\\\\\"123456\\\\\"}\")",
-      "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H \"Content-Type: application/json\" -d \"{\\\\\"email\\\\\":\\\\\"lidia@staffconsult.com.br\\\\\",\\\\\"password\\\\\":\\\\\"123456\\\\\"}\")",
-      "Bash(node -e \"const d=require\\('fs'\\).readFileSync\\(0,'utf8'\\); const c=JSON.parse\\(d\\); console.log\\(c.length + ' clientes:', c.map\\(x=>x.name\\).join\\(', '\\)\\)\")",
-      "mcp__Claude_in_Chrome__tabs_context_mcp",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\server.js\" ubuntu@136.248.112.181:~/gestor/)",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" ubuntu@136.248.112.181:~/gestor/public/)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && pm2 status\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" \"C:\\\\Gestor de tarefas\\\\server.js\" ubuntu@136.248.112.181:/home/ubuntu/gestor-tarefas/)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cp /home/ubuntu/gestor-tarefas/index.html /home/ubuntu/gestor-tarefas/public/index.html && pm2 restart gestor\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"find /home/ubuntu/gestor-tarefas -name 'index.html' | head -5 && ls /home/ubuntu/gestor-tarefas/\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"ls /home/ubuntu/gestor-tarefas/ && pm2 restart gestor && pm2 status\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" ubuntu@136.248.112.181:/home/ubuntu/gestor-tarefas/index.html)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"ls /home/ubuntu/gestor-tarefas/ && grep -n 'static\\\\|sendFile\\\\|index' /home/ubuntu/gestor-tarefas/server.js | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"find /home/ubuntu/gestor-tarefas -name '*.html' 2>/dev/null && ls -la /home/ubuntu/gestor-tarefas/\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'static\\\\|sendFile\\\\|index\\\\|public' /home/ubuntu/gestor-tarefas/server.js\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"head -20 /home/ubuntu/gestor-tarefas/server.js\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"mkdir -p /home/ubuntu/gestor-tarefas/public && cp /home/ubuntu/gestor-tarefas/index.html /home/ubuntu/gestor-tarefas/public/index.html && pm2 restart gestor && echo 'OK'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"ls -la /home/ubuntu/gestor-tarefas/public/ && tail -5 /home/ubuntu/gestor-tarefas/public/index.html\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -c 'Op\\\\.2 pode iniciar\\\\|▶ Op\\\\.2\\\\|Tarefas do Dia\\\\|todayExtras' /home/ubuntu/gestor-tarefas/public/index.html\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\server.js\" ubuntu@136.248.112.181:/home/ubuntu/gestor-tarefas/server.js)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && echo OK\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep -c 'todayExtras\\\\|▶ Op\\\\.2\\\\|Tarefas do Dia'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | tail -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | wc -c && wc -c /home/ubuntu/gestor-tarefas/public/index.html && wc -c /home/ubuntu/gestor-tarefas/index.html\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep -o 'todayExtras\\\\|Tarefas do Dia\\\\|Op\\\\.2 pode\\\\|wordBreak' | head -10\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -o 'todayExtras\\\\|Tarefas do Dia\\\\|wordBreak' /home/ubuntu/gestor-tarefas/public/index.html | head -10\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 show gestor | grep -E 'script|root|cwd|path'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"ls /home/ubuntu/gestor/ && ls /home/ubuntu/gestor/public/ 2>/dev/null || echo 'sem pasta public'\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" ubuntu@136.248.112.181:/home/ubuntu/gestor/public/index.html)",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\server.js\" ubuntu@136.248.112.181:/home/ubuntu/gestor/server.js)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep -o 'todayExtras\\\\|Tarefas do Dia\\\\|wordBreak' | head -5\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 logs gestor --lines 30 --nostream\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'Spinner\\\\\\\\\\\\\\\\>\\\\|\\\\\\\\\\\\\\\\api\\\\\\\\\\\\\\\\manuals' /home/ubuntu/gestor/public/index.html\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"node --check /home/ubuntu/gestor/public/index.html 2>&1 | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'DEFAULT_MANUALS\\\\|isDefault' /home/ubuntu/gestor/public/index.html | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'fmtISO\\\\|fmtDate' /home/ubuntu/gestor/public/index.html | head -10\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'const fmtISO' /home/ubuntu/gestor/public/index.html\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"grep -n 'today\\\\|fmtISO' /home/ubuntu/gestor/public/index.html | grep -v 'ContasAPagar\\\\|function Contas' | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && curl -s http://localhost:3000/ | grep -c 'todayStr\\\\|todayExtras'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep 'todayStr' | head -3\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" \"C:\\\\Gestor de tarefas\\\\server.js\" ubuntu@136.248.112.181:/home/ubuntu/gestor/)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cp /home/ubuntu/gestor/index.html /home/ubuntu/gestor/public/index.html && pm2 restart gestor && echo OK\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && curl -s http://localhost:3000/ | grep -c 'op1Sections\\\\|op2Sections'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep 'op1Sections' | head -2\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && curl -s http://localhost:3000/ | grep -c 'OutrosFilaCard\\\\|tipo.*santos'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep 'OutrosFilaCard' | head -2\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && curl -s http://localhost:3000/ | grep -c 'primaryOp1\\\\|tarefasGeraisDia'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep 'primaryOp1' | head -3\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && curl -s http://localhost:3000/ | grep -c 'op1SantosPend\\\\|op2ExtrasPend'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s http://localhost:3000/ | grep 'op1SantosPend' | head -2\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cd /home/ubuntu/gestor && npm install web-push --save && echo DONE\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\public\\\\sw.js\" ubuntu@136.248.112.181:/home/ubuntu/gestor/public/sw.js)",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo apt-get update -qq && sudo apt-get install -y nginx certbot python3-certbot-nginx && echo DONE\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"curl -s --max-time 5 http://gestor.staffconect.com.br/ | head -c 100 || echo 'DNS ainda não propagou ou porta 80 bloqueada na Oracle'\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo iptables -L INPUT --line-numbers | grep -E '80|443|ACCEPT' | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"dig +short gestor.staffconect.com.br && curl -s --max-time 5 -o /dev/null -w '%{http_code}' http://gestor.staffconect.com.br/ || echo TIMEOUT\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo certbot --nginx -d gestor.staffconect.com.br --non-interactive --agree-tos -m lidia@staffconsult.com.br --redirect && echo CERTIFICADO_OK\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo certbot --nginx -d gestor.staffconect.com.br --non-interactive --agree-tos -m lidia@staffconsult.com.br --redirect 2>&1 | tail -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo nginx -t && sudo systemctl status nginx --no-pager | head -5 && pm2 status && curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cat /etc/nginx/sites-enabled/gestor\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"sudo iptables -L INPUT --line-numbers -n | head -20\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cat /home/ubuntu/gestor/data/manuals.json | python3 -c \\\\\"import json,sys; d=json.load\\(sys.stdin\\); [print\\(m['id'], m.get\\('category',''\\), m['title'], len\\(m.get\\('steps',[]\\)\\), 'passos'\\) for m in d]\\\\\"\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cat /home/ubuntu/gestor/data/manuals.json | python3 -c \\\\\"import json,sys; d=json.load\\(sys.stdin\\); m=d[0]; print\\('CAMPOS DO STEP:', list\\(m['steps'][0].keys\\(\\)\\) if m.get\\('steps'\\) else 'sem steps'\\); print\\('EXEMPLO:', m['steps'][0] if m.get\\('steps'\\) else ''\\)\\\\\"\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cd /home/ubuntu/gestor && pm2 restart gestor && sleep 3 && pm2 logs gestor --lines 20 --nostream\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && sleep 3 && pm2 logs gestor --lines 10 --nostream\")",
-      "Bash(scp -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no \"C:\\\\Gestor de tarefas\\\\server.js\" \"C:\\\\Gestor de tarefas\\\\public\\\\index.html\" ubuntu@136.248.112.181:/home/ubuntu/gestor/server.js ubuntu@136.248.112.181:/home/ubuntu/gestor/public/index.html)",
-      "PowerShell(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"pm2 restart gestor && pm2 status\")",
-      "Bash(ssh -i \"C:\\\\Users\\\\Marcelo\\\\Downloads\\\\oracle ssh-key-2026-04-21.key\" -o StrictHostKeyChecking=no ubuntu@136.248.112.181 \"cd /home/ubuntu/gestor && pm2 restart gestor --update-env\")"
+  "hooks": {
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NonInteractive -File \"C:\\Users\\Marcelo\\.claude\\scripts\\update-master-log-Gestor.ps1\"",
+            "shell": "powershell",
+            "timeout": 180,
+            "statusMessage": "Atualizando MASTER_LOG.md..."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NonInteractive -File \"C:\\Users\\Marcelo\\.claude\\scripts\\update-master-log-Gestor.ps1\"",
+            "shell": "powershell",
+            "timeout": 180,
+            "statusMessage": "Atualizando MASTER_LOG.md..."
+          }
+        ]
+      }
     ]
   }
 }

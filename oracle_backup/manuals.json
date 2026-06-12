@@ -1,0 +1,693 @@
+[
+  {
+    "id": "default_b1",
+    "num": "1",
+    "title": "Rotina diária — Abertura e Conciliação",
+    "category": "Rotina Diária",
+    "assignedOperators": [
+      1776819683538,
+      1777317713733
+    ],
+    "createdAt": "2026-04-22T17:44:06.719Z",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Acessar e-mail",
+        "detail": "Verificar todos os e-mails. Identificar boletos, NF's e solicitações."
+      },
+      {
+        "n": 2,
+        "action": "Salvar boletos e NF's",
+        "detail": "Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."
+      },
+      {
+        "n": 3,
+        "action": "Verificar WhatsApp",
+        "detail": "Conferir grupo e individual. Anotar solicitações pendentes."
+      },
+      {
+        "n": 4,
+        "action": "Lançar no Conta Azul",
+        "detail": "Lançar todas as solicitações de pagamento identificadas."
+      },
+      {
+        "n": 5,
+        "action": "Acessar banco e extratos",
+        "detail": "Acessar internet banking. Baixar extrato PDF e OFX do dia."
+      },
+      {
+        "n": 6,
+        "action": "Importar OFX",
+        "detail": "Importar o arquivo OFX no Conta Azul para atualizar o fluxo."
+      },
+      {
+        "n": 7,
+        "action": "Conciliação bancária",
+        "detail": "Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir."
+      },
+      {
+        "n": 8,
+        "action": "Salvar conciliação",
+        "detail": "Exportar e salvar o arquivo da conciliação na pasta do mês."
+      },
+      {
+        "n": 9,
+        "action": "Conferir contas a pagar",
+        "detail": "Verificar na aba de contas a pagar se tem pagamento para o dia. Caso não, seguir a rotina. Caso sim, transferir para o outro operador."
+      },
+      {
+        "n": 10,
+        "action": "Conferir DDA",
+        "detail": "Verificar o DDA no banco para garantir que não há boletos não cadastrados no Conta Azul. Caso não, seguir a rotina. Caso sim, transferir para o outro operador."
+      },
+      {
+        "n": 11,
+        "action": "Atualizar posição bancária",
+        "detail": "Atualizar conforme saldo do dia"
+      },
+      {
+        "n": 12,
+        "action": "Enviar rotina ao cliente",
+        "detail": "1 - Mensagem de inicio de rotina conforme padrão / 2 - Anexar (enviar) posição bancária / 3 - Mensagem de que nao tem contas a pagar no dia / 4 - Enviar contas a pagar em aberto (se aplicavel, ver com a Lidia) / 5 - Enviar contas a receber em aberto - inadimplencia (se aplicavel, ver com a Lidia) / 6 - Enviar relatorio de receitas e despesas a identificar (se aplicavel, ver com a Lidia)"
+      }
+    ]
+  },
+  {
+    "id": "default_b2",
+    "num": "2",
+    "title": "Rotina Diária — Pagamentos",
+    "category": "Rotina Diária",
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-04-22T17:44:06.720Z",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Conferir contas a pagar",
+        "detail": "Verificar no Conta Azul todas as contas com vencimento no dia."
+      },
+      {
+        "n": 2,
+        "action": "Conferir NF's e boletos",
+        "detail": "Verificar fisicamente se os boletos e NF's batem com o sistema."
+      },
+      {
+        "n": 3,
+        "action": "Conferir DDA",
+        "detail": "Verificar o DDA no banco para garantir que não há boletos não cadastrados."
+      },
+      {
+        "n": 4,
+        "action": "Salvar contas a pagar",
+        "detail": "Salvar a relação de contas a pagar do dia na pasta do cliente."
+      },
+      {
+        "n": 5,
+        "action": "Agendar pagamentos",
+        "detail": "Agendar todos os pagamentos no internet banking. Confirmar cada um."
+      },
+      {
+        "n": 6,
+        "action": "Salvar programação bancária",
+        "detail": "Exportar comprovante de agendamento e salvar na pasta."
+      },
+      {
+        "n": 7,
+        "action": "Atualizar saldo bancário",
+        "detail": "Atualizar o saldo no Conta Azul após os agendamentos."
+      },
+      {
+        "n": 8,
+        "action": "Enviar rotina ao cliente",
+        "detail": "Redigir mensagem de retorno com resumo do feito e enviar ao cliente."
+      }
+    ]
+  },
+  {
+    "id": 1776864765255,
+    "title": "Rotina diaria - Sem contas a pagar",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 15/04/2026",
+        "detail": "https://kommodo.ai/recordings/9ofuj72iGGWV5NkZiqKK?onlyRecording=1"
+      },
+      {
+        "n": 2,
+        "action": "Video 2 15/04/2026",
+        "detail": "https://www.loom.com/share/775b8f77cd9f42b1846c9b33b6a79dfc"
+      },
+      {
+        "n": 3,
+        "action": "Video 16/04/2026",
+        "detail": "https://kommodo.ai/recordings/AWnORqcWgtDCBUPhZk2Q?onlyRecording=1"
+      }
+    ],
+    "createdAt": "2026-04-22T13:32:45.255Z",
+    "num": "3",
+    "assignedOperators": [
+      1776819616478
+    ]
+  },
+  {
+    "id": 1776864857186,
+    "title": "Atendimento via whatsapp",
+    "category": "Geral",
+    "steps": [],
+    "createdAt": "2026-04-22T13:34:17.186Z",
+    "num": "4",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776864918874,
+    "title": "Lançar despesas Cartão",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/baf2311372124b9a90731d210dc8be77"
+      },
+      {
+        "n": 2,
+        "action": "Video 2",
+        "detail": "https://www.loom.com/share/68a027677b9e4cd3bdb8c3790c92ad70"
+      }
+    ],
+    "createdAt": "2026-04-22T13:35:18.874Z",
+    "num": "5",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776864973293,
+    "title": "Conciliação Cartão",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/9d57eba946494126959e1042588fd0c6"
+      }
+    ],
+    "createdAt": "2026-04-22T13:36:13.293Z",
+    "num": "6",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776864990327,
+    "title": "Cadastro de clientes",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/661e854bd77d4facbd88ddec5c92e4ef"
+      }
+    ],
+    "createdAt": "2026-04-22T13:36:30.327Z",
+    "num": "7",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865005691,
+    "title": "Conciliação KIM",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/71485c9ca57147e9876547fd64eb0349"
+      }
+    ],
+    "createdAt": "2026-04-22T13:36:45.691Z",
+    "num": "8",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865030429,
+    "title": "Vendas Body / Clinica AK",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/d71f030bce1840c49fa3bf94e18c7015"
+      },
+      {
+        "n": 2,
+        "action": "Inclusao de vendas ",
+        "detail": "https://kommodo.ai/recordings/xuHtUt4oUosjWPDfxBp7?onlyRecording=1"
+      }
+    ],
+    "createdAt": "2026-04-22T13:37:10.429Z",
+    "num": "9",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865046131,
+    "title": "Conta AI Conta Azul -  Lançamento de Despesas e Receitas",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/aef1422a4ffd4e47920a68493f5ee747"
+      }
+    ],
+    "createdAt": "2026-04-22T13:37:26.131Z",
+    "num": "10",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865064206,
+    "title": "Vendas Kimberly",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Conferir vendas Kimberly",
+        "detail": "https://www.loom.com/share/55225269491d409b886c4cc76f896f2b"
+      },
+      {
+        "n": 2,
+        "action": "Inclusao de vendas",
+        "detail": "https://kommodo.ai/recordings/vRfCTbMNvOabPoSz3lfi?onlyRecording=1"
+      }
+    ],
+    "createdAt": "2026-04-22T13:37:44.206Z",
+    "num": "11",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865078239,
+    "title": "Rotina e-mail",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://drive.google.com/file/d/1gnsb4hZ0dK0shPNuO_bxYegSBYEhJxUg/view?usp=sharing"
+      }
+    ],
+    "createdAt": "2026-04-22T13:37:58.239Z",
+    "num": "12",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865114137,
+    "title": "Rotina Whatsapp Santos",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://drive.google.com/file/d/1SkG1TreO8mtkDGWtSzzDWR20X1xomUrv/view?usp=sharing"
+      },
+      {
+        "n": 2,
+        "action": "Video 2",
+        "detail": "https://www.loom.com/share/ad37a48e84e448db97529d2b5866f600"
+      },
+      {
+        "n": 3,
+        "action": "Acompanhar os grupos e centralizar o primeiro atendimento",
+        "detail": "Quando chegar uma solicitação, identificar se é apenas uma dúvida simples."
+      },
+      {
+        "n": 4,
+        "action": "Cliente pergunta se determinado pagamento foi realizado",
+        "detail": "acessa o Conta Azul, verifica se o título está baixado e já responde ao cliente"
+      },
+      {
+        "n": 5,
+        "action": "Cliente envia comprovante de pagamento",
+        "detail": "salva o arquivo ou print diretamente na pasta Documentos Recebidos e já confirma o recebimento ao cliente."
+      },
+      {
+        "n": 6,
+        "action": "Quando o cliente enviar uma solicitação de pagamento. Pergunta ao ciente se é urgente ou pode ser agendado para outro dia",
+        "detail": "Se for urgente, acionar imediatamente a Lidia"
+      },
+      {
+        "n": 7,
+        "action": "Quando o cliente enviar uma solicitação de pagamento. Pergunta ao ciente se é urgente ou pode ser agendado para outro dia",
+        "detail": "Se não for urgente, já dá o retorno ao cliente (Documento recebido), salva a solicitação na pasta Documento Recebidos"
+      }
+    ],
+    "createdAt": "2026-04-22T13:38:34.137Z",
+    "num": "13",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865130279,
+    "title": "Padrão nomenclatura arquivos",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://drive.google.com/file/d/1SkG1TreO8mtkDGWtSzzDWR20X1xomUrv/view?usp=sharing"
+      }
+    ],
+    "createdAt": "2026-04-22T13:38:50.279Z",
+    "num": "14",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865143275,
+    "title": "Gerar faturas / boletos",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://drive.google.com/file/d/1SkG1TreO8mtkDGWtSzzDWR20X1xomUrv/view?usp=sharing"
+      },
+      {
+        "n": 2,
+        "action": "Video 2",
+        "detail": "https://www.loom.com/share/6083d687117f4ebeb10273c968e7a5ac"
+      }
+    ],
+    "createdAt": "2026-04-22T13:39:03.275Z",
+    "num": "15",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1776865158329,
+    "title": "Conferir conciliação",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video 1",
+        "detail": "https://www.loom.com/share/39fdbe6fa266489f897e1a4db848b71f"
+      }
+    ],
+    "createdAt": "2026-04-22T13:39:18.329Z",
+    "num": "16",
+    "assignedOperators": [
+      1776819683538
+    ]
+  },
+  {
+    "id": 1777032599066,
+    "num": "17",
+    "title": "Rotina Semanal - Contas a pagar ",
+    "category": "Semanal",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Conferir contas a pagar da proxima semana",
+        "detail": ""
+      },
+      {
+        "n": 2,
+        "action": "Verificar boletos não recebidos / anotar pendencias",
+        "detail": ""
+      },
+      {
+        "n": 3,
+        "action": "Preencher controle de contas a pagar",
+        "detail": ""
+      },
+      {
+        "n": 4,
+        "action": "Atualizar CA conforme boletos recebidos",
+        "detail": ""
+      },
+      {
+        "n": 5,
+        "action": "Gerar relatorio de contas a pagar da proxima semana",
+        "detail": ""
+      },
+      {
+        "n": 6,
+        "action": "Enviar nos grupos",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-04-24T12:09:59.066Z"
+  },
+  {
+    "id": 1777032805266,
+    "num": "18",
+    "title": "Rotina Semanal - Gerar boletos/faturas",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Gerar ou cobrar boletos pendentes",
+        "detail": ""
+      },
+      {
+        "n": 2,
+        "action": "Salvar boletos nas pastas",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819683538
+    ],
+    "createdAt": "2026-04-24T12:13:25.266Z"
+  },
+  {
+    "id": 1777282800618,
+    "num": "19",
+    "title": "Rotina Diaria - RBJ",
+    "category": "Outras Tarefas",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Conferir ordem de compra no e-mail",
+        "detail": ""
+      },
+      {
+        "n": 2,
+        "action": "Emitir Ctes e NF´s",
+        "detail": ""
+      },
+      {
+        "n": 3,
+        "action": "Enviar EDI via STA",
+        "detail": ""
+      },
+      {
+        "n": 4,
+        "action": "Enviar e-mail com protocolo e NF´s se houver",
+        "detail": ""
+      },
+      {
+        "n": 5,
+        "action": "Atualizar planilha de faturamento",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-04-27T09:40:00.618Z"
+  },
+  {
+    "id": 1777282863894,
+    "num": "20",
+    "title": "Rotina Semanal - RBJ",
+    "category": "Outras Tarefas",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Conferir lançamentos no portal",
+        "detail": ""
+      },
+      {
+        "n": 2,
+        "action": "Ver pendencias de ordem de compra",
+        "detail": ""
+      },
+      {
+        "n": 3,
+        "action": "Enviar e-mail com as pendencias de lançamento no portal",
+        "detail": ""
+      },
+      {
+        "n": 4,
+        "action": "Enviar e-mail com as pendencias de ordem de compra",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-04-27T09:41:03.894Z"
+  },
+  {
+    "id": 1777740366978,
+    "num": "21",
+    "title": "Emissao NF Guimoo - Asaas",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Video",
+        "detail": "https://www.loom.com/share/c5ca584a0f004d78a56138a5c10ab311"
+      },
+      {
+        "n": 2,
+        "action": "Emitir todo dias - sempre emitir NF´s de pagamentos recebidos acima de 7 dias.",
+        "detail": "Exemplo: Dia 04/05 voce vai emitir as NF´s dos recebimentos de 26/04/26. "
+      },
+      {
+        "n": 3,
+        "action": "Acessar Asaas",
+        "detail": ""
+      },
+      {
+        "n": 4,
+        "action": "Cobranças - Todas",
+        "detail": ""
+      },
+      {
+        "n": 5,
+        "action": "Filtro",
+        "detail": "Periodo de recebimento - colocar data / Situação da cobrança - recebida / Aplicar"
+      },
+      {
+        "n": 6,
+        "action": "Emitir NF",
+        "detail": "Avançar / Deixar marcado Agora / Avançar / Emitir NF"
+      },
+      {
+        "n": 7,
+        "action": "Depois vai em Notas Fiscais / Todas",
+        "detail": "Confere se ficou com status Agendada"
+      },
+      {
+        "n": 8,
+        "action": "O Asaas faz a emissao, mas depois temos que conferir se ficou com Status de emitida. Caso não, verificar a pendencia.",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819683538
+    ],
+    "createdAt": "2026-05-02T16:46:06.978Z"
+  },
+  {
+    "id": 1777741454904,
+    "num": "22",
+    "title": "Lançar vendas UP",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "Acessar Medx",
+        "detail": ""
+      },
+      {
+        "n": 2,
+        "action": "Finanças",
+        "detail": ""
+      },
+      {
+        "n": 3,
+        "action": "Relatorios Financeiros",
+        "detail": ""
+      },
+      {
+        "n": 4,
+        "action": "Faturamento por paciente e procedimento",
+        "detail": "Selecionar o dia anterior"
+      },
+      {
+        "n": 5,
+        "action": "Financas",
+        "detail": ""
+      },
+      {
+        "n": 6,
+        "action": "Vendas e faturamento",
+        "detail": ""
+      },
+      {
+        "n": 7,
+        "action": "Consultar pelo nome do paciente",
+        "detail": ""
+      },
+      {
+        "n": 8,
+        "action": "Verificar forma de pagamento",
+        "detail": ""
+      },
+      {
+        "n": 9,
+        "action": "Lançar venda no conta azul",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-05-02T17:04:14.904Z"
+  },
+  {
+    "id": 1778178957366,
+    "num": "",
+    "title": "Ver depois",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "08:00 - Iniciar rotina ✕ 2. 08:05 - salvar extratos da Kimberly na pasta ✕ 3. 08:15 as 08:35 - conferir e-mails (salvar arquivos nas pastas imediatamente) ✕ 4. 08:40 as 09:00 - - conferir whatsapp (salvar arquivos nas pastas imediatamente) ✕ 5. 09:05 as 11:00 - Gerar extratos, fazer conciliação de todos os clientes, salvar extratos e relatorios da conciliacao nas pastas de cada cliente ✕ 6. 11:05 as 12:00 - Enviar as rotinas de todos os clientes. Lídia envia os que tem pagamento e Leonardo envia os que nao tem ✕ 7. 12:00 as 14:00 - almoço ✕ 8. 14:00 as 15:00 - Demais atividades da fila do dia por ordem de prioridade ✕ 9. 15:00 as 15:30 - conferir se tem solicitação no whatsapp ou email. Se tiver duvidas sobre a pergunta no whatsapp ou email , verificar com Lidia (Lembrando que ja vai avisar no chat quando chegar email) ✕ 10. 15:40 as 17:30 - Demais atividades da fila do dia por ordem de prioridade ✕ 11. 17:30 as 18:00 - onferir se tem solicitação no whatsapp. Se for urgente, avisar a Lidia. ✕ 12. Lembrar de marcar todas as tarefas no gestor",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [],
+    "createdAt": "2026-05-07T18:35:57.366Z"
+  },
+  {
+    "id": 1779835489154,
+    "num": "",
+    "title": "Treinamento Elaine",
+    "category": "Geral",
+    "steps": [
+      {
+        "n": 1,
+        "action": "https://kommodo.ai/recordings/wdPz2q7c890fxuNHxACT?onlyRecording=1",
+        "detail": ""
+      }
+    ],
+    "assignedOperators": [
+      1776819616478
+    ],
+    "createdAt": "2026-05-26T22:44:49.154Z"
+  }
+]

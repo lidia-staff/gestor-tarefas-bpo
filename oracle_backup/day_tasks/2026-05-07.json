@@ -1,0 +1,1525 @@
+{
+  "kimberly": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "09:54",
+      "doneAt": "10:41",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [
+        {
+          "id": "b1b_0_1778152071987",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "b1b_1_1778152071987",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "b1b_2_1778152071987",
+          "text": "Salvar conciliação",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "startedAt": "10:24",
+      "doneAt": "10:24"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar e-mail — salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "sc_4",
+          "text": "Conferir contas a pagar — verificar se há pagamento para o dia. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_6",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "sc_7",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:23",
+      "doneAt": "12:49",
+      "tipo": "sem_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null
+  },
+  "agro": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:02",
+      "doneAt": "10:44",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [
+        {
+          "id": "b1b_0_1778158892123",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "b1b_1_1778158892123",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "b1b_2_1778158892123",
+          "text": "Salvar conciliação",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "startedAt": "10:24",
+      "doneAt": "10:24"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:23",
+      "doneAt": "12:26",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "up": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_4",
+          "text": "Importar OFX no sistema",
+          "done": true
+        },
+        {
+          "id": "sc_5",
+          "text": "Realizar conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "sc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": true
+        },
+        {
+          "id": "sc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": true
+        },
+        {
+          "id": "sc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:41",
+      "doneAt": "21:04",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar e-mail — salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "sc_4",
+          "text": "Conferir contas a pagar — verificar se há pagamento para o dia. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_6",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "sc_7",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:23",
+      "doneAt": "13:00",
+      "tipo": "sem_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "jsa": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:24",
+      "doneAt": "10:44",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [
+        {
+          "id": "b1b_0_1778159049166",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "b1b_1_1778159049166",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "b1b_2_1778159049166",
+          "text": "Salvar conciliação",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "startedAt": "10:25",
+      "doneAt": "10:25"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:22",
+      "doneAt": "12:05",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "body": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Importar OFX no sistema",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Realizar conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:45",
+      "doneAt": "21:04",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:25",
+      "doneAt": "12:36",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "guimoo": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "sc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:25",
+      "doneAt": "10:45",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [
+        {
+          "id": "b1b_0_1778159049167",
+          "text": "Importar OFX",
+          "done": true
+        },
+        {
+          "id": "b1b_1_1778159049167",
+          "text": "Conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "b1b_2_1778159049167",
+          "text": "Salvar conciliação",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "startedAt": "10:25",
+      "doneAt": "10:25"
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar e-mail — salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "sc_4",
+          "text": "Conferir contas a pagar — verificar se há pagamento para o dia. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_6",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "sc_7",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:25",
+      "doneAt": "13:11",
+      "tipo": "sem_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "galiza": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar banco",
+          "done": false
+        },
+        {
+          "id": "sc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": false
+        },
+        {
+          "id": "sc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": false
+        },
+        {
+          "id": "sc_4",
+          "text": "Importar OFX no sistema",
+          "done": false
+        },
+        {
+          "id": "sc_5",
+          "text": "Realizar conciliação bancária",
+          "done": false
+        },
+        {
+          "id": "sc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": false
+        },
+        {
+          "id": "sc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": false
+        },
+        {
+          "id": "sc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": false
+        }
+      ],
+      "hasPayment": null,
+      "status": "pending",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "sc_1",
+          "text": "Acessar e-mail — salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "sc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "sc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "sc_4",
+          "text": "Conferir contas a pagar — verificar se há pagamento para o dia. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul. Caso sim, transferir para o outro operador",
+          "done": true
+        },
+        {
+          "id": "sc_6",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "sc_7",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:25",
+      "doneAt": "13:23",
+      "tipo": "sem_cap"
+    },
+    "fullyDone": false,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "matsu": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Importar OFX no sistema",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Realizar conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "21:04",
+      "doneAt": "21:05",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:25",
+      "doneAt": "17:24",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "ecofi": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Importar OFX no sistema",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Realizar conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "21:05",
+      "doneAt": "21:05",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:26",
+      "doneAt": "17:25",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  },
+  "makinsthall": {
+    "bloco1": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar banco",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Gerar extrato PDF · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Gerar OFX · salvar na pasta correta",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Importar OFX no sistema",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Realizar conciliação bancária",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Verificar receitas e despesas sem identificação",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Imprimir e salvar relatório de conciliação",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Conferir arquivos e pastas",
+          "done": true
+        }
+      ],
+      "hasPayment": null,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "21:05",
+      "doneAt": "21:05",
+      "opDone": true
+    },
+    "bloco1b": {
+      "steps": [],
+      "active": false,
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null
+    },
+    "bloco2": {
+      "steps": [
+        {
+          "id": "cc_1",
+          "text": "Acessar e-mail — conferir e salvar boletos e NFs",
+          "done": true
+        },
+        {
+          "id": "cc_2",
+          "text": "Verificar WhatsApp — conferir grupo e individual, anotar solicitações pendentes",
+          "done": true
+        },
+        {
+          "id": "cc_3",
+          "text": "Lançar no Conta Azul — lançar todas as solicitações de pagamento identificadas",
+          "done": true
+        },
+        {
+          "id": "cc_4",
+          "text": "Conferir contas a pagar — verificar pagamentos do dia",
+          "done": true
+        },
+        {
+          "id": "cc_5",
+          "text": "Conferir DDA — verificar no banco se há boletos não cadastrados no Conta Azul",
+          "done": true
+        },
+        {
+          "id": "cc_6",
+          "text": "Salvar contas a pagar — salvar relação de contas a pagar do dia na pasta do cliente",
+          "done": true
+        },
+        {
+          "id": "cc_7",
+          "text": "Agendar pagamentos — agendar todos os pagamentos no internet banking e confirmar cada um",
+          "done": true
+        },
+        {
+          "id": "cc_8",
+          "text": "Salvar programação bancária — exportar comprovante de agendamento e salvar na pasta",
+          "done": true
+        },
+        {
+          "id": "cc_9",
+          "text": "Atualizar posição bancária — conforme saldo do dia",
+          "done": true
+        },
+        {
+          "id": "cc_10",
+          "text": "Enviar rotina ao cliente",
+          "done": true
+        }
+      ],
+      "active": true,
+      "status": "done",
+      "notes": "",
+      "returnMsg": "",
+      "startedAt": "10:26",
+      "doneAt": "20:30",
+      "tipo": "com_cap"
+    },
+    "fullyDone": true,
+    "assignedTo": null,
+    "bloco_tarde": {
+      "tipo": "auditoria",
+      "steps": [
+        {
+          "id": "au_1",
+          "text": "Revisar pastas e arquivos do dia",
+          "done": false
+        },
+        {
+          "id": "au_2",
+          "text": "Conferir relatórios gerados",
+          "done": false
+        },
+        {
+          "id": "au_3",
+          "text": "Revisar checklist dos clientes",
+          "done": false
+        },
+        {
+          "id": "au_4",
+          "text": "Verificar pendências abertas",
+          "done": false
+        },
+        {
+          "id": "au_5",
+          "text": "Organizar ambiente operacional",
+          "done": false
+        },
+        {
+          "id": "au_6",
+          "text": "Registrar resumo do dia",
+          "done": false
+        }
+      ],
+      "status": "pending",
+      "notes": "",
+      "startedAt": null,
+      "doneAt": null,
+      "active": true
+    }
+  }
+}
