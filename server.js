@@ -331,8 +331,78 @@ function migrateClientRotinas(tid) {
   }
 }
 
+// Usuários canônicos do Oracle — usados como fallback se Railway não tiver usuários corretos
+const CANONICAL_USERS = [
+  { id:1776819616478, name:'LIDIA CAVALCANTI', email:'lidia@staffconsult.com.br',
+    password_hash:'$2a$10$BiGXcoFBTZCAY2tq6W16SOoiucgf6eNwk4sKU.F0Qrvreh5BSQDYG',
+    role:'admin', tenant_id:'staffconect', assignedClients:['1776945416932','1777644575935'] },
+  { id:1776819683538, name:'LEONARDO CUNHA CAVALCANTI', email:'adm.staffconsult@gmail.com',
+    password_hash:'$2a$10$Xe9fWZpEagn9OqS.58imsOvSbcReGh508MmIhT1AhIjRpGhAUsBvO',
+    role:'operator', tenant_id:'staffconect',
+    assignedClients:['kimberly','up','agro','jsa','body','guimoo','galiza','matsu','ecofi','makinsthall'] },
+  { id:1777317713733, name:'MIRELLA - SANTOS INTELIGENCIA', email:null, password_hash:null,
+    role:'operator', noLogin:true, tenant_id:'staffconect',
+    assignedClients:['kimberly','agro','jsa','guimoo'] },
+];
+
+// Corrige IDs e tenant_id dos usuários (migração Railway)
+function migrateUsers() {
+  let users = globalDB.users();
+  let changed = false;
+
+  // Se não há usuários, seed com canônicos
+  if (users.length === 0) {
+    globalDB.saveUsers(CANONICAL_USERS);
+    console.log('[migrate] ✓ users.json inicializado com usuários canônicos');
+    return;
+  }
+
+  // 1. Garante tenant_id em todos
+  users = users.map(u => {
+    if (!u.tenant_id) { changed = true; return { ...u, tenant_id: 'staffconect' }; }
+    return u;
+  });
+
+  // 2. Corrige ID da Lidia para o ID canônico (referenciado como op2_id nos clientes)
+  const LIDIA_EMAIL = 'lidia@staffconsult.com.br';
+  const LIDIA_CANONICAL_ID = 1776819616478;
+  const lidiaIdx = users.findIndex(u => u.email === LIDIA_EMAIL);
+  if (lidiaIdx !== -1 && users[lidiaIdx].id !== LIDIA_CANONICAL_ID) {
+    console.log(`[migrate] Corrigindo ID da Lidia: ${users[lidiaIdx].id} → ${LIDIA_CANONICAL_ID}`);
+    users[lidiaIdx] = { ...users[lidiaIdx], id: LIDIA_CANONICAL_ID };
+    changed = true;
+  }
+
+  // 3. Garante que Leonardo e Mirella existem (com IDs canônicos)
+  for (const canon of CANONICAL_USERS) {
+    if (!canon.email) continue; // skip noLogin sem email
+    if (!users.find(u => u.id === canon.id || u.email === canon.email)) {
+      users.push(canon);
+      changed = true;
+      console.log(`[migrate] Adicionado usuário faltante: ${canon.name}`);
+    }
+  }
+  // Garante Mirella (noLogin)
+  if (!users.find(u => u.id === 1777317713733)) {
+    users.push(CANONICAL_USERS[2]);
+    changed = true;
+    console.log('[migrate] Adicionado usuário faltante: Mirella');
+  }
+
+  // 4. Remove duplicatas por email (mantém a de ID canônico, ou primeira)
+  const seen = new Set();
+  const deduped = users.filter(u => {
+    const key = u.email || String(u.id);
+    if (seen.has(key)) { changed = true; return false; }
+    seen.add(key); return true;
+  });
+
+  if (changed) { globalDB.saveUsers(deduped); console.log('[migrate] ✓ users.json corrigido'); }
+}
+
 // Seed apenas para staffconect no startup
 seedTenantDefaults('staffconect');
+migrateUsers();
 migrateClientRotinas('staffconect');
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
