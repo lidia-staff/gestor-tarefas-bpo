@@ -205,36 +205,135 @@ function seedTenantDefaults(tid) {
   // (staffconect importa os próprios clientes via migrate.js)
 
   const ex = tDB.manuals();
-  if (!ex.find(m => m.id === 'default_b1')) {
-    tDB.saveManuals([
-      { id:'default_b1', num:'1', title:'Bloco 1 — Abertura e Conciliação', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
-        {n:1,action:'Acessar e-mail',detail:"Verificar todos os e-mails. Identificar boletos, NF's e solicitações."},
-        {n:2,action:"Salvar boletos e NF's",detail:"Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."},
-        {n:3,action:'Salvar na pasta do mês',detail:'Garantir que todos os documentos do dia estejam na pasta do mês corrente.'},
-        {n:4,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
-        {n:5,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
-        {n:6,action:'Acessar banco e extratos',detail:'Acessar internet banking. Baixar extrato PDF e OFX do dia.'},
-        {n:7,action:'Importar OFX',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
-        {n:8,action:'Conciliação bancária',detail:'Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir.'},
-        {n:9,action:'Salvar conciliação',detail:'Exportar e salvar o arquivo da conciliação na pasta do mês.'},
-      ]},
-      { id:'default_b2', num:'2', title:'Bloco 2 — Pagamentos', category:'Rotina Diária', assignedOperators:[], createdAt:new Date().toISOString(), steps:[
-        {n:1,action:'Conferir contas a pagar',detail:'Verificar no Conta Azul todas as contas com vencimento no dia.'},
-        {n:2,action:"Conferir NF's e boletos",detail:"Verificar fisicamente se os boletos e NF's batem com o sistema."},
-        {n:3,action:'Conferir DDA',detail:'Verificar o DDA no banco para garantir que não há boletos não cadastrados.'},
-        {n:4,action:'Salvar contas a pagar',detail:'Salvar a relação de contas a pagar do dia na pasta do cliente.'},
-        {n:5,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
-        {n:6,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
-        {n:7,action:'Atualizar saldo bancário',detail:'Atualizar o saldo no Conta Azul após os agendamentos.'},
-        {n:8,action:'Enviar rotina ao cliente',detail:'Redigir mensagem de retorno com resumo do feito e enviar ao cliente.'},
-      ]},
-      ...ex,
-    ]);
+  const ROTINA_DEFAULTS = [
+    { id:'default_b1', num:'1', title:'Bloco 1 — Abertura e Conciliação', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Acessar e-mail',detail:"Verificar todos os e-mails. Identificar boletos, NF's e solicitações."},
+      {n:2,action:"Salvar boletos e NF's",detail:"Salvar na pasta: NF's e Boletos de Fornecedores. Organizar por data."},
+      {n:3,action:'Salvar na pasta do mês',detail:'Garantir que todos os documentos do dia estejam na pasta do mês corrente.'},
+      {n:4,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
+      {n:5,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
+      {n:6,action:'Acessar banco e extratos',detail:'Acessar internet banking. Baixar extrato PDF e OFX do dia.'},
+      {n:7,action:'Importar OFX',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
+      {n:8,action:'Conciliação bancária',detail:'Conciliar entradas e saídas. Em caso de dúvida, perguntar no grupo antes de concluir.'},
+      {n:9,action:'Salvar conciliação',detail:'Exportar e salvar o arquivo da conciliação na pasta do mês.'},
+    ]},
+    { id:'default_b2', num:'2', title:'Bloco 2 — Pagamentos', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Conferir contas a pagar',detail:'Verificar no Conta Azul todas as contas com vencimento no dia.'},
+      {n:2,action:"Conferir NF's e boletos",detail:"Verificar fisicamente se os boletos e NF's batem com o sistema."},
+      {n:3,action:'Conferir DDA',detail:'Verificar o DDA no banco para garantir que não há boletos não cadastrados.'},
+      {n:4,action:'Salvar contas a pagar',detail:'Salvar a relação de contas a pagar do dia na pasta do cliente.'},
+      {n:5,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
+      {n:6,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
+      {n:7,action:'Atualizar saldo bancário',detail:'Atualizar o saldo no Conta Azul após os agendamentos.'},
+      {n:8,action:'Enviar rotina ao cliente',detail:'Redigir mensagem de retorno com resumo do feito e enviar ao cliente.'},
+    ]},
+    { id:'rotina_completo', title:'🔵 Conciliação Completa', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Acessar banco',detail:''},
+      {n:2,action:'Gerar extrato PDF',detail:'Salvar na pasta correta do cliente.'},
+      {n:3,action:'Gerar OFX',detail:'Salvar na pasta correta do cliente.'},
+      {n:4,action:'Importar OFX no sistema',detail:'Importar o arquivo OFX no Conta Azul para atualizar o fluxo.'},
+      {n:5,action:'Realizar conciliação bancária',detail:'Conciliar entradas e saídas.'},
+      {n:6,action:'Revisar movimentações pendentes',detail:''},
+      {n:7,action:'Verificar receitas sem identificação',detail:''},
+      {n:8,action:'Verificar despesas sem identificação',detail:''},
+      {n:9,action:'Imprimir relatório de conciliação',detail:''},
+      {n:10,action:'Salvar relatório na pasta correta',detail:''},
+      {n:11,action:'Conferir todos os arquivos salvos',detail:''},
+      {n:12,action:'Conferir nomes e pasta corretos',detail:''},
+      {n:13,action:'Atualizar posição bancária',detail:'Atualizar conforme saldo do dia.'},
+    ]},
+    { id:'rotina_bancos_rev', title:'🏦 Bancos + Revisão', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Acessar banco',detail:''},
+      {n:2,action:'Gerar extrato PDF',detail:'Salvar na pasta correta do cliente.'},
+      {n:3,action:'Gerar OFX',detail:'Salvar na pasta correta do cliente.'},
+      {n:4,action:'Conferir arquivos salvos e pasta correta',detail:''},
+      {n:5,action:'Atualizar posição bancária',detail:'Atualizar conforme saldo do dia.'},
+    ]},
+    { id:'rotina_conc_rel', title:'📊 Conciliação + Relatórios', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Importar OFX no sistema',detail:''},
+      {n:2,action:'Realizar conciliação bancária',detail:''},
+      {n:3,action:'Revisar movimentações pendentes',detail:''},
+      {n:4,action:'Verificar receitas sem identificação',detail:''},
+      {n:5,action:'Verificar despesas sem identificação',detail:''},
+      {n:6,action:'Imprimir relatório de conciliação',detail:''},
+      {n:7,action:'Salvar relatório na pasta correta',detail:''},
+      {n:8,action:'Atualizar posição bancária',detail:'Atualizar conforme saldo do dia.'},
+    ]},
+    { id:'rotina_sem_cap', title:'✅ Rotina sem Contas a Pagar', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Acessar e-mail',detail:'Salvar boletos e NFs na pasta correta.'},
+      {n:2,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
+      {n:3,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
+      {n:4,action:'Conferir contas a pagar',detail:'Verificar se há pagamento para o dia. Caso sim, transferir para o outro operador.'},
+      {n:5,action:'Conferir DDA',detail:'Verificar no banco se há boletos não cadastrados. Caso sim, transferir para o outro operador.'},
+      {n:6,action:'Atualizar posição bancária',detail:'Atualizar conforme saldo do dia.'},
+      {n:7,action:'Enviar rotina ao cliente',detail:''},
+    ]},
+    { id:'rotina_com_cap', title:'💰 Rotina com Contas a Pagar', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Acessar e-mail',detail:'Conferir e salvar boletos e NFs na pasta correta.'},
+      {n:2,action:'Verificar WhatsApp',detail:'Conferir grupo e individual. Anotar solicitações pendentes.'},
+      {n:3,action:'Lançar no Conta Azul',detail:'Lançar todas as solicitações de pagamento identificadas.'},
+      {n:4,action:'Conferir contas a pagar',detail:'Verificar pagamentos do dia.'},
+      {n:5,action:'Conferir DDA',detail:'Verificar no banco se há boletos não cadastrados no Conta Azul.'},
+      {n:6,action:'Salvar contas a pagar',detail:'Salvar relação de contas a pagar do dia na pasta do cliente.'},
+      {n:7,action:'Agendar pagamentos',detail:'Agendar todos os pagamentos no internet banking. Confirmar cada um.'},
+      {n:8,action:'Salvar programação bancária',detail:'Exportar comprovante de agendamento e salvar na pasta.'},
+      {n:9,action:'Atualizar posição bancária',detail:'Atualizar conforme saldo do dia.'},
+      {n:10,action:'Enviar rotina ao cliente',detail:''},
+    ]},
+    { id:'rotina_auditoria', title:'🔍 Organização e Auditoria (tarde)', category:'Rotina Diária', isDefault:true, assignedOperators:[], createdAt:new Date().toISOString(), steps:[
+      {n:1,action:'Revisar pastas e arquivos do dia',detail:''},
+      {n:2,action:'Conferir relatórios gerados',detail:''},
+      {n:3,action:'Revisar checklist dos clientes',detail:''},
+      {n:4,action:'Verificar pendências abertas',detail:''},
+      {n:5,action:'Organizar ambiente operacional',detail:''},
+      {n:6,action:'Registrar resumo do dia',detail:''},
+    ]},
+  ];
+  const missingDefaults = ROTINA_DEFAULTS.filter(d => !ex.find(m => String(m.id) === String(d.id)));
+  if (missingDefaults.length > 0) {
+    tDB.saveManuals([...missingDefaults, ...ex]);
+  }
+}
+
+// Mapeamento legado rotina_tipo → manual ID
+const ROTINA_TIPO_TO_MANUAL = {
+  padrao:    'default_b1',
+  completo:  'rotina_completo',
+  bancos_rev:'rotina_bancos_rev',
+  conc_rel:  'rotina_conc_rel',
+  sem_cap:   'rotina_sem_cap',
+  com_cap:   'rotina_com_cap',
+};
+const ROTINA_TIPO_TARDE_TO_MANUAL = {
+  auditoria: 'rotina_auditoria',
+};
+
+// Migra clientes legado (rotina_tipo → rotina_manual_id) — roda uma vez, idempotente
+function migrateClientRotinas(tid) {
+  const tDB = tenantDB(tid);
+  const clients = tDB.clients();
+  let changed = false;
+  const migrated = clients.map(c => {
+    let upd = { ...c };
+    if (!upd.rotina_manual_id && upd.rotina_tipo && ROTINA_TIPO_TO_MANUAL[upd.rotina_tipo]) {
+      upd.rotina_manual_id = ROTINA_TIPO_TO_MANUAL[upd.rotina_tipo];
+      changed = true;
+    }
+    if (!upd.rotina_tarde_manual_id && upd.rotina_tipo_tarde && ROTINA_TIPO_TARDE_TO_MANUAL[upd.rotina_tipo_tarde]) {
+      upd.rotina_tarde_manual_id = ROTINA_TIPO_TARDE_TO_MANUAL[upd.rotina_tipo_tarde];
+      changed = true;
+    }
+    return upd;
+  });
+  if (changed) {
+    tDB.saveClients(migrated);
+    console.log(`[${tid}] ✓ Migração rotina_manual_id concluída`);
   }
 }
 
 // Seed apenas para staffconect no startup
 seedTenantDefaults('staffconect');
+migrateClientRotinas('staffconect');
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
 function auth(req, res, next) {
@@ -532,6 +631,10 @@ app.put('/api/manuals/:id', auth, (req, res) => {
 app.delete('/api/manuals/:id', auth, (req, res) => {
   const raw = req.params.id;
   const id = isNaN(raw) ? raw : Number(raw);
+  const manual = req.tDB.manuals().find(m => String(m.id) === String(id));
+  if (manual?.isDefault && req.user.role !== 'master') {
+    return res.status(403).json({ error: 'Modelos padrão só podem ser excluídos pelo Master StaffConect' });
+  }
   req.tDB.saveManuals(req.tDB.manuals().filter(m => String(m.id) !== String(id)));
   res.json({ ok: true });
 });
