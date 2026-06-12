@@ -347,57 +347,45 @@ const CANONICAL_USERS = [
 
 // Corrige IDs e tenant_id dos usuários (migração Railway)
 function migrateUsers() {
-  let users = globalDB.users();
-  let changed = false;
+  let existing = globalDB.users();
 
-  // Se não há usuários, seed com canônicos
-  if (users.length === 0) {
-    globalDB.saveUsers(CANONICAL_USERS);
-    console.log('[migrate] ✓ users.json inicializado com usuários canônicos');
-    return;
-  }
+  // Constrói set de IDs e emails canônicos para detectar divergências
+  const canonicalIds  = new Set(CANONICAL_USERS.map(u => u.id));
+  const canonicalEmails = new Set(CANONICAL_USERS.filter(u=>u.email).map(u => u.email.toLowerCase()));
 
-  // 1. Garante tenant_id em todos
-  users = users.map(u => {
-    if (!u.tenant_id) { changed = true; return { ...u, tenant_id: 'staffconect' }; }
-    return u;
-  });
-
-  // 2. Corrige ID da Lidia para o ID canônico (referenciado como op2_id nos clientes)
-  const LIDIA_EMAIL = 'lidia@staffconsult.com.br';
-  const LIDIA_CANONICAL_ID = 1776819616478;
-  const lidiaIdx = users.findIndex(u => u.email === LIDIA_EMAIL);
-  if (lidiaIdx !== -1 && users[lidiaIdx].id !== LIDIA_CANONICAL_ID) {
-    console.log(`[migrate] Corrigindo ID da Lidia: ${users[lidiaIdx].id} → ${LIDIA_CANONICAL_ID}`);
-    users[lidiaIdx] = { ...users[lidiaIdx], id: LIDIA_CANONICAL_ID };
-    changed = true;
-  }
-
-  // 3. Garante que Leonardo e Mirella existem (com IDs canônicos)
-  for (const canon of CANONICAL_USERS) {
-    if (!canon.email) continue; // skip noLogin sem email
-    if (!users.find(u => u.id === canon.id || u.email === canon.email)) {
-      users.push(canon);
-      changed = true;
-      console.log(`[migrate] Adicionado usuário faltante: ${canon.name}`);
+  // Identifica usuários não-canônicos que pertencem ao staffconect (Lidia Administrador, duplicatas, etc.)
+  // Remove qualquer usuário staffconect que não esteja no set canônico
+  const nonStaffconect = existing.filter(u => {
+    if (!u.tenant_id || u.tenant_id === 'staffconect') {
+      // Manter apenas se for canônico
+      return canonicalIds.has(u.id);
     }
-  }
-  // Garante Mirella (noLogin)
-  if (!users.find(u => u.id === 1777317713733)) {
-    users.push(CANONICAL_USERS[2]);
-    changed = true;
-    console.log('[migrate] Adicionado usuário faltante: Mirella');
-  }
-
-  // 4. Remove duplicatas por email (mantém a de ID canônico, ou primeira)
-  const seen = new Set();
-  const deduped = users.filter(u => {
-    const key = u.email || String(u.id);
-    if (seen.has(key)) { changed = true; return false; }
-    seen.add(key); return true;
+    return true; // outros tenants preservados
   });
 
-  if (changed) { globalDB.saveUsers(deduped); console.log('[migrate] ✓ users.json corrigido'); }
+  // Para cada usuário canônico, preserva password_hash existente (caso Lidia tenha trocado senha)
+  const result = CANONICAL_USERS.map(canon => {
+    const existing_match =
+      existing.find(u => u.id === canon.id) ||
+      existing.find(u => u.email && canon.email && u.email.toLowerCase() === canon.email.toLowerCase());
+    if (existing_match && existing_match.password_hash) {
+      return { ...canon, password_hash: existing_match.password_hash,
+               must_change_password: existing_match.must_change_password };
+    }
+    return { ...canon };
+  });
+
+  // Adiciona usuários de outros tenants que possam existir
+  const othersPreserved = existing.filter(u => u.tenant_id && u.tenant_id !== 'staffconect');
+  const final = [...result, ...othersPreserved];
+
+  const changed = JSON.stringify(final) !== JSON.stringify(existing);
+  if (changed) {
+    globalDB.saveUsers(final);
+    console.log('[migrate] ✓ users.json reconstruído com usuários canônicos. Total:', final.length);
+  } else {
+    console.log('[migrate] ✓ users.json OK, sem alterações');
+  }
 }
 
 // Seed apenas para staffconect no startup

@@ -2049,7 +2049,7 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
 
         // Clientes com bloco da tarde — só aparece na seção do Op1
         const tardeClients = santosSorted.filter(c=>
-          c.rotina_tipo_tarde &&
+          (c.rotina_tipo_tarde || c.rotina_tarde_manual_id) &&
           String(c.op1_id||'')===opId &&
           dayTasks[c.id]?.bloco_tarde
         );
@@ -2106,7 +2106,7 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
                   <div style={{marginTop:'8px'}}>
                     <div style={{fontSize:'11px',color:'#7c3aed',fontWeight:600,marginBottom:'6px',paddingLeft:'4px'}}>{viewAs==='all'?'· Bloco 2 ativo':'· Clientes Santos'}</div>
                     {asOp2.map(c=>(
-                      <ClienteFilaCard key={'op2-'+c.id} client={c} task={dayTasks[c.id]} operators={operators} currentUser={currentUser} manuals={manuals||[]} onUpdate={t=>onUpdateTask(c.id,t)} onAddExtra={onAddExtra}/>
+                      <ClienteFilaCard key={'op2-'+c.id} client={c} task={dayTasks[c.id]||freshTaskForClient(c,manuals||[])} operators={operators} currentUser={currentUser} manuals={manuals||[]} onUpdate={t=>onUpdateTask(c.id,t)} onAddExtra={onAddExtra}/>
                     ))}
                   </div>
                 )}
