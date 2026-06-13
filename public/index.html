@@ -2005,23 +2005,6 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
         </div>
       </div>
 
-      {/* Banner de horário */}
-      {(()=>{
-        const h = new Date().getHours(), m = new Date().getMinutes();
-        const mins = h*60+m;
-        let bloco=null, cor='', bg='';
-        if(mins>=480&&mins<750)  { bloco='🔵 Bloco da Manhã — Conciliação Financeira (8h–12h30)'; cor='#0D6EFD'; bg='rgba(13,110,253,.06)'; }
-        else if(mins>=750&&mins<900) { bloco='🟡 Bloco da Tarde — Tratamento de Pendências (12h30–15h)'; cor='#d97706'; bg='rgba(245,158,11,.06)'; }
-        else if(mins>=900&&mins<990) { bloco='🟠 Bloco 15h–16h30 — Resolução de Pendências'; cor='#ea580c'; bg='rgba(249,115,22,.06)'; }
-        else if(mins>=990&&mins<1050){ bloco='🔍 Bloco Auditoria — Organização e Revisão (16h30–17h30)'; cor='#7c3aed'; bg='rgba(124,58,237,.06)'; }
-        else if(mins>=1050&&mins<1080){ bloco='📋 Fechamento do Dia (17h30–18h) — enviar resumo ao gestor'; cor='#475569'; bg='rgba(71,85,105,.06)'; }
-        if(!bloco) return null;
-        return (
-          <div style={{padding:'10px 16px',marginBottom:'16px',borderRadius:'10px',background:bg,border:`1px solid ${cor}33`,display:'flex',alignItems:'center',gap:'10px'}}>
-            <span style={{fontSize:'13px',fontWeight:700,color:cor}}>{bloco}</span>
-          </div>
-        );
-      })()}
 
       {/* Filtro de operador (admin only — dropdown) */}
       {isAdmin&&(
@@ -2792,7 +2775,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   const [editing,setEditing]   = useState(null);
   const [view,setView]         = useState('lista');   // 'lista' | 'clientes' | 'recorrentes'
   const [filter,setFilter]     = useState('pending');
-  const [filterOp,setFilterOp] = useState('');
+  const [filterOp,setFilterOp] = useState(isAdmin ? '' : String(currentUser?.id||''));
   const [filterCli,setFilterCli] = useState('');
   const [sortDate,setSortDate] = useState('asc');
   const today = todayStr();
@@ -2921,11 +2904,11 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
             </div>
             {/* Filtros secundários */}
             <div style={{display:'flex',gap:'8px',flexWrap:'wrap',alignItems:'center'}}>
-              <select value={filterOp} onChange={e=>setFilterOp(e.target.value)}
+              {isAdmin&&<select value={filterOp} onChange={e=>setFilterOp(e.target.value)}
                 style={{padding:'5px 10px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'1.5px solid #e2e8f0',background:filterOp?'#060505':'#fff',color:filterOp?'#00C48C':'#64748b',cursor:'pointer',outline:'none'}}>
                 <option value="">👤 Todos os operadores</option>
                 {operators.map(o=><option key={o.id} value={o.id}>{o.name}</option>)}
-              </select>
+              </select>}
               <select value={filterCli} onChange={e=>setFilterCli(e.target.value)}
                 style={{padding:'5px 10px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'1.5px solid #e2e8f0',background:filterCli?'#060505':'#fff',color:filterCli?'#00C48C':'#64748b',cursor:'pointer',outline:'none'}}>
                 <option value="">🏢 Todos os clientes</option>
@@ -3030,11 +3013,11 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
       {view==='recorrentes'&&(
         <>
           <div style={{display:'flex',gap:'8px',marginBottom:'16px',flexWrap:'wrap',alignItems:'center'}}>
-            <select value={filterOp} onChange={e=>setFilterOp(e.target.value)}
+            {isAdmin&&<select value={filterOp} onChange={e=>setFilterOp(e.target.value)}
               style={{padding:'5px 10px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'1.5px solid #e2e8f0',background:filterOp?'#060505':'#fff',color:filterOp?'#00C48C':'#64748b',cursor:'pointer',outline:'none'}}>
               <option value="">👤 Todos os operadores</option>
               {operators.map(o=><option key={o.id} value={o.id}>{o.name}</option>)}
-            </select>
+            </select>}
             <select value={filterCli} onChange={e=>setFilterCli(e.target.value)}
               style={{padding:'5px 10px',borderRadius:'8px',fontSize:'12px',fontWeight:600,border:'1.5px solid #e2e8f0',background:filterCli?'#060505':'#fff',color:filterCli?'#00C48C':'#64748b',cursor:'pointer',outline:'none'}}>
               <option value="">🏢 Todos os clientes</option>
