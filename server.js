@@ -309,6 +309,18 @@ const ROTINA_TIPO_TARDE_TO_MANUAL = {
 };
 
 // Migra clientes legado (rotina_tipo → rotina_manual_id) — roda uma vez, idempotente
+// Passwords dos clientes Oracle (migração idempotente) — aplicados apenas se cliente não tiver nenhum
+const ORACLE_CLIENT_PASSWORDS = {
+  'up': [{"id":1777741610724,"link":"https://v65.medx.med.br/Login_Unificado/loginUnificado.html","sistema":"Medx","usuario":"dermapelle01@outlook.com","senha":"upclinique2024","obs":""}],
+  'body': [{"id":1780521190134,"link":"https://agenciavirtual.light.com.br/portal/","sistema":"Light","usuario":"clinicaroundgluteorio@gmail.com","senha":"2412Vss@","obs":""}],
+  'guimoo': [{"id":1776989303545,"link":"https://www.asaas.com/","sistema":"Asaas","usuario":"guimoobpofinanceirosantosif@gmail.com","senha":"Santos@2808","obs":""}],
+  'matsu': [{"id":1778058872654,"link":"https://www.itau.com.br/empresas","sistema":"Banco Itau - Conta 98716-9","usuario":"871367162","senha":"120382","obs":"Acessos - Opcoes de acesso: Codigo do operador (871367162) - acesso básico"}],
+  'ecofi': [{"id":1778058962486,"link":"","sistema":"Banco Itau - Conta 98720-1","usuario":"871367162","senha":"120382","obs":"Acessos - Opcoes de acesso: Codigo do operador (871367162) - acesso básico"},{"id":1778059109717,"link":"","sistema":"Bradesco - Conta 0648607-0","usuario":"LCSC00222","senha":"12031982","obs":"Mesmo acesso da UP e Galiza"}],
+  'makinsthall': [{"id":1778059237585,"link":"","sistema":"Banco Itau - Conta 98483-6","usuario":"871367162","senha":"120382","obs":"Mesmo acesso da Ecofi e Matsu"},{"id":1778059300787,"link":"","sistema":"Bradesco - Conta 0648623-1","usuario":"LCSC00222","senha":"12031982","obs":"Mesmo acesso da UP e Galiza"},{"id":1778059336479,"link":"","sistema":"Banco Itau - Conta 98721-9","usuario":"871367162","senha":"120382","obs":"Mesmo acesso da Ecofi e Matsu"},{"id":1778059471279,"link":"https://www.santander.com.br/","sistema":"Santander - Conta 13004989-4","usuario":"83082913334","senha":"120382","obs":"Pessoa Juridica Ag 4198 Conta 130049894"},{"id":1778782639828,"link":"https://nfe.osasco.sp.gov.br/EissnfeWebApp/Portal/Default.aspx","sistema":"Acesso prefeitura de Osasco","usuario":"IM126265","senha":"126265","obs":"Emissao de NF"}],
+  '1776945416932': [{"id":1776945305184,"link":"","sistema":"Simples Cte","usuario":"lidia@staffconsult.com.br","senha":"St12345*","obs":""},{"id":1776945338290,"link":"","sistema":"Prefeitura","usuario":"628.669.233-91","senha":"Rochab2020*","obs":""}],
+  '1777644575935': [{"id":1777644876700,"link":"","sistema":"Instagram","usuario":"staff.consult","senha":"St12345*","obs":""},{"id":1777644919534,"link":"","sistema":"Instagram StaffConect","usuario":"lidia@staffconsult.com.br","senha":"St12345","obs":""},{"id":1777645300128,"link":"","sistema":"Google Meu Negócio","usuario":"adm.staffconsult@gmail.com","senha":"","obs":"Enviei um convite para este email"},{"id":1777645773849,"link":"","sistema":"Linkedin","usuario":"","senha":"","obs":"Te convidei como Administrador"},{"id":1777645796239,"link":"","sistema":"Meta","usuario":"adm.staffconsult@gmail.com","senha":"","obs":"Enviei um convite para este email"},{"id":1778677793240,"link":"","sistema":"Qualitycert","usuario":"LIDIAA.CRISTINA","senha":"@lidiaa2025","obs":"Link vline: https://vline.soluti.com.br/arqualitycert"},{"id":1778677858288,"link":"","sistema":"Conta Azul Santos","usuario":"contato.staffconsult@gmail.com","senha":"Sif12345*","obs":""}],
+};
+
 function migrateClientRotinas(tid) {
   const tDB = tenantDB(tid);
   const clients = tDB.clients();
@@ -323,19 +335,26 @@ function migrateClientRotinas(tid) {
       upd.rotina_tarde_manual_id = ROTINA_TIPO_TARDE_TO_MANUAL[upd.rotina_tipo_tarde];
       changed = true;
     }
+    // Migra passwords do Oracle se cliente não tiver nenhum
+    const oraclePws = ORACLE_CLIENT_PASSWORDS[String(c.id)];
+    if (oraclePws && (!upd.passwords || upd.passwords.length === 0)) {
+      upd.passwords = oraclePws;
+      changed = true;
+    }
     return upd;
   });
   if (changed) {
     tDB.saveClients(migrated);
-    console.log(`[${tid}] ✓ Migração rotina_manual_id concluída`);
+    console.log(`[${tid}] ✓ Migração clientes concluída (rotinas + passwords)`);
   }
 }
 
 // Usuários canônicos do Oracle — usados como fallback se Railway não tiver usuários corretos
 const CANONICAL_USERS = [
+  // Lidia é master global (tenant_id: null) — acessa StaffMaster e gestor operacional
   { id:1776819616478, name:'LIDIA CAVALCANTI', email:'lidia@staffconsult.com.br',
     password_hash:'$2a$10$BiGXcoFBTZCAY2tq6W16SOoiucgf6eNwk4sKU.F0Qrvreh5BSQDYG',
-    role:'admin', tenant_id:'staffconect', assignedClients:['1776945416932','1777644575935'] },
+    role:'master', tenant_id:null, assignedClients:['1776945416932','1777644575935'] },
   { id:1776819683538, name:'LEONARDO CUNHA CAVALCANTI', email:'adm.staffconsult@gmail.com',
     password_hash:'$2a$10$Xe9fWZpEagn9OqS.58imsOvSbcReGh508MmIhT1AhIjRpGhAUsBvO',
     role:'operator', tenant_id:'staffconect',
@@ -347,44 +366,59 @@ const CANONICAL_USERS = [
 
 // Corrige IDs e tenant_id dos usuários (migração Railway)
 function migrateUsers() {
-  let existing = globalDB.users();
+  const existing = globalDB.users();
+  const canonicalIds = new Set(CANONICAL_USERS.map(u => u.id));
+  const canonicalEmails = new Set(CANONICAL_USERS.filter(u=>u.email).map(u=>u.email.toLowerCase()));
 
-  // Constrói set de IDs e emails canônicos para detectar divergências
-  const canonicalIds  = new Set(CANONICAL_USERS.map(u => u.id));
-  const canonicalEmails = new Set(CANONICAL_USERS.filter(u=>u.email).map(u => u.email.toLowerCase()));
+  // Constrói os usuários canônicos preservando password_hash atual (caso Lidia tenha trocado senha)
+  const canonical = CANONICAL_USERS.map(canon => {
+    const match =
+      existing.find(u => u.id === canon.id) ||
+      existing.find(u => canon.email && u.email && u.email.toLowerCase() === canon.email.toLowerCase() && !u.tenant_id);
+    const hash = match?.password_hash || canon.password_hash;
+    return { ...canon, password_hash: hash,
+             ...(match?.must_change_password ? { must_change_password: true } : {}) };
+  });
 
-  // Identifica usuários não-canônicos que pertencem ao staffconect (Lidia Administrador, duplicatas, etc.)
-  // Remove qualquer usuário staffconect que não esteja no set canônico
-  const nonStaffconect = existing.filter(u => {
-    if (!u.tenant_id || u.tenant_id === 'staffconect') {
-      // Manter apenas se for canônico
-      return canonicalIds.has(u.id);
-    }
+  // Preserva usuários de outros tenants (não-staffconect, não-canônicos)
+  // Remove: quaisquer usuários staffconect duplicados/variantes (Lidia Administrador, etc.)
+  // Preserva: usuários de outros tenants; ignora master (já está em canonical)
+  const others = existing.filter(u => {
+    if (canonicalIds.has(u.id)) return false;            // já está no canonical
+    if (canonicalEmails.has((u.email||'').toLowerCase())) return false; // email duplicado com canônico
+    if (u.tenant_id === 'staffconect') return false;     // staffconect não-canônico → remover
+    if (!u.tenant_id && u.role !== 'master') return false; // tenant null sem ser master → remover
     return true; // outros tenants preservados
   });
 
-  // Para cada usuário canônico, preserva password_hash existente (caso Lidia tenha trocado senha)
-  const result = CANONICAL_USERS.map(canon => {
-    const existing_match =
-      existing.find(u => u.id === canon.id) ||
-      existing.find(u => u.email && canon.email && u.email.toLowerCase() === canon.email.toLowerCase());
-    if (existing_match && existing_match.password_hash) {
-      return { ...canon, password_hash: existing_match.password_hash,
-               must_change_password: existing_match.must_change_password };
-    }
-    return { ...canon };
-  });
-
-  // Adiciona usuários de outros tenants que possam existir
-  const othersPreserved = existing.filter(u => u.tenant_id && u.tenant_id !== 'staffconect');
-  const final = [...result, ...othersPreserved];
-
+  const final = [...canonical, ...others];
   const changed = JSON.stringify(final) !== JSON.stringify(existing);
   if (changed) {
     globalDB.saveUsers(final);
-    console.log('[migrate] ✓ users.json reconstruído com usuários canônicos. Total:', final.length);
+    console.log('[migrate] ✓ users.json reconstruído. Total:', final.length, final.map(u=>u.name).join(', '));
   } else {
     console.log('[migrate] ✓ users.json OK, sem alterações');
+  }
+}
+
+function migrateExtraTasks(tid) {
+  const MISSING_TASKS = [
+    {"id":1781277266032,"title":"Incluir mes de janeiro na licenca nova da Galiza","client_id":"galiza","operator_id":1776819616478,"due_date":"2026-06-19","priority":"normal","notes":"","recurring":false,"frequency":"daily","steps":[],"status":"pending","created_at":"2026-06-12T15:14:26.032Z","done_at":null},
+    {"id":1781274605237,"title":"Lançamento cartao Agro - ver com Roni","client_id":"agro","operator_id":1776819616478,"due_date":"2026-06-15","priority":"high","notes":"Mostrar como foi feito","recurring":false,"frequency":"daily","steps":[],"status":"pending","created_at":"2026-06-12T14:30:05.237Z","done_at":null},
+    {"id":"1781234639350.7454","title":"Fechamento Operacional - 17:00 às 17:30h","client_id":"","operator_id":"1776819683538","due_date":"2026-06-12","priority":"high","notes":"","recurring":true,"frequency":"daily","steps":[{"id":"s_1781180721562","text":"Conferir relatórios gerados do dia","done":false},{"id":"s_1781180727425","text":"Conferir arquivos salvos","done":false},{"id":"s_1781180734268","text":"Conferir pastas atualizadas","done":false},{"id":"s_1781180746562","text":"Registrar pendências encontradas","done":false},{"id":"s_1781180753177","text":"Registrar resumo do dia","done":false}],"status":"pending","created_at":"2026-06-11T12:26:00.538Z","done_at":null,"exec_notes":"","exec_notes_history":[]},
+    {"id":"1781234639352.2788","title":"Emitir NF - Guimoo","client_id":"guimoo","operator_id":1776819616478,"due_date":"2026-06-12","priority":"high","notes":"EMITIR TODOS OS DIAS - NF´S DAS VENDAS EFETUADAS / CONFIRMADAS NO DIA ANTERIOR\nEX: DIA 30/5 - EMITIR NF DE 29/05 COBRANÇAS CONFIRMADAS","recurring":true,"frequency":"daily","steps":[{"id":"s_1780087892391","text":"Acessar Menu Cobranças > Todas > Filtros","done":false},{"id":"s_1780087911966","text":"Aplicar filtro: Confirmadas","done":false},{"id":"s_1780088001599","text":"Filtro avançado","done":false},{"id":"s_1780088009649","text":"Criação: data do dia anterior","done":false},{"id":"s_1780088030843","text":"Situação das cobranças: Confirmada","done":false},{"id":"s_1780088050908","text":"Nao exibir cobranças removidas","done":false},{"id":"s_1780088057881","text":"Todas as faturas","done":false},{"id":"s_1780088074667","text":"Nota Fiscal: Sem nota fiscal","done":false}],"status":"pending","created_at":"2026-05-29T20:33:10.293Z","done_at":null,"exec_notes":"","exec_notes_history":[]},
+    {"id":"1781234639352.7063","title":"Emitir NF´s Kim","client_id":"kimberly","operator_id":1776819616478,"due_date":"2026-06-12","priority":"high","notes":"Emissao de todas as notas até o ultimo dia util do mes","recurring":true,"frequency":"monthly","steps":[],"status":"pending","created_at":"2026-04-29T15:07:33.996Z","done_at":null,"exec_notes":"","exec_notes_history":[{"date":"2026-05-14","note":"AGUARDANDO PLANILHA"}]},
+    {"id":"1781234639352.0703","title":"Emitir NF´s Body","client_id":"body","operator_id":1776819616478,"due_date":"2026-06-12","priority":"high","notes":"Emissao de todas as notas até o ultimo dia util do mes","recurring":true,"frequency":"monthly","steps":[],"status":"pending","created_at":"2026-04-29T15:06:51.648Z","done_at":null,"exec_notes":"","exec_notes_history":[{"date":"2026-05-13","note":"SOLICITAR AO VINICIUS DADOS DA PACIENTE Rafaella Costa PARA EMISSAO DA NF"}]},
+    {"id":"1781234639354.269","title":"Recibo de motoristas","client_id":"1776945416932","operator_id":1776819616478,"due_date":"2026-06-12","priority":"normal","notes":"","recurring":true,"frequency":"weekly","steps":[{"id":"s_1777282956789","text":"Gerar e enviar recibos de motoristas","done":false}],"status":"pending","created_at":"2026-04-27T09:42:39.970Z","done_at":null,"exec_notes":"","exec_notes_history":[]},
+    {"id":"1781234639354.6362","title":"Rotina Diaria - RBJ","client_id":"1776945416932","operator_id":1776819616478,"due_date":"2026-06-12","priority":"normal","notes":"","recurring":true,"frequency":"daily","steps":[{"id":"m_0_1777283266330","text":"Conferir ordem de compra no e-mail","done":false},{"id":"m_1_1777283266330","text":"Emitir Ctes e NF´s","done":false},{"id":"m_2_1777283266330","text":"Enviar EDI via STA","done":false},{"id":"m_3_1777283266330","text":"Enviar e-mail com protocolo e NF´s se houver","done":false},{"id":"m_4_1777283266330","text":"Atualizar planilha de faturamento","done":false}],"status":"pending","created_at":"2026-04-27T09:41:52.470Z","done_at":null,"exec_notes":"","exec_notes_history":[]},
+  ];
+  const db = tenantDB(tid);
+  const tasks = db.extraTasks();
+  const existingIds = new Set(tasks.map(t=>String(t.id)));
+  const toAdd = MISSING_TASKS.filter(t=>!existingIds.has(String(t.id)));
+  if (toAdd.length > 0) {
+    db.saveExtra([...tasks, ...toAdd]);
+    console.log(`[migrate] ✓ extra_tasks: adicionadas ${toAdd.length} tarefas do Oracle`);
   }
 }
 
@@ -392,6 +426,7 @@ function migrateUsers() {
 seedTenantDefaults('staffconect');
 migrateUsers();
 migrateClientRotinas('staffconect');
+migrateExtraTasks('staffconect');
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
 function auth(req, res, next) {
