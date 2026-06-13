@@ -646,8 +646,9 @@ app.put('/api/extra-tasks/:id', auth, (req, res) => {
   const id = String(req.params.id);
   const body = { ...req.body };
 
-  // Operadores não podem marcar diretamente como done — vai para pending_approval
-  if (body.status === 'done' && req.user.role === 'operator') {
+  // Operadores não podem marcar diretamente como done — vai para pending_approval (se tenant exigir)
+  const _tenantCfg = globalDB.tenants().find(t => t.id === req.tenant) || {};
+  if (body.status === 'done' && req.user.role === 'operator' && _tenantCfg.requiresApproval) {
     body.status              = 'pending_approval';
     body.approval_requested_at = new Date().toISOString();
     body.approval_requested_by = req.user.name;
@@ -684,7 +685,7 @@ app.post('/api/extra-tasks/:id/rejeitar', auth, (req, res) => {
   const idx = tasks.findIndex(t => String(t.id) === id);
   if (idx === -1) return res.status(404).json({ error: 'Tarefa não encontrada' });
   if (tasks[idx].status !== 'pending_approval') return res.status(409).json({ error: 'Tarefa não está aguardando aprovação' });
-  tasks[idx] = { ...tasks[idx], status: 'pending', done_at: null,
+  tasks[idx] = { ...tasks[idx], status: 'active', done_at: null,
     rejected_at: new Date().toISOString(), rejected_by: req.user.name,
     rejected_reason: reason || '', approved_at: null, approved_by: null };
   req.tDB.saveExtra(tasks);
@@ -1415,7 +1416,7 @@ app.put('/api/master/tenants/:id', masterAuth, (req, res) => {
 app.get('/api/tenant-info', auth, (req, res) => {
   const tenants = globalDB.tenants();
   const tenant  = tenants.find(t => t.id === req.tenant) || { id: req.tenant, activeTabIds: null };
-  res.json({ id: tenant.id, name: tenant.name, activeTabIds: tenant.activeTabIds || null, primaryColor: tenant.primaryColor || '#00C48C' });
+  res.json({ id: tenant.id, name: tenant.name, activeTabIds: tenant.activeTabIds || null, primaryColor: tenant.primaryColor || '#00C48C', requiresApproval: !!tenant.requiresApproval });
 });
 
 // POST /api/master/impersonate/:tenantId — master obtém token de admin para visualizar o Gestor de um tenant
@@ -1574,6 +1575,21 @@ app.post('/api/master/users', masterAuth, (req, res) => {
   };
   globalDB.saveUsers([...users, newUser]);
   res.json({ ok: true, user: { id: newUser.id, name, email: emailNorm, role: newUser.role, tenant_id } });
+});
+
+// PUT /api/master/users/:id — edita nome, email, role de usuário (master only)
+app.put('/api/master/users/:id', masterAuth, (req, res) => {
+  const id = isNaN(req.params.id) ? req.params.id : Number(req.params.id);
+  const { name, email, role } = req.body;
+  const users = globalDB.users();
+  const idx = users.findIndex(u => String(u.id) === String(id));
+  if (idx === -1) return res.status(404).json({ error: 'Usuário não encontrado' });
+  if (users[idx].role === 'master') return res.status(403).json({ error: 'Não é possível editar o usuário master' });
+  if (name)  users[idx].name  = name.trim();
+  if (email) users[idx].email = email.toLowerCase().trim();
+  if (role && ['operator','admin'].includes(role)) users[idx].role = role;
+  globalDB.saveUsers(users);
+  res.json({ ok: true });
 });
 
 // DELETE /api/master/users/:id — remove usuário por ID (master only)

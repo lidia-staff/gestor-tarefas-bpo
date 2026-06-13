@@ -2027,13 +2027,13 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
       {isAdmin&&(
         <div style={{display:'flex',gap:'8px',marginBottom:'20px',flexWrap:'wrap',alignItems:'center',padding:'12px 16px',background:'#fff',borderRadius:'10px',boxShadow:'0 1px 4px rgba(0,0,0,.07)'}}>
           <span style={{fontSize:'12px',color:'#64748b',fontWeight:600,marginRight:'4px'}}>👁 Ver como:</span>
-          <button onClick={()=>setViewAs('all')}
+          {isAdmin&&<button onClick={()=>setViewAs('all')}
             style={{fontSize:'12px',padding:'5px 14px',borderRadius:'8px',border:'none',cursor:'pointer',fontWeight:600,background:viewAs==='all'?'#060505':'#F4F5F7',color:viewAs==='all'?'#00C48C':'#475569'}}>
             Todos
-          </button>
-          {operators.filter(o=>!o.noLogin).map(o=>(
-            <button key={o.id} onClick={()=>setViewAs(String(o.id))}
-              style={{fontSize:'12px',padding:'5px 14px',borderRadius:'8px',border:'none',cursor:'pointer',fontWeight:600,background:viewAs===String(o.id)?'#0D6EFD':'#F4F5F7',color:viewAs===String(o.id)?'#fff':'#475569'}}>
+          </button>}
+          {operators.filter(o=>!o.noLogin&&(isAdmin||String(o.id)===String(currentUser?.id))).map(o=>(
+            <button key={o.id} onClick={()=>isAdmin&&setViewAs(String(o.id))}
+              style={{fontSize:'12px',padding:'5px 14px',borderRadius:'8px',border:'none',cursor:isAdmin?'pointer':'default',fontWeight:600,background:viewAs===String(o.id)?'#0D6EFD':'#F4F5F7',color:viewAs===String(o.id)?'#fff':'#475569'}}>
               👤 {o.name.split(' ')[0]}
             </button>
           ))}
@@ -2769,7 +2769,7 @@ function TarefaCard({t, priStyle, getClient, getOp, onUpdate, onEdit, onDelete, 
 function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUpdate, onDelete, manuals}) {
   const [modal,setModal]       = useState(false);
   const [editing,setEditing]   = useState(null);
-  const [view,setView]         = useState('lista');   // 'lista' | 'recorrentes'
+  const [view,setView]         = useState('lista');   // 'lista' | 'clientes' | 'recorrentes'
   const [filter,setFilter]     = useState('pending');
   const [filterOp,setFilterOp] = useState('');
   const [filterCli,setFilterCli] = useState('');
@@ -2792,7 +2792,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   const handleRejeitar = async (t, reason) => {
     try {
       await API.post(`/api/extra-tasks/${t.id}/rejeitar`, { reason });
-      onUpdate({...t, status:'pending', done_at: null, rejected_reason: reason, rejected_by: currentUser?.name});
+      onUpdate({...t, status:'active', done_at: null, rejected_reason: reason, rejected_by: currentUser?.name});
     } catch(e) { alert(e.error||'Erro ao rejeitar'); }
   };
 
@@ -2861,6 +2861,10 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
           <button onClick={()=>setView('lista')}
             style={{padding:'7px 18px',borderRadius:'8px',fontSize:'13px',fontWeight:600,border:'none',cursor:'pointer',background:view==='lista'?'#060505':'#fff',color:view==='lista'?'#00C48C':'#64748b'}}>
             📋 Lista
+          </button>
+          <button onClick={()=>setView('clientes')}
+            style={{padding:'7px 18px',borderRadius:'8px',fontSize:'13px',fontWeight:600,border:'none',cursor:'pointer',background:view==='clientes'?'#060505':'#fff',color:view==='clientes'?'#00C48C':'#64748b'}}>
+            🏢 Por cliente
           </button>
           <button onClick={()=>setView('recorrentes')}
             style={{padding:'7px 18px',borderRadius:'8px',fontSize:'13px',fontWeight:600,border:'none',cursor:'pointer',background:view==='recorrentes'?'#060505':'#fff',color:view==='recorrentes'?'#00C48C':'#64748b'}}>
@@ -2943,6 +2947,63 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
           </>}
         </>
       )}
+
+      {/* ════ VISTA: POR CLIENTE ════ */}
+      {view==='clientes'&&(()=>{
+        const activeTasks = (extraTasks||[]).filter(t=>t.status!=='done'&&t.status!=='pending_approval');
+        const clientIds = [...new Set(activeTasks.map(t=>t.client_id).filter(Boolean))];
+        const sortedClients = clientIds
+          .map(id=>clients.find(c=>String(c.id)===String(id)))
+          .filter(Boolean)
+          .sort((a,b)=>(a.priority||99)-(b.priority||99)||(a.name||'').localeCompare(b.name||''));
+        if(sortedClients.length===0) return <div style={{textAlign:'center',padding:'40px',color:'#94a3b8',background:'#fff',borderRadius:'12px'}}>Nenhum cliente com tarefas pendentes. ✓</div>;
+        return (
+          <div style={{display:'flex',flexDirection:'column',gap:'16px'}}>
+            {sortedClients.map(c=>{
+              const clientTasks = activeTasks.filter(t=>String(t.client_id)===String(c.id))
+                .sort((a,b)=>{
+                  if(!a.due_date&&!b.due_date) return 0;
+                  if(!a.due_date) return 1; if(!b.due_date) return -1;
+                  return a.due_date.localeCompare(b.due_date);
+                });
+              const today = todayStr();
+              const hasOverdue = clientTasks.some(t=>t.due_date&&t.due_date<today);
+              return (
+                <div key={c.id} className="card" style={{padding:'16px',borderLeft:`3px solid ${hasOverdue?'#dc2626':'#00C48C'}`}}>
+                  <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'12px'}}>
+                    <div style={{fontWeight:700,fontSize:'14px',color:'#060505'}}>{c.name}</div>
+                    <span style={{fontSize:'11px',fontWeight:600,padding:'2px 8px',borderRadius:'20px',background:'rgba(0,196,140,.1)',color:'#00C48C'}}>{clientTasks.length}</span>
+                    {hasOverdue&&<span style={{fontSize:'11px',fontWeight:600,padding:'2px 8px',borderRadius:'20px',background:'rgba(220,38,38,.1)',color:'#dc2626'}}>⚠ Atrasada</span>}
+                  </div>
+                  <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+                    {clientTasks.map(t=>{
+                      const op = operators.find(o=>String(o.id)===String(t.operator_id));
+                      const overdue = t.due_date&&t.due_date<today;
+                      const priMap = {critical:'🔴',high:'🟠',normal:'🔵',low:'⚪'};
+                      return (
+                        <div key={t.id} style={{display:'flex',alignItems:'center',gap:'10px',padding:'8px 10px',background:'#f8fafc',borderRadius:'8px',borderLeft:`3px solid ${overdue?'#dc2626':t.status==='active'?'#0D6EFD':'#e2e8f0'}`}}>
+                          <span style={{fontSize:'13px'}}>{priMap[t.priority||'normal']||'🔵'}</span>
+                          <div style={{flex:1,minWidth:0}}>
+                            <div style={{fontWeight:600,fontSize:'13px',color:'#060505',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.title}</div>
+                            {t.desc&&<div style={{fontSize:'11px',color:'#64748b',marginTop:'2px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}>{t.desc}</div>}
+                          </div>
+                          {op&&<span style={{fontSize:'11px',color:'#7c3aed',fontWeight:600,flexShrink:0}}>👤 {op.name.split(' ')[0]}</span>}
+                          {t.due_date&&<span style={{fontSize:'11px',fontWeight:600,flexShrink:0,color:overdue?'#dc2626':'#64748b'}}>{overdue?'⚠ ':''}{t.due_date}</span>}
+                          <span style={{fontSize:'11px',padding:'2px 8px',borderRadius:'20px',flexShrink:0,
+                            background:t.status==='active'?'rgba(13,110,253,.1)':t.status==='waiting'?'rgba(220,38,38,.08)':'rgba(148,163,184,.1)',
+                            color:t.status==='active'?'#0D6EFD':t.status==='waiting'?'#dc2626':'#64748b'}}>
+                            {t.status==='active'?'Em andamento':t.status==='waiting'?'Aguardando':'Pendente'}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* ════ VISTA: RECORRENTES ════ */}
       {view==='recorrentes'&&(
@@ -4342,9 +4403,11 @@ function Dashboard({user, onLogout}) {
 
           {tabs.map(t=>{
             const isActive = tab===t.id;
+            const pendingApprovalCount = (user?.role==='admin'||user?.role==='master') ? (extraTasks||[]).filter(t=>t.status==='pending_approval').length : 0;
             const badge = (t.id==='chat'&&unreadChat>0) ? unreadChat
                         : (t.id==='emails'&&unreadEmails>0) ? unreadEmails
                         : (t.id==='lancamentos'&&pendentesLancamentos>0) ? pendentesLancamentos
+                        : (t.id==='tarefas'&&pendingApprovalCount>0) ? pendingApprovalCount
                         : 0;
             return (
               <button key={t.id} onClick={()=>navTo(t.id)}
@@ -4352,7 +4415,7 @@ function Dashboard({user, onLogout}) {
                 <span style={{fontSize:'15px',flexShrink:0,lineHeight:1}}>{t.icon}</span>
                 <span className="nav-label">{t.label}</span>
                 {badge>0&&(
-                  <span style={{marginLeft:'auto',background:t.id==='lancamentos'?'#f59e0b':'#dc2626',
+                  <span style={{marginLeft:'auto',background:t.id==='lancamentos'||t.id==='tarefas'?'#f59e0b':'#dc2626',
                     color:'#fff',borderRadius:'999px',fontSize:'10px',fontWeight:700,
                     minWidth:'16px',height:'16px',display:'flex',alignItems:'center',
                     justifyContent:'center',padding:'0 4px',lineHeight:1,flexShrink:0}}>
@@ -4694,7 +4757,7 @@ function TenantModal({tenant, onSave, onClose}) {
             </div>
             <div style={{fontSize:'11px',color:'#94a3b8',marginTop:'6px'}}>Abas com 🔒 são obrigatórias no plano básico.</div>
           </div>
-          {isEdit && <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
+          {isEdit && <div style={{display:'flex',alignItems:'center',gap:'10px',flexWrap:'wrap'}}>
             <label style={{fontSize:'12px',fontWeight:600,color:'#64748b'}}>Status</label>
             <button onClick={()=>upd('active',!form.active)}
               style={{padding:'5px 14px',borderRadius:'20px',fontSize:'12px',fontWeight:600,border:'1.5px solid',cursor:'pointer',
@@ -4702,6 +4765,14 @@ function TenantModal({tenant, onSave, onClose}) {
                 background:form.active?'rgba(0,196,140,.1)':'#f1f5f9',
                 color:form.active?'#00C48C':'#94a3b8'}}>
               {form.active?'✓ Ativo':'✕ Inativo'}
+            </button>
+            <label style={{fontSize:'12px',fontWeight:600,color:'#64748b',marginLeft:'12px'}}>Aprovação de tarefas</label>
+            <button onClick={()=>upd('requiresApproval',!form.requiresApproval)}
+              style={{padding:'5px 14px',borderRadius:'20px',fontSize:'12px',fontWeight:600,border:'1.5px solid',cursor:'pointer',
+                borderColor:form.requiresApproval?'#f59e0b':'#e2e8f0',
+                background:form.requiresApproval?'rgba(245,158,11,.1)':'#f1f5f9',
+                color:form.requiresApproval?'#d97706':'#94a3b8'}}>
+              {form.requiresApproval?'✓ Ativo':'✕ Inativo'}
             </button>
           </div>}
         </div>
@@ -4782,6 +4853,42 @@ function NovoUsuarioModal({tenants, onSave, onClose}) {
   );
 }
 
+function EditUserModal({user: u, onSave, onClose}) {
+  const [form, setForm] = useState({name: u.name||'', email: u.email||'', role: u.role||'operator'});
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState('');
+  const upd = (k,v) => setForm(f=>({...f,[k]:v}));
+  const save = async () => {
+    setErr(''); setSaving(true);
+    try { await API.put(`/api/master/users/${u.id}`, form); onSave(); }
+    catch(e) { setErr(e.error||'Erro'); }
+    finally { setSaving(false); }
+  };
+  return (
+    <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,.5)',zIndex:100,display:'flex',alignItems:'center',justifyContent:'center',padding:'16px'}}>
+      <div className="card fade-in" style={{width:'100%',maxWidth:'400px',padding:'24px'}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}>
+          <h3 style={{fontWeight:700,fontSize:'15px'}}>Editar Usuário</h3>
+          <button onClick={onClose} style={{background:'none',border:'none',fontSize:'18px',cursor:'pointer',color:'#94a3b8'}}>✕</button>
+        </div>
+        {err && <div style={{background:'#fee2e2',color:'#dc2626',padding:'8px',borderRadius:'8px',fontSize:'13px',marginBottom:'12px'}}>{err}</div>}
+        <div style={{display:'grid',gap:'12px'}}>
+          <input className="input-field" placeholder="Nome" value={form.name} onChange={e=>upd('name',e.target.value)}/>
+          <input className="input-field" placeholder="E-mail" type="email" value={form.email} onChange={e=>upd('email',e.target.value)}/>
+          <select className="input-field" value={form.role} onChange={e=>upd('role',e.target.value)}>
+            <option value="operator">Operador</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div style={{display:'flex',gap:'10px',marginTop:'16px',justifyContent:'flex-end'}}>
+          <button className="btn-ghost" onClick={onClose}>Cancelar</button>
+          <button className="btn-green" onClick={save} disabled={saving}>{saving?'Salvando…':'Salvar'}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MasterDashboard({user, onLogout, onViewGestor}) {
   const [tab, setTab] = useState('dashboard');
   const [tenants, setTenants] = useState([]);
@@ -4790,6 +4897,7 @@ function MasterDashboard({user, onLogout, onViewGestor}) {
   const [tenantModal, setTenantModal] = useState(null); // null | 'new' | tenant obj
   const [resetModal, setResetModal] = useState(null);
   const [novoUserModal, setNovoUserModal] = useState(false);
+  const [editUserModal, setEditUserModal] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -5020,11 +5128,16 @@ function MasterDashboard({user, onLogout, onViewGestor}) {
                             </span>
                           </td>
                           <td style={{padding:'12px 16px'}}>
-                            {!u.noLogin && u.email && (
-                              <button onClick={()=>setResetModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
-                                🔑 Resetar senha
+                            <div style={{display:'flex',gap:'6px'}}>
+                              <button onClick={()=>setEditUserModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
+                                ✏️ Editar
                               </button>
-                            )}
+                              {!u.noLogin && u.email && (
+                                <button onClick={()=>setResetModal(u)} style={{padding:'5px 12px',borderRadius:'8px',border:'1.5px solid #e2e8f0',background:'#fff',cursor:'pointer',fontSize:'12px',fontWeight:600,color:'#475569'}}>
+                                  🔑 Resetar
+                                </button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       );
@@ -5126,6 +5239,13 @@ function MasterDashboard({user, onLogout, onViewGestor}) {
           tenants={tenants}
           onSave={()=>{ setNovoUserModal(false); load(); }}
           onClose={()=>setNovoUserModal(false)}
+        />
+      )}
+      {editUserModal && (
+        <EditUserModal
+          user={editUserModal}
+          onSave={()=>{ setEditUserModal(null); load(); }}
+          onClose={()=>setEditUserModal(null)}
         />
       )}
       <HelpPanel screen={tab}/>
