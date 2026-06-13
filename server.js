@@ -422,11 +422,54 @@ function migrateExtraTasks(tid) {
   }
 }
 
+// Seed clientes canônicos do tenant staffconect (RBJ e Staff Consult)
+function seedStaffconectClients() {
+  const LIDIA = 1776819616478;
+  const LEO   = 1776819683538;
+  const SEED_CLIENTS = [
+    { id:'1776945416932', name:'RBJ Transportes', priority:1, banks:[], whatsapp:'', cnpj:'', contact:'', erp:'STA', email:'', notes:'', passwords:[
+        {id:1776945305184,link:'',sistema:'Simples Cte',usuario:'lidia@staffconsult.com.br',senha:'St12345*',obs:''},
+        {id:1776945338290,link:'',sistema:'Prefeitura',usuario:'628.669.233-91',senha:'Rochab2020*',obs:''},
+      ], rotina:{bloco1:{name:'',steps:[]},bloco2:{steps:[]}}, tipo:'outros', op1_id:LIDIA, op2_id:LIDIA,
+    },
+    { id:'1777644575935', name:'Staff Consult e Conect', priority:1, banks:[], whatsapp:'', cnpj:'', contact:'', erp:'Conta Azul', email:'', notes:'', passwords:[
+        {id:1777644876700,link:'',sistema:'Instagram',usuario:'staff.consult',senha:'St12345*',obs:''},
+        {id:1777644919534,link:'',sistema:'Instagram StaffConect',usuario:'lidia@staffconsult.com.br',senha:'St12345',obs:''},
+        {id:1777645300128,link:'',sistema:'Google Meu Negócio',usuario:'adm.staffconsult@gmail.com',senha:'',obs:'Convite enviado'},
+        {id:1777645773849,link:'',sistema:'Linkedin',usuario:'',senha:'',obs:'Convidei como Administrador'},
+        {id:1777645796239,link:'',sistema:'Meta',usuario:'adm.staffconsult@gmail.com',senha:'',obs:'Convite enviado'},
+        {id:1778677793240,link:'',sistema:'Qualitycert',usuario:'LIDIAA.CRISTINA',senha:'@lidiaa2025',obs:''},
+        {id:1778677858288,link:'',sistema:'Conta Azul Santos',usuario:'contato.staffconsult@gmail.com',senha:'Sif12345*',obs:''},
+      ], rotina:{bloco1:{name:'',steps:[]},bloco2:{steps:[]}},
+      rotina_manual_id:'default_b1', rotina_tipo:'padrao', op1_id:LIDIA, op2_id:LIDIA,
+    },
+  ];
+  const db = tenantDB('staffconect');
+  const clients = db.clients();
+  const existingIds = new Set(clients.map(c=>String(c.id)));
+  // Remove quaisquer clientes criados com Date.now() que correspondem a RBJ/Staff Consult pelo nome
+  const SEED_IDS = new Set(SEED_CLIENTS.map(c=>c.id));
+  const SEED_NAMES = new Set(SEED_CLIENTS.map(c=>c.name.toLowerCase()));
+  const filtered = clients.filter(c => {
+    if (SEED_IDS.has(String(c.id))) return false; // remover versão antiga se existir
+    if (SEED_NAMES.has((c.name||'').toLowerCase()) && !SEED_IDS.has(String(c.id))) return false; // duplicata por nome
+    return true;
+  });
+  const toAdd = SEED_CLIENTS.filter(c=>!existingIds.has(c.id) || !clients.find(x=>String(x.id)===String(c.id)));
+  // Sempre re-seed para garantir IDs corretos (idempotente — por ID)
+  const final = [...filtered, ...SEED_CLIENTS];
+  if (JSON.stringify(final) !== JSON.stringify(clients)) {
+    db.saveClients(final);
+    console.log('[seed] ✓ Clientes RBJ e Staff Consult sincronizados');
+  }
+}
+
 // Seed apenas para staffconect no startup
 seedTenantDefaults('staffconect');
 migrateUsers();
 migrateClientRotinas('staffconect');
 migrateExtraTasks('staffconect');
+seedStaffconectClients();
 
 // ─── MIDDLEWARE AUTH ─────────────────────────────────
 function auth(req, res, next) {
@@ -513,7 +556,9 @@ app.get('/api/clients', auth, (req, res) => {
 
 app.post('/api/clients', auth, (req, res) => {
   const clients = req.tDB.clients();
-  const novo = { ...req.body, id: String(Date.now()) };
+  // Admin/master pode fornecer ID customizado (para importar clientes com IDs do Oracle)
+  const id = (['admin','master'].includes(req.user.role) && req.body.id) ? String(req.body.id) : String(Date.now());
+  const novo = { ...req.body, id };
   req.tDB.saveClients([...clients, novo]);
   res.json(novo);
 });
@@ -1529,6 +1574,17 @@ app.post('/api/master/users', masterAuth, (req, res) => {
   };
   globalDB.saveUsers([...users, newUser]);
   res.json({ ok: true, user: { id: newUser.id, name, email: emailNorm, role: newUser.role, tenant_id } });
+});
+
+// DELETE /api/master/users/:id — remove usuário por ID (master only)
+app.delete('/api/master/users/:id', masterAuth, (req, res) => {
+  const id = isNaN(req.params.id) ? req.params.id : Number(req.params.id);
+  const users = globalDB.users();
+  const target = users.find(u => String(u.id) === String(id));
+  if (!target) return res.status(404).json({ error: 'Usuário não encontrado' });
+  if (target.role === 'master') return res.status(403).json({ error: 'Não é possível excluir o usuário master' });
+  globalDB.saveUsers(users.filter(u => String(u.id) !== String(id)));
+  res.json({ ok: true, removed: target.name });
 });
 
 // ─── SPA FALLBACK ────────────────────────────────────
