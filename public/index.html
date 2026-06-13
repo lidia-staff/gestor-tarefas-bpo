@@ -2823,7 +2823,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
   // Pega o template mais recente de cada grupo recorrente
   // Um template é identificado por recurring=true; agrupamos por title+client_id+operator_id
   const recurringTemplates = (() => {
-    const all = extraTasks.filter(t=>t.recurring);
+    const all = extraTasks.filter(t=>t.recurring && (filterOp ? String(t.operator_id||'')===String(filterOp) : true));
     // Para cada tarefa recorrente, queremos o "template" (mais recente por due_date)
     const groups = {};
     all.forEach(t => {
@@ -2954,7 +2954,7 @@ function TarefasExtras({clients, operators, extraTasks, currentUser, onAdd, onUp
 
       {/* ════ VISTA: POR CLIENTE ════ */}
       {view==='clientes'&&(()=>{
-        const activeTasks = (extraTasks||[]).filter(t=>t.status!=='done'&&t.status!=='pending_approval');
+        const activeTasks = (extraTasks||[]).filter(t=>t.status!=='done'&&t.status!=='pending_approval'&&(filterOp?String(t.operator_id||'')===String(filterOp):true));
         const clientIds = [...new Set(activeTasks.map(t=>t.client_id).filter(Boolean))];
         const sortedClients = clientIds
           .map(id=>clients.find(c=>String(c.id)===String(id)))
