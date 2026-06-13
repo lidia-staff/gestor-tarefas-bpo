@@ -2023,20 +2023,17 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
         );
       })()}
 
-      {/* Filtro de operador (admin) */}
+      {/* Filtro de operador (admin only — dropdown) */}
       {isAdmin&&(
-        <div style={{display:'flex',gap:'8px',marginBottom:'20px',flexWrap:'wrap',alignItems:'center',padding:'12px 16px',background:'#fff',borderRadius:'10px',boxShadow:'0 1px 4px rgba(0,0,0,.07)'}}>
-          <span style={{fontSize:'12px',color:'#64748b',fontWeight:600,marginRight:'4px'}}>👁 Ver como:</span>
-          {isAdmin&&<button onClick={()=>setViewAs('all')}
-            style={{fontSize:'12px',padding:'5px 14px',borderRadius:'8px',border:'none',cursor:'pointer',fontWeight:600,background:viewAs==='all'?'#060505':'#F4F5F7',color:viewAs==='all'?'#00C48C':'#475569'}}>
-            Todos
-          </button>}
-          {operators.filter(o=>!o.noLogin&&(isAdmin||String(o.id)===String(currentUser?.id))).map(o=>(
-            <button key={o.id} onClick={()=>isAdmin&&setViewAs(String(o.id))}
-              style={{fontSize:'12px',padding:'5px 14px',borderRadius:'8px',border:'none',cursor:isAdmin?'pointer':'default',fontWeight:600,background:viewAs===String(o.id)?'#0D6EFD':'#F4F5F7',color:viewAs===String(o.id)?'#fff':'#475569'}}>
-              👤 {o.name.split(' ')[0]}
-            </button>
-          ))}
+        <div style={{display:'flex',gap:'10px',marginBottom:'20px',alignItems:'center',padding:'10px 16px',background:'#fff',borderRadius:'10px',boxShadow:'0 1px 4px rgba(0,0,0,.07)'}}>
+          <span style={{fontSize:'12px',color:'#64748b',fontWeight:600,flexShrink:0}}>👁 Operador:</span>
+          <select value={viewAs} onChange={e=>setViewAs(e.target.value)}
+            style={{padding:'6px 10px',borderRadius:'8px',fontSize:'13px',fontWeight:600,border:'1.5px solid #e2e8f0',background:viewAs==='all'?'#fff':'#060505',color:viewAs==='all'?'#475569':'#00C48C',cursor:'pointer',outline:'none',flex:1,maxWidth:'260px'}}>
+            <option value="all">👥 Todos os operadores</option>
+            {operators.filter(o=>!o.noLogin).map(o=>(
+              <option key={o.id} value={String(o.id)}>👤 {o.name}</option>
+            ))}
+          </select>
         </div>
       )}
 
@@ -2131,7 +2128,44 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
               </div>
             )}
 
-            {/* 3️⃣ ⏰ TAREFAS ATRASADAS — cards completos, operador pode iniciar e concluir */}
+            {/* 3️⃣ ✅ TAREFAS DO DIA — agrupadas por cliente */}
+            {filaCount>0&&(()=>{
+              // Agrupar myTasks por client_id
+              const byClient = {};
+              myTasks.forEach(t=>{
+                const key = t.client_id ? String(t.client_id) : '__geral__';
+                if(!byClient[key]) byClient[key] = [];
+                byClient[key].push(t);
+              });
+              // Ordenar grupos: clientes com priority primeiro, depois geral
+              const clientGroups = Object.entries(byClient).sort(([ka],[kb])=>{
+                if(ka==='__geral__') return 1;
+                if(kb==='__geral__') return -1;
+                const ca = getClient(ka), cb = getClient(kb);
+                return (ca?.priority||99)-(cb?.priority||99);
+              });
+              return (
+                <div style={{marginBottom:'18px'}}>
+                  <SectionHeader color="#d97706" label="✅ Tarefas do Dia" sub={`${filaCount} tarefa${filaCount!==1?'s':''}`}/>
+                  {clientGroups.map(([cid, tasks])=>{
+                    const cli = cid==='__geral__' ? null : getClient(cid);
+                    return (
+                      <div key={cid} style={{marginBottom:'8px'}}>
+                        {cli&&<div style={{fontSize:'11px',fontWeight:700,color:'#475569',marginBottom:'4px',paddingLeft:'4px'}}>🏢 {cli.name}</div>}
+                        {tasks.map(t=>(
+                          <TarefaCard key={t.id} t={t} priStyle={priStyle} getClient={getClient} getOp={getOp} onUpdate={onUpdateExtra} onEdit={null} onDelete={onDeleteExtra} isAdmin={isAdmin}/>
+                        ))}
+                      </div>
+                    );
+                  })}
+                  {outrosCli.map(c=>(
+                    <OutrosFilaCard key={c.id} client={c} clients={clients} extraTasks={extraTasks||[]} operators={operators} currentUser={currentUser} manuals={manuals||[]} onUpdateExtra={onUpdateExtra}/>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* 4️⃣ ⏰ TAREFAS ATRASADAS */}
             {(()=>{
               const atrasadasOp = (extraTasks||[]).filter(t=>
                 t.due_date && t.due_date<today && t.status!=='done' && t.status!=='waiting' &&
@@ -2140,12 +2174,12 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
               if(!atrasadasOp.length) return null;
               return (
                 <div style={{marginBottom:'18px'}}>
-                  <SectionHeader color="#dc2626" label="⏰ Tarefas Atrasadas" sub={`${atrasadasOp.length} não concluída${atrasadasOp.length!==1?'s':''}`}/>
+                  <SectionHeader color="#dc2626" label="⏰ Atrasadas" sub={`${atrasadasOp.length} não concluída${atrasadasOp.length!==1?'s':''}`}/>
                   <div style={{display:'flex',flexDirection:'column',gap:'0'}}>
                     {atrasadasOp.map(t=>(
                       <div key={t.id}>
-                        <div style={{fontSize:'11px',color:'#dc2626',fontWeight:600,padding:'4px 4px 2px',display:'flex',alignItems:'center',gap:'6px'}}>
-                          <span>⏰ Execução em atraso — venceu {fmtDate(t.due_date)}</span>
+                        <div style={{fontSize:'11px',color:'#dc2626',fontWeight:600,padding:'4px 4px 2px'}}>
+                          ⏰ Venceu {fmtDate(t.due_date)}
                         </div>
                         <TarefaCard t={t} priStyle={priStyle} getClient={getClient} getOp={getOp} onUpdate={onUpdateExtra} onEdit={null} onDelete={onDeleteExtra} isAdmin={isAdmin}/>
                       </div>
@@ -2154,19 +2188,6 @@ function FilaDoDia({clients, dayTasks, operators, currentUser, onUpdateTask, ext
                 </div>
               );
             })()}
-
-            {/* 4️⃣ 🟡 TAREFAS DO DIA */}
-            {filaCount>0&&(
-              <div style={{marginBottom:'18px'}}>
-                <SectionHeader color="#d97706" label="🟡 Tarefas do Dia" sub={`${filaCount} tarefa${filaCount!==1?'s':''}`}/>
-                {myTasks.map(t=>(
-                  <TarefaCard key={t.id} t={t} priStyle={priStyle} getClient={getClient} getOp={getOp} onUpdate={onUpdateExtra} onEdit={null} onDelete={onDeleteExtra} isAdmin={isAdmin}/>
-                ))}
-                {outrosCli.map(c=>(
-                  <OutrosFilaCard key={c.id} client={c} clients={clients} extraTasks={extraTasks||[]} operators={operators} currentUser={currentUser} manuals={manuals||[]} onUpdateExtra={onUpdateExtra}/>
-                ))}
-              </div>
-            )}
 
             {/* 5️⃣ 🔴 TAREFAS TRAVADAS */}
             {aguardCount>0&&(
