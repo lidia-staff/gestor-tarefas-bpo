@@ -325,6 +325,20 @@ function migrateClientRotinas(tid) {
   const tDB = tenantDB(tid);
   const clients = tDB.clients();
   let changed = false;
+
+  const EMAIL_CONTA_AI = {
+    kimberly:    'kimberlym4903@conta.ai',
+    up:          'up9948@conta.ai',
+    agro:        'agro0981@conta.ai',
+    jsa:         'jsa2100@conta.ai',
+    body:        'body2597@conta.ai',
+    guimoo:      'guimoo5063@conta.ai',
+    galiza:      'galiza2483@conta.ai',
+    matsu:       'matsu4029@conta.ai',
+    ecofi:       'ecofi9428@conta.ai',
+    makinsthall: 'makinsthal5279@conta.ai',
+  };
+
   const migrated = clients.map(c => {
     let upd = { ...c };
     if (!upd.rotina_manual_id && upd.rotina_tipo && ROTINA_TIPO_TO_MANUAL[upd.rotina_tipo]) {
@@ -339,6 +353,12 @@ function migrateClientRotinas(tid) {
     const oraclePws = ORACLE_CLIENT_PASSWORDS[String(c.id)];
     if (oraclePws && (!upd.passwords || upd.passwords.length === 0)) {
       upd.passwords = oraclePws;
+      changed = true;
+    }
+    // Migra email_conta_ai do Oracle
+    const contaAiEmail = EMAIL_CONTA_AI[String(c.id)];
+    if (contaAiEmail && !upd.email_conta_ai) {
+      upd.email_conta_ai = contaAiEmail;
       changed = true;
     }
     return upd;

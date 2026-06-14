@@ -768,6 +768,7 @@ function ClienteModal({client, operators, manuals=[], onSave, onClose}) {
               <div key={key}><div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>{label}</div><input className="input-field" value={form[key]||''} onChange={e=>upd(key,e.target.value)} placeholder={ph}/></div>
             ))}
             <div style={{gridColumn:'1/-1'}}><div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>ERP</div><input className="input-field" value={form.erp||''} onChange={e=>upd('erp',e.target.value)} placeholder="Conta Azul, Omie..."/></div>
+            <div style={{gridColumn:'1/-1'}}><div style={{fontSize:'11px',fontWeight:600,color:'#64748b',marginBottom:'4px'}}>E-mail Conta.AI</div><input className="input-field" value={form.email_conta_ai||''} onChange={e=>upd('email_conta_ai',e.target.value)} placeholder="cliente0000@conta.ai"/></div>
           </div>
           {operators&&operators.length>0&&(
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}}>
